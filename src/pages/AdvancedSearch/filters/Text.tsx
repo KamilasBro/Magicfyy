@@ -1,11 +1,11 @@
 import React from "react";
-import TextSvg from "/src/assets/images/icons/text.svg?react";
+// import TextSvg from "/src/assets/images/icons/text.svg?react";
 const Text: React.FC = () => {
   return (
     <li className="filter filter-text">
       <div className="flex justify-between">
         <label className="filter-label flex">
-          <TextSvg />
+          {/* <TextSvg /> */}
           Text
         </label>
         <div className="input-wrap">
