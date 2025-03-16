@@ -74,10 +74,10 @@
   background-color: $green;
 }
 .Card .card-info .card-formats button.restricted {
-  background-color: rgba(191, 146, 29, 1);
+  background-color: $yellow;
 }
 .Card .card-info .card-formats button.banned {
-  background-color: rgba(206, 12, 12, 1);
+  background-color: $crimsonRed;
 }
 .Card .prints {
   grid-area: 1 / 2 / 2 / 3;
@@ -106,7 +106,7 @@
   height: 25px;
 }
 .Card .prints svg path {
-  fill: $grey;
+  fill: $gray;
 }
 .Card .prints svg.active path {
   fill: $orange;

@@ -1,21 +1,19 @@
 @import "../../assets/scss/partials/colors";
-.navbar{
-    height: 100px;
-    transition: 300ms;
+.navbar {
+  height: 100px;
+  transition: 300ms;
 }
-.navbar .inner-nav{
-    width: 1520px;
+.navbar .inner-nav {
+  width: 1520px;
 }
-.navbar .nav-links{
-    gap: 30px;
+.navbar .nav-links {
+  gap: 30px;
 }
-.navbar .nav-link{
-    font-size: 16px;
-    font-weight: 400;
+.navbar .nav-link {
+  font-size: 16px;
+  font-weight: 400;
 }
-.navbar .nav-link:hover{
-    font-size: 16px;
-    font-weight: 400;
-    transition: 300ms;
-    color: $orange;
+.navbar .nav-link a:hover {
+  transition: 300ms;
+  color: $orange;
 }

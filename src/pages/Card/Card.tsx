@@ -115,7 +115,7 @@ const Card: React.FC = () => {
   useEffect(() => {
     const fetchSymbols = async () => {
       try {
-        await new Promise((resolve) => setTimeout(resolve, 100)); // Set a timeout of 100ms
+        await new Promise((resolve) => setTimeout(resolve, 50)); // Set a timeout of 100ms
         const apiUrl = `https://api.scryfall.com/symbology`;
         const response = await fetch(apiUrl);
         if (!response.ok) {
@@ -249,8 +249,11 @@ const Card: React.FC = () => {
   function renderCardImg() {
     const typeLine =
       cardData?.type_line || cardData?.card_faces?.[0]?.type_line;
-
-    if (typeLine?.includes("Room")) {
+    if (
+      typeLine?.includes("Room") ||
+      typeLine?.includes("Adventure") ||
+      cardData?.layout.includes("flip")
+    ) {
       return <img src={cardData?.image_uris?.normal} className="card-img" />;
     }
     if (cardData?.card_back_id && showCardBack) {

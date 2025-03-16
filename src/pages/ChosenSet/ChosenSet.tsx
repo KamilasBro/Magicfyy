@@ -22,11 +22,11 @@ const ChosenSet: React.FC = () => {
   const [visibleCards, setVisibleCards] = useState<number>(25); // Track number of visible cards
   const observer = useRef<IntersectionObserver | null>(null);
   const [loadedCards, setLoadedCards] = useState<boolean[]>([]); // Track loading state for each card
-
+  const [isLoading, setIsLoading] = useState(true); // Track loading state
   useEffect(() => {
     const fetchIcon = async () => {
       try {
-        await new Promise((resolve) => setTimeout(resolve, 100)); // Set a timeout of 100ms
+        await new Promise((resolve) => setTimeout(resolve, 50)); // Set a timeout of 100ms
         const apiUrl = `https://api.scryfall.com/sets`;
         const response = await fetch(apiUrl);
         if (!response.ok) {
@@ -49,6 +49,7 @@ const ChosenSet: React.FC = () => {
 
     fetchIcon();
   }, []);
+
   useEffect(() => {
     const fetchCards = async () => {
       try {
@@ -56,7 +57,7 @@ const ChosenSet: React.FC = () => {
         let page = 1;
 
         while (hasMore) {
-          await new Promise((resolve) => setTimeout(resolve, 100)); // Set a timeout of 100ms
+          await new Promise((resolve) => setTimeout(resolve, 50)); // Set a timeout of 100ms
           const apiUrl = `https://api.scryfall.com/cards/search?q=e:${setCode}&page=${page}`;
           const response = await fetch(apiUrl);
 
@@ -71,8 +72,10 @@ const ChosenSet: React.FC = () => {
           }
         }
         setIsFetched((prevState) => ({ ...prevState, cardsFetched: true }));
+        setIsLoading(false); // Set loading to false after fetching is complete
       } catch (error) {
         console.error("Error fetching data:", error);
+        setIsLoading(false); // Set loading to false in case of error
       }
     };
 
@@ -115,86 +118,89 @@ const ChosenSet: React.FC = () => {
 
   return (
     <section className="Chosen-set">
-      {isFetched.iconFetched && dataFromSet.length > 0 ? (
-        <div className="flex items-center">
-          <img src={iconUrl} className="h1-set-icon" />
-          <h1>{nameOfSet}</h1>
-        </div>
-      ) : (
-        <h1>Loading Set</h1>
-      )}
-      <div className="search-bar flex">
-        <div className="search-wrap flex items-center justify-center">
-          <SearchSvg />
-        </div>
-        <div className="input-wrap flex items-center">
-          <input
-            disabled={!isFetched.cardsFetched}
-            placeholder='Any card name ex. "black lotus"'
-            onChange={(event) => {
-              setSearchedName(
-                FormatString(event.currentTarget.value).replace(/-/g, " ")
-              );
-            }}
-          />
-        </div>
-      </div>
-      <ul className="cards flex flex-wrap">
-        {dataFromSet.length === 0 ? (
-          <LoadingCardsAnim />
+      {/* Remove NotFound logic */}
+      <>
+        {isFetched.iconFetched && dataFromSet.length > 0 ? (
+          <div className="flex items-center">
+            <img src={iconUrl} className="h1-set-icon" />
+            <h1>{nameOfSet}</h1>
+          </div>
         ) : (
-          <>
-            {isFetched.cardsFetched &&
-              dataFromSet
-                .filter((card: CardData) =>
-                  searchedName
-                    ? card.name
-                        .toLowerCase()
-                        .includes(searchedName.toLowerCase())
-                    : true
-                )
-                .slice(0, visibleCards) // Display only visible cards
-                .map((card: CardData, index: number) => (
-                  <Link
-                    to={`/card/${card.set}/${card.collector_number}`}
-                    key={card.id}
-                  >
-                    <li>
-                      {!loadedCards[index] && <CardPlaceholder />}{" "}
-                      {/* Placeholder */}
-                      {card.image_uris ? (
-                        <img
-                          className="card"
-                          src={card.image_uris.normal}
-                          alt="Card"
-                          loading="eager"
-                          onLoad={() => handleImageLoad(index)} // Update load state
-                          style={{
-                            display: loadedCards[index] ? "block" : "none",
-                          }} // Hide until loaded
-                        />
-                      ) : (
-                        card.card_faces && (
+          <h1>Loading Set</h1>
+        )}
+        <div className="search-bar flex">
+          <div className="search-wrap flex items-center justify-center">
+            <SearchSvg />
+          </div>
+          <div className="input-wrap flex items-center">
+            <input
+              disabled={!isFetched.cardsFetched}
+              placeholder='Any card name ex. "black lotus"'
+              onChange={(event) => {
+                setSearchedName(
+                  FormatString(event.currentTarget.value).replace(/-/g, " ")
+                );
+              }}
+            />
+          </div>
+        </div>
+        <ul className="cards flex flex-wrap">
+          {isLoading ? (
+            <LoadingCardsAnim />
+          ) : (
+            <>
+              {isFetched.cardsFetched &&
+                dataFromSet
+                  .filter((card: CardData) =>
+                    searchedName
+                      ? card.name
+                          .toLowerCase()
+                          .includes(searchedName.toLowerCase())
+                      : true
+                  )
+                  .slice(0, visibleCards) // Display only visible cards
+                  .map((card: CardData, index: number) => (
+                    <Link
+                      to={`/card/${card.set}/${card.collector_number}`}
+                      key={card.id}
+                    >
+                      <li>
+                        {!loadedCards[index] && <CardPlaceholder />}{" "}
+                        {/* Placeholder */}
+                        {card.image_uris ? (
                           <img
                             className="card"
-                            src={card.card_faces[0].image_uris.normal}
+                            src={card.image_uris.normal}
                             alt="Card"
                             loading="eager"
-                            onLoad={() => handleImageLoad(index)}
+                            onLoad={() => handleImageLoad(index)} // Update load state
                             style={{
                               display: loadedCards[index] ? "block" : "none",
-                            }}
+                            }} // Hide until loaded
                           />
-                        )
-                      )}
-                    </li>
-                  </Link>
-                ))}
-          </>
-        )}
-      </ul>
-      <div id="sentinel" style={{ height: "1px" }}></div>
-      <GoTopArrow />
+                        ) : (
+                          card.card_faces && (
+                            <img
+                              className="card"
+                              src={card.card_faces[0].image_uris.normal}
+                              alt="Card"
+                              loading="eager"
+                              onLoad={() => handleImageLoad(index)}
+                              style={{
+                                display: loadedCards[index] ? "block" : "none",
+                              }}
+                            />
+                          )
+                        )}
+                      </li>
+                    </Link>
+                  ))}
+            </>
+          )}
+        </ul>
+        <div id="sentinel" style={{ height: "1px" }}></div>
+        <GoTopArrow />
+      </>
     </section>
   );
 };

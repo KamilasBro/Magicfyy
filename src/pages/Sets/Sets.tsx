@@ -15,7 +15,7 @@ const Sets: React.FC = () => {
     const fetchCards = async () => {
       try {
         await new Promise((resolve) => {
-          setTimeout(resolve, 100); // Set a timeout of 100ms
+          setTimeout(resolve, 50); // Set a timeout of 50ms
         });
         const apiUrl = `https://api.scryfall.com/sets`;
         const response = await fetch(apiUrl);
@@ -23,7 +23,7 @@ const Sets: React.FC = () => {
           throw new Error("Failed to fetch data");
         }
         const data = await response.json();
-        setSets(data.data);
+        setSets(data.data.filter((set: any) => set.card_count > 0));
         setIsFetched(true);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -31,7 +31,6 @@ const Sets: React.FC = () => {
     };
     fetchCards();
   }, []);
-
   return (
     <section className="Sets">
       <h1>Search for a set</h1>

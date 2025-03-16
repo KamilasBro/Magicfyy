@@ -1,4 +1,7 @@
 @import "../../assets/scss/partials/colors";
+.Sets {
+  min-height: 550px;
+}
 .Sets h1 {
   font-size: 42px;
   font-weight: 600;
@@ -91,7 +94,6 @@
 .Sets .set-tile {
   cursor: pointer;
   gap: 25px;
-  transition: 300ms;
 }
 .Sets .set-tile img {
   height: 40px;
