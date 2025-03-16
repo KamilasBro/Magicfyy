@@ -1,5 +1,5 @@
 import React from "react";
-import TextSvg from "../../../assets/images/icons/text.svg?react";
+import TextSvg from "/src/assets/images/icons/text.svg?react";
 const Text: React.FC = () => {
   return (
     <li className="filter filter-text">
