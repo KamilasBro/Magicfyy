@@ -2,8 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import ManaCostSvg from "../../../assets/images/icons/manaCost.svg?react";
 import AddSvg from "../../../assets/images/icons/add.svg?react";
 
-const ManaCost: React.FC = () => {
-  const [manaCost, setManaCost] = useState<string>("");
+interface ManaCostProps {
+  manaCost: string;
+  setManaCost: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const ManaCost: React.FC<ManaCostProps> = ({ manaCost, setManaCost }) => {
   const [manaSymbolsList, setManaSymbolsList] = useState<any[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);

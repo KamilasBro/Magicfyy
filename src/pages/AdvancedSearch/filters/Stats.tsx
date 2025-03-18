@@ -5,18 +5,21 @@ import CloseSvg from "../../../assets/images/icons/close.svg?react";
 import ArrowDownSvg from "../../../assets/images/icons/arrowDown.svg?react";
 
 interface StatItem {
-  id: number;
   stat: string;
   condition: string;
   value: string;
 }
 
-const Stats: React.FC = () => {
+interface StatsProps {
+  statsList: StatItem[];
+  setStatsList: React.Dispatch<React.SetStateAction<StatItem[]>>;
+}
+
+const Stats: React.FC<StatsProps> = ({ statsList, setStatsList }) => {
   const [showDropdown, setShowDropdown] = useState<string | null>(null);
   const [stat, setStat] = useState<string>("cmc");
   const [condition, setCondition] = useState<string>("=");
   const [statValue, setStatValue] = useState<string>("");
-  const [statsList, setStatsList] = useState<StatItem[]>([]);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const conditionDropdownRef = useRef<HTMLDivElement>(null);
@@ -69,7 +72,6 @@ const Stats: React.FC = () => {
   const handleAddStat = () => {
     if (statValue) {
       const newStat: StatItem = {
-        id: Date.now(),
         stat,
         condition,
         value: statValue,
@@ -92,7 +94,7 @@ const Stats: React.FC = () => {
   };
 
   const handleRemoveStat = (id: number) => {
-    setStatsList((prev) => prev.filter((item) => item.id !== id));
+    setStatsList((prev) => prev.filter((_, index) => index !== id));
   };
 
   return (
@@ -104,10 +106,10 @@ const Stats: React.FC = () => {
         </label>
         <div className="input-wrap">
           <ul className="stats-list flex flex-wrap">
-            {statsList.map(({ id, stat, condition, value }) => (
-              <li key={id} className="flex items-center">
+            {statsList.map(({ stat, condition, value }, index) => (
+              <li key={index} className="flex items-center">
                 {stat} {condition} {value}
-                <CloseSvg onClick={() => handleRemoveStat(id)} />
+                <CloseSvg onClick={() => handleRemoveStat(index)} />
               </li>
             ))}
           </ul>

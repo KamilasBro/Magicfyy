@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import RaritySvg from "../../../assets/images/icons/rarity.svg?react";
 
-const Rarity: React.FC = () => {
-  const [rarities, setRarities] = useState<string[]>([]);
+interface RarityProps {
+  selectedRarities: string[];
+  setSelectedRarities: React.Dispatch<React.SetStateAction<string[]>>;
+}
 
+const Rarity: React.FC<RarityProps> = ({
+  selectedRarities,
+  setSelectedRarities,
+}) => {
   const handleRarityChange = (selectedRarity: string) => {
-    setRarities((prevRarities) =>
+    setSelectedRarities((prevRarities) =>
       prevRarities.includes(selectedRarity)
         ? prevRarities.filter((rarity) => rarity !== selectedRarity)
         : [...prevRarities, selectedRarity]
@@ -25,7 +31,7 @@ const Rarity: React.FC = () => {
             <input
               type="checkbox"
               className="radio"
-              checked={rarities.includes("c")}
+              checked={selectedRarities.includes("c")}
               onChange={() => handleRarityChange("c")}
             />
           </div>
@@ -34,7 +40,7 @@ const Rarity: React.FC = () => {
             <input
               type="checkbox"
               className="radio"
-              checked={rarities.includes("u")}
+              checked={selectedRarities.includes("u")}
               onChange={() => handleRarityChange("u")}
             />
           </div>
@@ -43,7 +49,7 @@ const Rarity: React.FC = () => {
             <input
               type="checkbox"
               className="radio"
-              checked={rarities.includes("r")}
+              checked={selectedRarities.includes("r")}
               onChange={() => handleRarityChange("r")}
             />
           </div>
@@ -52,7 +58,7 @@ const Rarity: React.FC = () => {
             <input
               type="checkbox"
               className="radio"
-              checked={rarities.includes("m")}
+              checked={selectedRarities.includes("m")}
               onChange={() => handleRarityChange("m")}
             />
           </div>

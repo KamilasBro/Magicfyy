@@ -1,6 +1,11 @@
 import React from "react";
 import NameSvg from "../../../assets/images/icons/name.svg?react";
-const Name: React.FC = () => {
+
+interface NameProps {
+  setNameFilter: (name: string) => void;
+}
+
+const Name: React.FC<NameProps> = ({ setNameFilter }) => {
   return (
     <li className="filter filter-name">
       <div className="flex justify-between">
@@ -9,7 +14,10 @@ const Name: React.FC = () => {
           Name
         </label>
         <div className="input-wrap">
-          <input placeholder="Any words in the name ex. “jace”" />
+          <input
+            placeholder="Any words in the name ex. “jace”"
+            onChange={(event) => setNameFilter(event.target.value)}
+          />
         </div>
       </div>
       <hr />

@@ -379,14 +379,16 @@
   flex-direction: column;
   display: flex;
 }
-.Advanced-search .set {
+.Advanced-search .set,
+.Advanced-search .block {
   gap: 5px;
   font-size: 15px;
   font-weight: 300;
   transition: 300ms;
   cursor: pointer;
 }
-.Advanced-search .set:hover {
+.Advanced-search .set:hover,
+.Advanced-search .block:hover {
   color: $orange;
 }
 .Advanced-search .set-icon {

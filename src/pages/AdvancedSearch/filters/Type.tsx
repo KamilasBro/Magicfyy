@@ -2,8 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import TypeSvg from "../../../assets/images/icons/type.svg?react";
 import CloseSvg from "../../../assets/images/icons/close.svg?react";
 
-const Type: React.FC = () => {
-  const [allowPartialMatches, setAllowPartialMatches] = useState(false);
+interface TypeProps {
+  setSelectedTypes: React.Dispatch<
+    React.SetStateAction<{ type: string; isIncluded: boolean }[]>
+  >;
+}
+
+const Type: React.FC<TypeProps> = ({ setSelectedTypes }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [typeInput, setTypeInput] = useState("");
   const [cardTypes, setCardTypes] = useState<string[]>([]);
@@ -12,7 +17,7 @@ const Type: React.FC = () => {
   const [landTypes, setLandTypes] = useState<string[]>([]);
   const [artifactTypes, setArtifactTypes] = useState<string[]>([]);
   const [spellTypes, setSpellTypes] = useState<string[]>([]);
-  const [selectedTypes, setSelectedTypes] = useState<
+  const [selectedTypes, setSelectedTypesState] = useState<
     { type: string; isIncluded: boolean }[]
   >([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -128,22 +133,30 @@ const Type: React.FC = () => {
 
   const handleTypeSelect = (type: string) => {
     if (!selectedTypes.some((t) => t.type === type)) {
-      setSelectedTypes([...selectedTypes, { type, isIncluded: true }]);
+      const updatedTypes = [...selectedTypes, { type, isIncluded: true }];
+      setSelectedTypes(updatedTypes);
+      setSelectedTypesState(updatedTypes);
       setTypeInput(""); // Clear input after selection
       setShowDropdown(false); // Close dropdown after selection
     }
   };
 
   const handleRemoveType = (type: string) => {
-    setSelectedTypes(selectedTypes.filter((t) => t.type !== type));
+    const updatedTypes = selectedTypes.filter((t) => t.type !== type);
+    setSelectedTypes(updatedTypes);
+    setSelectedTypesState(updatedTypes);
   };
 
   const toggleTypeInclusion = (type: string) => {
-    setSelectedTypes(
-      selectedTypes.map((t) =>
-        t.type === type ? { ...t, isIncluded: !t.isIncluded } : t
-      )
+    const updatedTypes = selectedTypes.map((t) =>
+      t.type === type ? { ...t, isIncluded: !t.isIncluded } : t
     );
+    setSelectedTypes(updatedTypes);
+    setSelectedTypesState(updatedTypes);
+  };
+
+  const handlePartialMatchesChange = () => {
+    // No functionality needed, keep the radio button for UI purposes only
   };
 
   const filteredItems = (items: string[]) =>
@@ -282,10 +295,7 @@ const Type: React.FC = () => {
             <input
               type="checkbox"
               className="radio"
-              checked={allowPartialMatches}
-              onChange={() => {
-                setAllowPartialMatches((prevState: boolean) => !prevState);
-              }}
+              onChange={handlePartialMatchesChange}
             />
             <span>Allow partial type matches</span>
           </div>

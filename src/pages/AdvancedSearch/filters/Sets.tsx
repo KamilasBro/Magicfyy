@@ -3,56 +3,66 @@ import SetsSvg from "../../../assets/images/icons/sets.svg?react";
 import CloseSvg from "../../../assets/images/icons/close.svg?react";
 import { Set } from "../../../interfaces/CardsInterface";
 
-const Sets: React.FC = () => {
+interface SetsProps {
+  selectedSets: { name: string; code: string }[];
+  setSelectedSets: React.Dispatch<
+    React.SetStateAction<{ name: string; code: string }[]>
+  >;
+  selectedBlocks: { name: string; code: string }[];
+  setSelectedBlocks: React.Dispatch<
+    React.SetStateAction<{ name: string; code: string }[]>
+  >;
+}
+
+const Sets: React.FC<SetsProps> = ({
+  selectedSets,
+  setSelectedSets,
+  selectedBlocks,
+  setSelectedBlocks,
+}) => {
   const [showDropdown, setShowDropdown] = useState<string | null>(null);
   const [setsInput, setSetsInput] = useState("");
   const [blocksInput, setBlocksInput] = useState("");
   const [sets, setSets] = useState<Set[]>([]);
   const blocks = [
-    "Commander",
-    "Conspiracy",
-    "Magic Player Rewards",
-    "Arena League",
-    "Judge Gift Cards",
-    "Core Set",
-    "Portal",
-    "Innistrad: Double Feature",
-    "Alchemy 2025",
-    "Outlaws of Thunder Junction",
-    "Alchemy 2024",
-    "Alchemy 2023",
-    "Alchemy 2022",
-    "Guilds of Ravnica",
-    "Heroes of the Realm",
-    "Ixalan",
-    "Amonkhet",
-    "Kaladesh",
-    "Shadows over Innistrad",
-    "Battle for Zendikar",
-    "Khans of Tarkir",
-    "Theros",
-    "Return to Ravnica",
-    "Innistrad",
-    "Scars of Mirrodin",
-    "Zendikar",
-    "Alara",
-    "Shadowmoor",
-    "Lorwyn",
-    "Time Spiral",
-    "Ravnica",
-    "Kamigawa",
-    "Mirrodin",
-    "Onslaught",
-    "Odyssey",
-    "Invasion",
-    "Masques",
-    "Urza",
-    "Tempest",
-    "Mirage",
-    "Ice Age",
+    { name: "Commander", code: "cmr" },
+    { name: "Conspiracy", code: "cns" },
+    { name: "Magic Player Rewards", code: "mpr" },
+    { name: "Arena League", code: "arl" },
+    { name: "Judge Gift Cards", code: "jgp" },
+    { name: "Core Set", code: "lea" },
+    { name: "Portal", code: "por" },
+    { name: "Innistrad: Double Feature", code: "dbl" },
+    { name: "Outlaws of Thunder Junction", code: "otj" },
+    { name: "Guilds of Ravnica", code: "grn" },
+    { name: "Heroes of the Realm", code: "htr" },
+    { name: "Ixalan", code: "xln" },
+    { name: "Amonkhet", code: "akh" },
+    { name: "Kaladesh", code: "kld" },
+    { name: "Shadows over Innistrad", code: "soi" },
+    { name: "Battle for Zendikar", code: "bfz" },
+    { name: "Khans of Tarkir", code: "ktk" },
+    { name: "Theros", code: "ths" },
+    { name: "Return to Ravnica", code: "rtr" },
+    { name: "Innistrad", code: "isd" },
+    { name: "Scars of Mirrodin", code: "som" },
+    { name: "Zendikar", code: "zen" },
+    { name: "Alara", code: "ala" },
+    { name: "Shadowmoor", code: "shm" },
+    { name: "Lorwyn", code: "lrw" },
+    { name: "Time Spiral", code: "tsp" },
+    { name: "Ravnica", code: "rav" },
+    { name: "Kamigawa", code: "chk" },
+    { name: "Mirrodin", code: "mrd" },
+    { name: "Onslaught", code: "ons" },
+    { name: "Odyssey", code: "ody" },
+    { name: "Invasion", code: "inv" },
+    { name: "Masques", code: "mmq" },
+    { name: "Urza", code: "usg" },
+    { name: "Tempest", code: "tmp" },
+    { name: "Mirage", code: "mir" },
+    { name: "Ice Age", code: "ice" },
   ];
-  const [selectedSets, setSelectedSets] = useState<string[]>([]);
-  const [selectedBlocks, setSelectedBlocks] = useState<string[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -109,43 +119,42 @@ const Sets: React.FC = () => {
     setBlocksInput(event.target.value);
   };
 
-  const handleSetSelect = (set: string) => {
-    if (!selectedSets.includes(set)) {
-      setSelectedSets([...selectedSets, set]);
+  const handleSetSelect = (set: Set) => {
+    if (!selectedSets.some((s) => s.code === set.code)) {
+      setSelectedSets([...selectedSets, { name: set.name, code: set.code }]);
       setSetsInput(""); // Clear input after selection
       setShowDropdown(null); // Close dropdown after selection
     }
   };
 
-  const handleBlockSelect = (block: string) => {
-    if (!selectedBlocks.includes(block)) {
+  const handleBlockSelect = (block: { name: string; code: string }) => {
+    if (!selectedBlocks.some((b) => b.code === block.code)) {
       setSelectedBlocks([...selectedBlocks, block]);
       setBlocksInput(""); // Clear input after selection
       setShowDropdown(null); // Close dropdown after selection
     }
   };
 
-  const handleRemoveSet = (set: string) => {
-    setSelectedSets(selectedSets.filter((s) => s !== set));
+  const handleRemoveSet = (code: string) => {
+    setSelectedSets(selectedSets.filter((s) => s.code !== code));
   };
 
-  const handleRemoveBlock = (block: string) => {
-    setSelectedBlocks(selectedBlocks.filter((b) => b !== block));
+  const handleRemoveBlock = (code: string) => {
+    setSelectedBlocks(selectedBlocks.filter((b) => b.code !== code));
   };
 
   const filteredSets = (items: Set[]) =>
     items.filter(
       (set) =>
         set.name.toLowerCase().includes(setsInput.toLowerCase()) &&
-        !selectedSets.includes(set.name)
+        !selectedSets.some((s) => s.code === set.code)
     );
 
-  const filteredBlocks = (items: string[]) =>
-    items.filter(
-      (block) =>
-        block.toLowerCase().includes(blocksInput.toLowerCase()) &&
-        !selectedBlocks.includes(block)
-    );
+  const filteredBlocks = blocks.filter(
+    (block) =>
+      block.name.toLowerCase().includes(blocksInput.toLowerCase()) &&
+      !selectedBlocks.some((b) => b.code === block.code)
+  );
 
   const handleDropdownToggle = (dropdown: string) => {
     setShowDropdown((prev) => (prev === dropdown ? null : dropdown));
@@ -163,9 +172,9 @@ const Sets: React.FC = () => {
             {selectedSets.length > 0 && (
               <ul className="set-tags flex flex-wrap">
                 {selectedSets.map((set) => (
-                  <li key={set} className="set-tag flex items-center">
-                    <span className="set-tag-name">{set}</span>
-                    <CloseSvg onClick={() => handleRemoveSet(set)} />
+                  <li key={set.code} className="set-tag flex items-center">
+                    <span className="set-tag-name">{set.name}</span>
+                    <CloseSvg onClick={() => handleRemoveSet(set.code)} />
                   </li>
                 ))}
               </ul>
@@ -185,8 +194,8 @@ const Sets: React.FC = () => {
                       {filteredSets(sets).map((set) => (
                         <li
                           className="set flex items-center"
-                          key={set.name}
-                          onClick={() => handleSetSelect(set.name)}
+                          key={set.code} // Use set.code as the key
+                          onClick={() => handleSetSelect(set)}
                         >
                           <img
                             className="set-icon"
@@ -194,8 +203,8 @@ const Sets: React.FC = () => {
                             alt={set.name}
                           />
                           <span className="set-name">{`${
-                            set.name + " " + set.code.toUpperCase()
-                          }`}</span>
+                            set.name
+                          } (${set.code.toUpperCase()})`}</span>
                         </li>
                       ))}
                     </>
@@ -208,9 +217,9 @@ const Sets: React.FC = () => {
             {selectedBlocks.length > 0 && (
               <ul className="set-tags flex flex-wrap">
                 {selectedBlocks.map((block) => (
-                  <li key={block} className="set-tag flex items-center">
-                    <span className="set-tag-name">{block}</span>
-                    <CloseSvg onClick={() => handleRemoveBlock(block)} />
+                  <li key={block.code} className="set-tag flex items-center">
+                    <span className="set-tag-name">{block.name}</span>
+                    <CloseSvg onClick={() => handleRemoveBlock(block.code)} />
                   </li>
                 ))}
               </ul>
@@ -225,15 +234,15 @@ const Sets: React.FC = () => {
             {showDropdown === "blocks" && (
               <div className="dropdown block-dropdown">
                 <ul className="sets-list">
-                  {filteredBlocks(blocks).length > 0 && (
+                  {filteredBlocks.length > 0 && (
                     <>
-                      {filteredBlocks(blocks).map((block) => (
+                      {filteredBlocks.map((block) => (
                         <li
                           className="block"
-                          key={block}
+                          key={block.code}
                           onClick={() => handleBlockSelect(block)}
                         >
-                          {block}
+                          {block.name}
                         </li>
                       ))}
                     </>

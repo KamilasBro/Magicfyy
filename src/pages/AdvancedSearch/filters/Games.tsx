@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import GamesSvg from "../../../assets/images/icons/games.svg?react";
 
-const Games: React.FC = () => {
-  //if gamemode will be empty search btn will search default for paper
-  const [gameModes, setGameModes] = useState<string[]>(["paper"]);
+interface GamesProps {
+  gameModes: string[];
+  setGameModes: (modes: (prevGameModes: string[]) => string[]) => void;
+}
 
+const Games: React.FC<GamesProps> = ({ gameModes, setGameModes }) => {
   const handleGameModeChange = (selectedGameMode: string) => {
     setGameModes((prevGameModes) =>
       prevGameModes.includes(selectedGameMode)

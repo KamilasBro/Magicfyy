@@ -5,12 +5,16 @@ import CloseSvg from "../../../assets/images/icons/close.svg?react";
 import ArrowDownSvg from "../../../assets/images/icons/arrowDown.svg?react";
 
 interface formatsItem {
-  id: number;
   legality: string;
   format: string;
 }
 
-const Formats: React.FC = () => {
+interface FormatsProps {
+  formatsList: formatsItem[];
+  setFormatsList: React.Dispatch<React.SetStateAction<formatsItem[]>>;
+}
+
+const Formats: React.FC<FormatsProps> = ({ formatsList, setFormatsList }) => {
   const [showDropdown, setShowDropdown] = useState<string | null>(null);
   const [legality, setLegality] = useState<string>("Legal");
   const [format, setFormat] = useState<string>("Standard");
@@ -29,7 +33,6 @@ const Formats: React.FC = () => {
     "Oathbreaker",
     "Penny",
   ];
-  const [formatsList, setFormatList] = useState<formatsItem[]>([]);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const formatsDropdownRef = useRef<HTMLDivElement>(null);
@@ -63,11 +66,10 @@ const Formats: React.FC = () => {
   };
   const handleAddFormat = () => {
     const newFormat: formatsItem = {
-      id: Date.now(),
       legality,
       format,
     };
-    setFormatList((prev) => {
+    setFormatsList((prev) => {
       if (
         prev.some(
           (item) => item.legality === legality && item.format === format
@@ -79,8 +81,8 @@ const Formats: React.FC = () => {
     });
   };
 
-  const handleRemoveFormat = (id: number) => {
-    setFormatList((prev) => prev.filter((item) => item.id !== id));
+  const handleRemoveFormat = (index: number) => {
+    setFormatsList((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -92,13 +94,13 @@ const Formats: React.FC = () => {
         </label>
         <div className="input-wrap">
           <ul className="formats-list flex flex-wrap">
-            {formatsList.map(({ id, legality, format }) => (
+            {formatsList.map(({ legality, format }, index) => (
               <li
-                key={id}
+                key={index}
                 className={`flex items-center ${legality.toLowerCase()}`}
               >
                 {legality} in {format}
-                <CloseSvg onClick={() => handleRemoveFormat(id)} />
+                <CloseSvg onClick={() => handleRemoveFormat(index)} />
               </li>
             ))}
           </ul>

@@ -9,12 +9,20 @@ import GreenSvg from "../../../assets/images/colors/green.svg?react";
 import RedSvg from "../../../assets/images/colors/red.svg?react";
 import ArrowDownSvg from "../../../assets/images/icons/arrowDown.svg?react";
 
-const Colors: React.FC = () => {
-  const [selectedColors, setSelectedColors] = useState<string[]>([]);
+interface ColorsProps {
+  selectedColors: string[];
+  setSelectedColors: React.Dispatch<React.SetStateAction<string[]>>;
+  colorOption: string;
+  setColorOption: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const Colors: React.FC<ColorsProps> = ({
+  selectedColors,
+  setSelectedColors,
+  colorOption,
+  setColorOption,
+}) => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<string>(
-    "Exactly these colors"
-  );
   const dropdownRef = useRef<HTMLDivElement>(null);
   const colors = [
     { name: "white", Svg: WhiteSvg },
@@ -32,6 +40,11 @@ const Colors: React.FC = () => {
         ? prevColors.filter((c) => c !== color)
         : [...prevColors, color]
     );
+  };
+
+  const handleOptionClick = (option: string) => {
+    setColorOption(option);
+    setShowDropdown(false);
   };
 
   useEffect(() => {
@@ -69,33 +82,18 @@ const Colors: React.FC = () => {
               className="colors-input flex justify-between items-center"
               onClick={() => setShowDropdown(!showDropdown)}
             >
-              <span>{selectedOption}</span>
+              <span>{colorOption}</span>
               <ArrowDownSvg className={`arrow ${showDropdown && "active"}`} />
             </div>
             {showDropdown && (
               <ul className="dropdown">
-                <li
-                  onClick={(e) => {
-                    setSelectedOption(e.currentTarget.textContent || "");
-                    setShowDropdown(false);
-                  }}
-                >
+                <li onClick={() => handleOptionClick("Exactly these colors")}>
                   Exactly these colors
                 </li>
-                <li
-                  onClick={(e) => {
-                    setSelectedOption(e.currentTarget.textContent || "");
-                    setShowDropdown(false);
-                  }}
-                >
+                <li onClick={() => handleOptionClick("Including these colors")}>
                   Including these colors
                 </li>
-                <li
-                  onClick={(e) => {
-                    setSelectedOption(e.currentTarget.textContent || "");
-                    setShowDropdown(false);
-                  }}
-                >
+                <li onClick={() => handleOptionClick("At most these colors")}>
                   At most these colors
                 </li>
               </ul>
