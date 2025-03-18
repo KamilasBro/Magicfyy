@@ -142,7 +142,7 @@ const AdvancedSearch: React.FC = () => {
       rarityQuery ? `+${rarityQuery}` : ""
     }${flavorQuery ? `+${flavorQuery}` : ""}`;
 
-    const hasFilters = query.includes(":");
+    const hasFilters = query !== "q="; // Check if query contains any filters
     return hasFilters ? `${query}&lang:en&page=1` : `${query}lang:en&page=1`;
   };
 

@@ -3,7 +3,6 @@ import ColorsSvg from "../../../assets/images/icons/colors.svg?react";
 import BlackSvg from "../../../assets/images/colors/black.svg?react";
 import BlueSvg from "../../../assets/images/colors/blue.svg?react";
 import WhiteSvg from "../../../assets/images/colors/white.svg?react";
-import SnowSvg from "../../../assets/images/colors/snow.svg?react";
 import ColorlessSvg from "../../../assets/images/colors/colorless.svg?react";
 import GreenSvg from "../../../assets/images/colors/green.svg?react";
 import RedSvg from "../../../assets/images/colors/red.svg?react";
@@ -25,27 +24,35 @@ const Colors: React.FC<ColorsProps> = ({
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const colors = [
-    { name: "white", Svg: WhiteSvg },
-    { name: "blue", Svg: BlueSvg },
-    { name: "black", Svg: BlackSvg },
-    { name: "red", Svg: RedSvg },
-    { name: "green", Svg: GreenSvg },
-    { name: "snow", Svg: SnowSvg },
-    { name: "colorless", Svg: ColorlessSvg },
+    { name: "W", Svg: WhiteSvg },
+    { name: "U", Svg: BlueSvg },
+    { name: "B", Svg: BlackSvg },
+    { name: "R", Svg: RedSvg },
+    { name: "G", Svg: GreenSvg },
+    { name: "C", Svg: ColorlessSvg },
   ];
 
+
   const handleColorClick = (color: string) => {
-    setSelectedColors((prevColors) =>
-      prevColors.includes(color)
-        ? prevColors.filter((c) => c !== color)
-        : [...prevColors, color]
-    );
+    setSelectedColors((prevColors) => {
+      if (color === "C") {
+        // If "colorless" is clicked, deactivate all other colors
+        return prevColors.includes("C") ? [] : ["C"];
+      } else {
+        // If any other color is clicked, deactivate "colorless" if active
+        const updatedColors = prevColors.includes(color)
+          ? prevColors.filter((c) => c !== color)
+          : [...prevColors.filter((c) => c !== "C"), color];
+        return updatedColors;
+      }
+    });
   };
 
   const handleOptionClick = (option: string) => {
     setColorOption(option);
     setShowDropdown(false);
   };
+
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
