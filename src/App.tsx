@@ -30,7 +30,7 @@ const App: React.FC = () => {
             <Route path="/sets/:setCode" element={<ChosenSet />} />
             <Route path="/card/:set/:code" element={<Card />} />
             <Route path="/guess" element={<GuessTheCard />} />
-            <Route path="/*" element={<NotFound message="Page" />} />
+            <Route path="/*" element={<NotFound/>} />
           </Routes>
         </main>
       </div>

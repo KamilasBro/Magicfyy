@@ -1,0 +1,194 @@
+@import "../../assets/scss/partials/colors";
+
+.Guess-the-card h1 {
+  font-size: 48px;
+  font-weight: 600;
+}
+.Guess-the-card h3 {
+  font-size: 28px;
+  font-weight: 600;
+  color: $orange;
+  margin-bottom: 8px;
+  margin-left: 15px;
+}
+.Guess-the-card .choose-set {
+  background-color: $transparentBlack;
+  border-radius: 10px;
+  padding: 50px;
+  gap: 25px;
+  width: 850px;
+  margin-top: 50px;
+}
+.Guess-the-card .choose-set h2 {
+  font-size: 42px;
+  font-weight: 500;
+}
+.Guess-the-card .choose-set .set-input {
+  width: 100%;
+  font-size: 20px;
+  font-weight: 500;
+  padding: 15px;
+  background-color: $black;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.Guess-the-card .choose-set .sets-list {
+  width: 100%;
+  height: 350px;
+  overflow-y: auto;
+  background-color: $transparentBlack;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.Guess-the-card .choose-set .sets-list li {
+  font-size: 16px;
+  font-weight: 500;
+  padding-block: 10px;
+  padding-inline: 15px;
+  cursor: pointer;
+  transition: 300ms;
+  gap: 15px;
+}
+.Guess-the-card .choose-set .sets-list li img {
+  width: 30px;
+  height: 30px;
+  filter: invert(35%) sepia(100%) saturate(7500%) hue-rotate(30deg);
+}
+.Guess-the-card .choose-set .sets-list li:hover {
+  color: $orange;
+}
+.Guess-the-card .choose-set .btn-wrap {
+  gap: 25px;
+}
+.Guess-the-card .choose-set button {
+  font-size: 16px;
+  font-weight: 400;
+  background-color: $orange;
+  padding: 10px;
+  transition: 300ms;
+}
+.Guess-the-card .choose-set button:hover {
+  background-color: $red;
+}
+.Guess-the-card .choose-set .year-input {
+  background-color: $black;
+  border-radius: 10px;
+}
+.Guess-the-card .choose-set .year-input input {
+  padding-block: 10px;
+  padding-inline: 20px;
+  background-color: transparent;
+}
+@-webkit-keyframes shine {
+  from {
+    -webkit-mask-position: 150%;
+    mask-position: 150%;
+  }
+
+  to {
+    -webkit-mask-position: -50%;
+    mask-position: -50%;
+  }
+}
+
+@keyframes shine {
+  from {
+    mask-position: 150%;
+  }
+
+  to {
+    mask-position: -50%;
+  }
+}
+.Guess-the-card .choose-set .set-placeholders {
+  background-color: $transparentBlack;
+  border-radius: 10px;
+  -webkit-mask-image: linear-gradient(
+    -75deg,
+    rgba(255, 255, 255, 0.6) 30%,
+    #fff 50%,
+    rgba(255, 255, 255, 0.6) 70%
+  ); // White mask
+  -webkit-mask-size: 200%;
+  mask-image: linear-gradient(
+    -75deg,
+    rgba(255, 255, 255, 0.6) 30%,
+    #fff 50%,
+    rgba(255, 255, 255, 0.6) 70%
+  );
+  mask-size: 200%;
+  animation: shine 2s infinite;
+}
+.Guess-the-card .choose-set .set-placeholder {
+  gap: 15px;
+  padding-block: 10px;
+  padding-inline: 15px;
+}
+.Guess-the-card .choose-set .set-placeholder span {
+  height: 30px;
+  width: 30px;
+  border-radius: 10px;
+  background-color: $gray;
+}
+.Guess-the-card .choose-set .set-placeholder div {
+  height: 25px;
+  width: 350px;
+  border-radius: 10px;
+  background-color: $gray;
+}
+
+.Guess-the-card .set-name {
+  gap: 15px;
+  margin-block: 25px;
+}
+.Guess-the-card .set-name img {
+  width: 40px;
+  filter: invert(35%) sepia(100%) saturate(7500%) hue-rotate(30deg);
+}
+.Guess-the-card .set-name h2 {
+  font-size: 28px;
+  font-weight: 500;
+}
+.Guess-the-card .set-name button {
+  font-size: 16px;
+  background-color: $orange;
+  padding-inline: 20px;
+  transition: 300ms;
+}
+.Guess-the-card .set-name button:hover {
+  background-color: $red;
+}
+.Guess-the-card .search-input {
+  margin-block: 25px;
+}
+.Guess-the-card .input-wrap {
+  background-color: $transparentBlack;
+  border-radius: 10px;
+  width: 700px;
+}
+.Guess-the-card .input-wrap input {
+  background-color: transparent;
+  font-size: 20px;
+  padding: 15px;
+  width: 100%;
+}
+.Guess-the-card .input-wrap .send-wrap {
+  cursor: pointer;
+  background-color: $orange;
+  border-radius: 0px 10px 10px 0px;
+  padding: 16px;
+  transition: 300ms;
+}
+.Guess-the-card .input-wrap .send-wrap:hover {
+  background-color: $red;
+}
+.Guess-the-card .search-input .dropdown {
+  background-color: $transparentBlack;
+  border-radius: 10px;
+  width: 100%;
+  height: 300px;
+  padding: 15px;
+}
+.Guess-the-card .search-input .dropdown li {
+  color: $orange;
+}

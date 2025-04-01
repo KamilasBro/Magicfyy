@@ -48,6 +48,10 @@ main {
   margin-top: 175px;
   width: 1520px;
 }
+input {
+  border: none;
+  outline: none;
+}
 input::placeholder {
   color: $white;
 }

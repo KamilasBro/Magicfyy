@@ -148,7 +148,7 @@ const Searched: React.FC = () => {
             ? `${handleCardCounter(1)} - ${handleCardCounter(2)} of ${
                 searchedCards.total_cards
               } cards`
-            : `Searching for cards`}
+            : `Searching`}
         </div>
         <ul className={"counter-buttons-wrap flex"}>
           <button
@@ -198,7 +198,7 @@ const Searched: React.FC = () => {
   return (
     <section className="Searched">
       {cardNotFound ? (
-        <NotFound message="Cards" />
+        <NotFound />
       ) : (
         <>
           <GoTopArrow />
@@ -251,7 +251,7 @@ const Searched: React.FC = () => {
             </>
           )}
 
-          {returnCardsCounter()}
+          {searchedCards.data.length > 0 && returnCardsCounter()}
         </>
       )}
     </section>

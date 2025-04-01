@@ -75,4 +75,5 @@ export interface Set {
   icon_svg_uri: string;
   code: string;
   uri: string;
+  released_at?: string;
 }

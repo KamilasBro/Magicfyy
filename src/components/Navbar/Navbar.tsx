@@ -1,5 +1,5 @@
 import { useState } from "react";
-import logo from "../../assets/images/logo/logo.webp";
+import LogoSvg from "../../assets/images/logo/logo.svg?react"
 import { Link } from "react-router-dom";
 import "./navbar.scss";
 const Navbar: React.FC = () => {
@@ -21,7 +21,7 @@ const Navbar: React.FC = () => {
     >
       <div className="inner-nav flex items-center justify-between">
         <Link to={"/"}>
-          <img src={logo} alt="logo" />
+          <LogoSvg/>
         </Link>
         <ul className="nav-links flex ">
           <li className="nav-link">

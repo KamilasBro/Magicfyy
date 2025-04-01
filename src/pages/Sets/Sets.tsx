@@ -3,7 +3,6 @@ import SearchSvg from "../../assets/images/icons/search.svg?react";
 import GoTopArrow from "../../components/GoTopArrow/GoTopArrow";
 import { Link } from "react-router-dom";
 import { Set } from "../../interfaces/CardsInterface";
-import FormatString from "../../utils/FormatString";
 import "./sets.scss";
 
 const Sets: React.FC = () => {
@@ -43,7 +42,7 @@ const Sets: React.FC = () => {
             disabled={!isFetched}
             placeholder='Any set name ex. "dominaria"'
             onChange={(event) => {
-              setSearchedName(FormatString(event.currentTarget.value));
+              setSearchedName(event.currentTarget.value);
             }}
           />
         </div>
