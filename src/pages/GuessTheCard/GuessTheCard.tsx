@@ -19,6 +19,8 @@ const GuessTheCard: React.FC = () => {
   });
   const [dataFromSet, setDataFromSet] = useState<CardData[]>([]);
   const [randomCard, setRandomCard] = useState<CardData>();
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [guesses, setGuesses] = useState<string[]>([]);
   useEffect(() => {
     const fetchCards = async () => {
       try {
@@ -92,14 +94,33 @@ const GuessTheCard: React.FC = () => {
             <div className="search-input flex justify-center">
               <div>
                 <div className="input-wrap flex">
-                  <input placeholder="Any Card Name" />
+                  <input
+                    placeholder="Any Card Name"
+                    onChange={(event) => {
+                      setSearchValue(event.target.value);
+                    }}
+                  />
                   <div className="send-wrap flex justify-center items-center">
                     <SendSvg />
                   </div>
                 </div>
-                <ul className="dropdown">
-                  <li></li>
-                </ul>
+                {searchValue && (
+                  <ul className="dropdown">
+                    {dataFromSet
+                      .filter((card) => {
+                        return card.name
+                          .toLowerCase()
+                          .includes(searchValue.toLowerCase());
+                      })
+                      .map((card) => {
+                        return (
+                          <li key={card.id} className="flex">
+                            <span className="card-name">{card.name}</span>
+                          </li>
+                        );
+                      })}
+                  </ul>
+                )}
               </div>
             </div>
           </div>

@@ -160,6 +160,7 @@
 }
 .Guess-the-card .search-input {
   margin-block: 25px;
+  position: relative;
 }
 .Guess-the-card .input-wrap {
   background-color: $transparentBlack;
@@ -183,12 +184,19 @@
   background-color: $red;
 }
 .Guess-the-card .search-input .dropdown {
-  background-color: $transparentBlack;
-  border-radius: 10px;
-  width: 100%;
-  height: 300px;
+  @extend .input-wrap;
+  position: absolute;
+  z-index: 5;
+  max-height: 300px;
   padding: 15px;
+  overflow-y: auto;
 }
 .Guess-the-card .search-input .dropdown li {
+  color: $white;
+  cursor: pointer;
+  transition: 300ms;
+  gap: 15px;
+}
+.Guess-the-card .search-input .dropdown li:hover {
   color: $orange;
 }
