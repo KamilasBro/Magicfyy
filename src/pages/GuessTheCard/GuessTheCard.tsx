@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { CardData } from "../../interfaces/CardsInterface";
 import ChooseSet from "./ChooseSet";
 import SendSvg from "../../assets/images/icons/send.svg?react";
-
 import "./guessTheCard.scss";
 
 const GuessTheCard: React.FC = () => {
@@ -21,6 +20,9 @@ const GuessTheCard: React.FC = () => {
   const [randomCard, setRandomCard] = useState<CardData>();
   const [searchValue, setSearchValue] = useState<string>("");
   const [guesses, setGuesses] = useState<string[]>([]);
+  const [showPopup, setShowPopup] = useState<{ option: string; show: boolean }>(
+    { option: "", show: false }
+  );
   useEffect(() => {
     const fetchCards = async () => {
       try {
@@ -73,6 +75,70 @@ const GuessTheCard: React.FC = () => {
     }
   }, [dataFromSet]);
 
+  function renderPopup() {
+    return (
+      <div className="popup-wrap flex justify-center items-center">
+        {showPopup.option === "reset" ? (
+          <div className="popup popup-reset">
+            <h2>Do you want to reset set?</h2>
+            <span className="reset-btns-wrap flex justify-center">
+              <button>Yes</button>
+              <button
+                onClick={() => {
+                  setShowPopup({ option: "", show: false });
+                }}
+              >
+                No
+              </button>
+            </span>
+          </div>
+        ) : showPopup.option === "hints" ? (
+          <div className="popup popup-hints">
+            <h2>Hints</h2>
+            <ul>
+              <li>
+                <p>
+                  Formats Legality: <span>Hint unlocked in x guesses</span>
+                  <span></span>
+                </p>
+                <div></div>
+              </li>
+              <li>
+                <p>
+                  Game Changer: <span>Hint unlocked in x guesses</span>
+                  <span></span>
+                </p>
+                <div></div>
+              </li>
+              <li>
+                <p>
+                  Oracle Text: <span>Hint unlocked in x guesses</span>
+                  <span></span>
+                </p>
+                <div></div>
+              </li>
+              <li>
+                <p>
+                  First Letter: <span>Hint unlocked in x guesses</span>
+                  <span></span>
+                </p>
+                <div></div>
+              </li>
+              <li>
+                <p>
+                  Artwork: <span>Hint unlocked in x guesses</span>
+                  <span></span>
+                </p>
+                <div></div>
+              </li>
+            </ul>
+          </div>
+        ) : (
+          <></>
+        )}
+      </div>
+    );
+  }
   console.log(dataFromSet);
   console.log(randomCard);
   return (
@@ -89,7 +155,6 @@ const GuessTheCard: React.FC = () => {
             <span className="set-name flex justify-center items-center">
               <img src={chosenSet.icon_svg_uri} alt="set-icon" />
               <h2>{chosenSet.name}</h2>
-              <button className="reset-btn">Reset Set</button>
             </span>
             <div className="search-input flex justify-center">
               <div>
@@ -123,9 +188,27 @@ const GuessTheCard: React.FC = () => {
                 )}
               </div>
             </div>
+            <div className="panel flex justify-center">
+              <div className="btns-wrap flex  items-center">
+                <button
+                  onClick={() => setShowPopup({ option: "reset", show: true })}
+                >
+                  Reset Set
+                </button>
+                <button
+                  onClick={() => setShowPopup({ option: "hints", show: true })}
+                >
+                  Hints
+                </button>
+                <div className="guesses-counter">
+                  Your guesses: <span>X</span>
+                </div>
+              </div>
+            </div>
           </div>
         </>
       )}
+      {showPopup.show && renderPopup()}
     </section>
   );
 };

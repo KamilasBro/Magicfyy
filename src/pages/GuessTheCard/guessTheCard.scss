@@ -149,15 +149,6 @@
   font-size: 28px;
   font-weight: 500;
 }
-.Guess-the-card .set-name button {
-  font-size: 16px;
-  background-color: $orange;
-  padding-inline: 20px;
-  transition: 300ms;
-}
-.Guess-the-card .set-name button:hover {
-  background-color: $red;
-}
 .Guess-the-card .search-input {
   margin-block: 25px;
   position: relative;
@@ -199,4 +190,57 @@
 }
 .Guess-the-card .search-input .dropdown li:hover {
   color: $orange;
+}
+.Guess-the-card .btns-wrap {
+  width: 700px;
+  gap: 15px;
+}
+.Guess-the-card .panel button {
+  font-size: 16px;
+  background-color: $orange;
+  padding-inline: 20px;
+  padding-block: 10px;
+  font-weight: 500;
+}
+.Guess-the-card .panel button:hover {
+  background-color: $red;
+}
+.Guess-the-card .panel .guesses-counter {
+  font-size: 24px;
+  font-weight: 500;
+}
+.Guess-the-card .panel .guesses-counter span {
+  color: $orange;
+}
+
+.Guess-the-card .popup-wrap {
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  z-index: 10;
+  top: 0;
+  left: 0;
+  background-color: $transparentBlack;
+}
+.Guess-the-card .popup-wrap .popup {
+  font-size: 28px;
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  padding: 50px;
+  background-color: $black;
+  border-radius: 10px;
+}
+.Guess-the-card .popup-wrap .popup .reset-btns-wrap {
+  gap: 50px;
+}
+.Guess-the-card .popup-wrap button {
+  font-size: 20px;
+  font-weight: 500;
+  background-color: $orange;
+  width: 75px;
+}
+.Guess-the-card .popup-wrap button:hover {
+  background-color: $red;
 }
