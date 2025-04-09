@@ -244,3 +244,53 @@
 .Guess-the-card .popup-wrap button:hover {
   background-color: $red;
 }
+
+.Guess-the-card .game {
+  margin-top: 25px;
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: repeat(2, auto);
+}
+.Guess-the-card .game ul {
+  display: flex;
+  justify-content: center;
+}
+.Guess-the-card .game li {
+  width: 100px;
+  height: 100px;
+}
+.Guess-the-card .game .categories {
+  grid-area: 1 / 1 / 2 / 2;
+  gap: 25px;
+}
+.Guess-the-card .game .category {
+  background-color: $transparentBlack;
+  font-size: 18px;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.Guess-the-card .game .guesses {
+  grid-area: 2 / 1 / 3 / 2;
+  gap: 25px;
+  margin-top: 10px;
+}
+.Guess-the-card .game .guess {
+  gap: 25px;
+}
+.Guess-the-card .game .guess li {
+  border: 2px solid $white;
+  border-radius: 10px;
+  box-sizing: border-box;
+  background-color: $transparentBlack;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}

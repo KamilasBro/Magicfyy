@@ -23,6 +23,15 @@ const GuessTheCard: React.FC = () => {
   const [showPopup, setShowPopup] = useState<{ option: string; show: boolean }>(
     { option: "", show: false }
   );
+  const gameCategories = [
+    "Card Image",
+    "Type",
+    "Color",
+    "Base Mana Cost",
+    "Rarity",
+    "Art Author",
+    "Super Type",
+  ];
   useEffect(() => {
     const fetchCards = async () => {
       try {
@@ -203,6 +212,42 @@ const GuessTheCard: React.FC = () => {
                 <div className="guesses-counter">
                   Your guesses: <span>X</span>
                 </div>
+              </div>
+            </div>
+            <div className="game">
+              <ul className="categories">
+                {gameCategories.map((category, index) => {
+                  return (
+                    <li key={index} className="category">
+                      <span>{category}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+              <div className="guesses flex flex-col">
+                <ul className="guess">
+                  <li>
+                    <img src={randomCard?.image_uris?.art_crop} />
+                  </li>
+                  <li>creature</li>
+                  <li>creature</li>
+                  <li>creature</li>
+                  <li>creature</li>
+                  <li>creature</li>
+                  <li>creature</li>
+                </ul>
+                <ul className="guess">
+                  <li>
+                    <img src={randomCard?.image_uris?.art_crop} />
+                  </li>
+                  <li>creatured</li>
+                  <li>creature</li>
+                  <li>creature</li>
+                  <li>creature</li>
+                  <li>creature</li>
+                  <li>creature</li>
+                </ul>
+                
               </div>
             </div>
           </div>
