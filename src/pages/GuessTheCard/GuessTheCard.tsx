@@ -19,7 +19,7 @@ const GuessTheCard: React.FC = () => {
   const [dataFromSet, setDataFromSet] = useState<CardData[]>([]);
   const [randomCard, setRandomCard] = useState<CardData>();
   const [searchValue, setSearchValue] = useState<string>("");
-  const [guesses, setGuesses] = useState<string[]>([]);
+  const [guesses, setGuesses] = useState<CardData[]>([]);
   const [showPopup, setShowPopup] = useState<{ option: string; show: boolean }>(
     { option: "", show: false }
   );
@@ -169,6 +169,7 @@ const GuessTheCard: React.FC = () => {
               <div>
                 <div className="input-wrap flex">
                   <input
+                    value={searchValue}
                     placeholder="Any Card Name"
                     onChange={(event) => {
                       setSearchValue(event.target.value);
@@ -181,14 +182,23 @@ const GuessTheCard: React.FC = () => {
                 {searchValue && (
                   <ul className="dropdown">
                     {dataFromSet
-                      .filter((card) => {
-                        return card.name
-                          .toLowerCase()
-                          .includes(searchValue.toLowerCase());
+                      .filter((card, index) => {
+                        // Sprawdź, czy karta nie jest już w zgadywanych i czy pasuje do wartości wyszukiwania
+                        return (
+                          !guesses.some((guess) => guess.name === card.name) && // Sprawdź, czy karta nie jest już zgadywana
+                          card.name.toLowerCase().includes(searchValue.toLowerCase()) // Sprawdź, czy nazwa karty pasuje do wyszukiwania
+                        );
                       })
                       .map((card) => {
                         return (
-                          <li key={card.id} className="flex">
+                          <li
+                            key={card.id}
+                            className="flex"
+                            onClick={() => {
+                              setGuesses((prevState) => [...prevState, card]);
+                              setSearchValue("");
+                            }}
+                          >
                             <span className="card-name">{card.name}</span>
                           </li>
                         );
@@ -225,29 +235,22 @@ const GuessTheCard: React.FC = () => {
                 })}
               </ul>
               <div className="guesses flex flex-col">
-                <ul className="guess">
-                  <li>
-                    <img src={randomCard?.image_uris?.art_crop} />
-                  </li>
-                  <li>creature</li>
-                  <li>creature</li>
-                  <li>creature</li>
-                  <li>creature</li>
-                  <li>creature</li>
-                  <li>creature</li>
-                </ul>
-                <ul className="guess">
-                  <li>
-                    <img src={randomCard?.image_uris?.art_crop} />
-                  </li>
-                  <li>creatured</li>
-                  <li>creature</li>
-                  <li>creature</li>
-                  <li>creature</li>
-                  <li>creature</li>
-                  <li>creature</li>
-                </ul>
-                
+                {guesses.map((guess, index) => {
+                  return (
+                    <ul className="guess" key={guess.id + index}>
+                      <li>
+                        <img src={guess?.image_uris?.art_crop} />
+                      </li>
+                      <li>{guess.type_line}</li>
+                      <li>{guess.colors}</li>
+                      <li>{guess.cmc}</li>
+                      <li>{guess.rarity}</li>
+                      <li>{guess.artist}</li>
+                      <li>{guess.type_line}</li>
+                    </ul>
+                  );
+                })}
+
               </div>
             </div>
           </div>

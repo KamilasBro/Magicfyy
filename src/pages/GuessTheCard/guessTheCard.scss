@@ -4,6 +4,7 @@
   font-size: 48px;
   font-weight: 600;
 }
+
 .Guess-the-card h3 {
   font-size: 28px;
   font-weight: 600;
@@ -11,6 +12,7 @@
   margin-bottom: 8px;
   margin-left: 15px;
 }
+
 .Guess-the-card .choose-set {
   background-color: $transparentBlack;
   border-radius: 10px;
@@ -19,10 +21,12 @@
   width: 850px;
   margin-top: 50px;
 }
+
 .Guess-the-card .choose-set h2 {
   font-size: 42px;
   font-weight: 500;
 }
+
 .Guess-the-card .choose-set .set-input {
   width: 100%;
   font-size: 20px;
@@ -32,6 +36,7 @@
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
+
 .Guess-the-card .choose-set .sets-list {
   width: 100%;
   height: 350px;
@@ -40,6 +45,7 @@
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
+
 .Guess-the-card .choose-set .sets-list li {
   font-size: 16px;
   font-weight: 500;
@@ -49,17 +55,21 @@
   transition: 300ms;
   gap: 15px;
 }
+
 .Guess-the-card .choose-set .sets-list li img {
   width: 30px;
   height: 30px;
   filter: invert(35%) sepia(100%) saturate(7500%) hue-rotate(30deg);
 }
+
 .Guess-the-card .choose-set .sets-list li:hover {
   color: $orange;
 }
+
 .Guess-the-card .choose-set .btn-wrap {
   gap: 25px;
 }
+
 .Guess-the-card .choose-set button {
   font-size: 16px;
   font-weight: 400;
@@ -67,18 +77,22 @@
   padding: 10px;
   transition: 300ms;
 }
+
 .Guess-the-card .choose-set button:hover {
   background-color: $red;
 }
+
 .Guess-the-card .choose-set .year-input {
   background-color: $black;
   border-radius: 10px;
 }
+
 .Guess-the-card .choose-set .year-input input {
   padding-block: 10px;
   padding-inline: 20px;
   background-color: transparent;
 }
+
 @-webkit-keyframes shine {
   from {
     -webkit-mask-position: 150%;
@@ -100,36 +114,36 @@
     mask-position: -50%;
   }
 }
+
 .Guess-the-card .choose-set .set-placeholders {
   background-color: $transparentBlack;
   border-radius: 10px;
-  -webkit-mask-image: linear-gradient(
-    -75deg,
-    rgba(255, 255, 255, 0.6) 30%,
-    #fff 50%,
-    rgba(255, 255, 255, 0.6) 70%
-  ); // White mask
+  -webkit-mask-image: linear-gradient(-75deg,
+      rgba(255, 255, 255, 0.6) 30%,
+      #fff 50%,
+      rgba(255, 255, 255, 0.6) 70%); // White mask
   -webkit-mask-size: 200%;
-  mask-image: linear-gradient(
-    -75deg,
-    rgba(255, 255, 255, 0.6) 30%,
-    #fff 50%,
-    rgba(255, 255, 255, 0.6) 70%
-  );
+  mask-image: linear-gradient(-75deg,
+      rgba(255, 255, 255, 0.6) 30%,
+      #fff 50%,
+      rgba(255, 255, 255, 0.6) 70%);
   mask-size: 200%;
   animation: shine 2s infinite;
 }
+
 .Guess-the-card .choose-set .set-placeholder {
   gap: 15px;
   padding-block: 10px;
   padding-inline: 15px;
 }
+
 .Guess-the-card .choose-set .set-placeholder span {
   height: 30px;
   width: 30px;
   border-radius: 10px;
   background-color: $gray;
 }
+
 .Guess-the-card .choose-set .set-placeholder div {
   height: 25px;
   width: 350px;
@@ -141,29 +155,35 @@
   gap: 15px;
   margin-block: 25px;
 }
+
 .Guess-the-card .set-name img {
   width: 40px;
   filter: invert(35%) sepia(100%) saturate(7500%) hue-rotate(30deg);
 }
+
 .Guess-the-card .set-name h2 {
   font-size: 28px;
   font-weight: 500;
 }
+
 .Guess-the-card .search-input {
   margin-block: 25px;
   position: relative;
 }
+
 .Guess-the-card .input-wrap {
   background-color: $transparentBlack;
   border-radius: 10px;
   width: 700px;
 }
+
 .Guess-the-card .input-wrap input {
   background-color: transparent;
   font-size: 20px;
   padding: 15px;
   width: 100%;
 }
+
 .Guess-the-card .input-wrap .send-wrap {
   cursor: pointer;
   background-color: $orange;
@@ -171,9 +191,11 @@
   padding: 16px;
   transition: 300ms;
 }
+
 .Guess-the-card .input-wrap .send-wrap:hover {
   background-color: $red;
 }
+
 .Guess-the-card .search-input .dropdown {
   @extend .input-wrap;
   position: absolute;
@@ -182,19 +204,23 @@
   padding: 15px;
   overflow-y: auto;
 }
+
 .Guess-the-card .search-input .dropdown li {
   color: $white;
   cursor: pointer;
   transition: 300ms;
   gap: 15px;
 }
+
 .Guess-the-card .search-input .dropdown li:hover {
   color: $orange;
 }
+
 .Guess-the-card .btns-wrap {
   width: 700px;
   gap: 15px;
 }
+
 .Guess-the-card .panel button {
   font-size: 16px;
   background-color: $orange;
@@ -202,13 +228,16 @@
   padding-block: 10px;
   font-weight: 500;
 }
+
 .Guess-the-card .panel button:hover {
   background-color: $red;
 }
+
 .Guess-the-card .panel .guesses-counter {
   font-size: 24px;
   font-weight: 500;
 }
+
 .Guess-the-card .panel .guesses-counter span {
   color: $orange;
 }
@@ -222,6 +251,7 @@
   left: 0;
   background-color: $transparentBlack;
 }
+
 .Guess-the-card .popup-wrap .popup {
   font-size: 28px;
   font-weight: 500;
@@ -232,15 +262,18 @@
   background-color: $black;
   border-radius: 10px;
 }
+
 .Guess-the-card .popup-wrap .popup .reset-btns-wrap {
   gap: 50px;
 }
+
 .Guess-the-card .popup-wrap button {
   font-size: 20px;
   font-weight: 500;
   background-color: $orange;
   width: 75px;
 }
+
 .Guess-the-card .popup-wrap button:hover {
   background-color: $red;
 }
@@ -251,18 +284,22 @@
   grid-template-columns: auto;
   grid-template-rows: repeat(2, auto);
 }
+
 .Guess-the-card .game ul {
   display: flex;
   justify-content: center;
 }
+
 .Guess-the-card .game li {
   width: 100px;
   height: 100px;
 }
+
 .Guess-the-card .game .categories {
   grid-area: 1 / 1 / 2 / 2;
   gap: 25px;
 }
+
 .Guess-the-card .game .category {
   background-color: $transparentBlack;
   font-size: 18px;
@@ -274,21 +311,29 @@
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
+
 .Guess-the-card .game .guesses {
   grid-area: 2 / 1 / 3 / 2;
   gap: 25px;
   margin-top: 10px;
 }
+
 .Guess-the-card .game .guess {
   gap: 25px;
 }
+.Guess-the-card .game .guess img{
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+}
+
 .Guess-the-card .game .guess li {
   border: 2px solid $white;
   border-radius: 10px;
   box-sizing: border-box;
   background-color: $transparentBlack;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 400;
   display: flex;
   justify-content: center;
   align-items: center;
