@@ -111,27 +111,28 @@ const ChooseSet: React.FC<setChosenSetInterface> = ({ setChosenSet }) => {
             className="year-input"
             onSubmit={(event) => {
               event.preventDefault();
-              const inputYear =
-                event.currentTarget.querySelector("input")?.value;
+              const inputYear = event.currentTarget.querySelector("input")?.value;
               if (!inputYear) {
                 return;
               }
-              // Filtruj zestawy na podstawie roku wydania
+
+              // Filter sets based on the release year
               const filteredSets = sets.filter((set) =>
                 set.released_at?.startsWith(inputYear)
               );
 
               if (filteredSets.length > 0) {
-                // Wybierz losowy zestaw z przefiltrowanej listy
-                const randomNumber = Math.floor(
-                  Math.random() * filteredSets.length
-                );
-                setChosenSet(() => ({
-                  setCode: filteredSets[randomNumber].code,
+                // Choose a random set from the filtered list
+                const randomNumber = Math.floor(Math.random() * filteredSets.length);
+                const chosenSet = filteredSets[randomNumber];
+
+                // Update the state with the chosen set
+                setChosenSet({
+                  setCode: chosenSet.code,
                   isChosen: true,
-                  icon_svg_uri: sets[randomNumber].icon_svg_uri,
-                  name: filteredSets[randomNumber].name,
-                }));
+                  icon_svg_uri: chosenSet.icon_svg_uri,
+                  name: chosenSet.name,
+                });
               } else {
                 alert("No sets found for the selected year.");
               }

@@ -253,6 +253,7 @@
 }
 
 .Guess-the-card .popup-wrap .popup {
+  position: relative;
   font-size: 28px;
   font-weight: 500;
   display: flex;
@@ -261,6 +262,23 @@
   padding: 50px;
   background-color: $black;
   border-radius: 10px;
+}
+
+.Guess-the-card .popup-wrap .popup-hints h2 {
+  font-size: 38px;
+}
+
+.Guess-the-card .popup-wrap .popup svg {
+  width: 35px;
+  height: 35px;
+  right: 25px;
+  top: 25px;
+  cursor: pointer;
+  position: absolute;
+}
+
+.Guess-the-card .popup-wrap .popup svg path {
+  stroke-width: 6px;
 }
 
 .Guess-the-card .popup-wrap .popup .reset-btns-wrap {
@@ -302,7 +320,8 @@
 
 .Guess-the-card .game .category {
   background-color: $transparentBlack;
-  font-size: 18px;
+  font-size: 16px;
+  padding: 5px;
   font-weight: 500;
   display: flex;
   justify-content: center;
@@ -316,26 +335,36 @@
   grid-area: 2 / 1 / 3 / 2;
   gap: 25px;
   margin-top: 10px;
+  flex-direction: column-reverse;
 }
 
 .Guess-the-card .game .guess {
   gap: 25px;
 }
-.Guess-the-card .game .guess img{
+
+.Guess-the-card .game .guess img {
   height: 100%;
   width: 100%;
+  object-fit: cover;
   border-radius: 10px;
 }
 
 .Guess-the-card .game .guess li {
-  border: 2px solid $white;
   border-radius: 10px;
   box-sizing: border-box;
   background-color: $transparentBlack;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 400;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
+}
+
+.Guess-the-card .game .guess li.correct {
+  background-color: $green;
+}
+
+.Guess-the-card .game .guess li.partial {
+  background-color: $yellow;
 }
