@@ -243,9 +243,9 @@
 }
 
 .Guess-the-card .popup-wrap {
-  position: absolute;
+  position: fixed;
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   z-index: 10;
   top: 0;
   left: 0;
@@ -254,21 +254,52 @@
 
 .Guess-the-card .popup-wrap .popup {
   position: relative;
-  font-size: 28px;
   font-weight: 500;
   display: flex;
   flex-direction: column;
-  gap: 50px;
+  gap: 25px;
   padding: 50px;
   background-color: $black;
   border-radius: 10px;
+  overflow: auto;
+  -webkit-user-select: none; // Wyłącza zaznaczanie tekstu na Webkit (Chrome, Safari, mobile)
+  user-select: none; // Wyłącza zaznaczanie tekstu na wszystkich przeglądarkach
+  -webkit-tap-highlight-color: transparent; // Usuwa tap highlight na urządzeniach mobilnych
+
+}
+
+.Guess-the-card .popup-wrap .popup-reset h2 {
+  font-size: 28px;
+}
+
+.Guess-the-card .popup-wrap .popup-hints {
+  width: 800px;
+  height: 650px;
+}
+
+
+.Guess-the-card .popup-wrap .popup-hints ul {
+  font-size: 38px;
+  overflow: auto;
+  gap: 25px;
 }
 
 .Guess-the-card .popup-wrap .popup-hints h2 {
   font-size: 38px;
+  color: $orange;
 }
 
-.Guess-the-card .popup-wrap .popup svg {
+.Guess-the-card .popup-wrap .popup-hints p {
+  color: $white;
+  font-size: 24px;
+}
+
+.Guess-the-card .popup-wrap .popup-hints p .hint-counter {
+  color: $gray;
+  font-size: 20px;
+}
+
+.Guess-the-card .popup-wrap .popup .close-icon {
   width: 35px;
   height: 35px;
   right: 25px;
@@ -277,7 +308,14 @@
   position: absolute;
 }
 
-.Guess-the-card .popup-wrap .popup svg path {
+.Guess-the-card .popup-wrap .popup .arrow-icon {
+  width: 20px;
+  height: 14px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.Guess-the-card .popup-wrap .popup .close-icon path {
   stroke-width: 6px;
 }
 

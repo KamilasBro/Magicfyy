@@ -44,9 +44,9 @@ const AdvancedSearch: React.FC = () => {
   const buildTextQuery = (text: string) => {
     return text
       ? `(${text
-          .split(" ")
-          .map((word) => `oracle:${word}`)
-          .join("+")})`
+        .split(" ")
+        .map((word) => `oracle:${word}`)
+        .join("+")})`
       : "";
   };
 
@@ -70,8 +70,8 @@ const AdvancedSearch: React.FC = () => {
       option === "Exactly these colors"
         ? "color="
         : option === "Including these colors"
-        ? "color>="
-        : "color<=";
+          ? "color>="
+          : "color<=";
     return `${prefix}${colors.join("")}`;
   };
 
@@ -99,9 +99,12 @@ const AdvancedSearch: React.FC = () => {
     sets: { name: string; code: string }[],
     blocks: { name: string; code: string }[]
   ) => {
-    const setsQuery = sets.map((set) => `set:${set.code}`).join("+");
-    const blocksQuery = blocks.map((block) => `block:${block.code}`).join("+");
-    return [setsQuery, blocksQuery].filter(Boolean).join("+");
+    const setParts = sets.map((set) => `set:${set.code}`);
+    const blockParts = blocks.map((block) => `block:${block.code}`);
+    const allParts = [...setParts, ...blockParts];
+    if (allParts.length === 0) return "";
+    // Join with +OR+ and wrap in parentheses
+    return `(${allParts.join("+OR+")})`;
   };
 
   const buildRarityQuery = (rarities: string[]) => {
@@ -111,9 +114,9 @@ const AdvancedSearch: React.FC = () => {
   const buildFlavorQuery = (flavor: string) => {
     return flavor
       ? `(${flavor
-          .split(" ")
-          .map((word) => `flavor:${word}`)
-          .join(" ")})`
+        .split(" ")
+        .map((word) => `flavor:${word}`)
+        .join(" ")})`
       : "";
   };
 
@@ -130,17 +133,12 @@ const AdvancedSearch: React.FC = () => {
     rarityQuery: string,
     flavorQuery: string
   ) => {
-    const query = `q=${name ? `name:${name}` : ""}${
-      textQuery ? `+${textQuery}` : ""
-    }${gameModesQuery ? `+(${gameModesQuery})` : ""}${
-      typeQuery ? `+${typeQuery}` : ""
-    }${colorsQuery ? `+${colorsQuery}` : ""}${
-      manaCostQuery ? `+${manaCostQuery}` : ""
-    }${statsQuery ? `+${statsQuery}` : ""}${
-      formatsQuery ? `+${formatsQuery}` : ""
-    }${setsQuery ? `+${setsQuery}` : ""}${
-      rarityQuery ? `+${rarityQuery}` : ""
-    }${flavorQuery ? `+${flavorQuery}` : ""}`;
+    const query = `q=${name ? `name:${name}` : ""}${textQuery ? `+${textQuery}` : ""
+      }${gameModesQuery ? `+(${gameModesQuery})` : ""}${typeQuery ? `+${typeQuery}` : ""
+      }${colorsQuery ? `+${colorsQuery}` : ""}${manaCostQuery ? `+${manaCostQuery}` : ""
+      }${statsQuery ? `+${statsQuery}` : ""}${formatsQuery ? `+${formatsQuery}` : ""
+      }${setsQuery ? `+${setsQuery}` : ""}${rarityQuery ? `+${rarityQuery}` : ""
+      }${flavorQuery ? `+${flavorQuery}` : ""}`;
 
     const hasFilters = query !== "q="; // Check if query contains any filters
     return hasFilters ? `${query}&lang:en&page=1` : `${query}lang:en&page=1`;
@@ -185,7 +183,7 @@ const AdvancedSearch: React.FC = () => {
       <form
         className="inner"
         onSubmit={handleFormSubmit}
-        // onKeyDown={handleKeyDown}
+      // onKeyDown={handleKeyDown}
       >
         <h1>Advanced Search</h1>
         <ul className="filters flex flex-col">

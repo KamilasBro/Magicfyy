@@ -3,6 +3,7 @@ import { CardData } from "../../interfaces/CardsInterface";
 import ChooseSet from "./ChooseSet";
 import SendSvg from "../../assets/images/icons/send.svg?react";
 import CloseSvg from "../../assets/images/icons/close.svg?react";
+import ArrowDownSvg from "../../assets/images/icons/arrowDown.svg?react";
 import LoadingCardsAnim from "../../components/LoadingCardsAnim/LoadingCardsAnim";
 import "./guessTheCard.scss";
 
@@ -26,6 +27,19 @@ const GuessTheCard: React.FC = () => {
   const [showPopup, setShowPopup] = useState<{ option: string; show: boolean }>(
     { option: "", show: false }
   );
+  const [showHints, setShowHints] = useState<{
+    formatsLegality: boolean;
+    color: boolean;
+    oracleText: boolean;
+    firstLetter: boolean;
+    artwork: boolean;
+  }>({
+    formatsLegality: false,
+    color: false,
+    oracleText: false,
+    firstLetter: false,
+    artwork: false,
+  });
   const gameCategories = [
     "Card Image",
     "Type",
@@ -70,10 +84,24 @@ const GuessTheCard: React.FC = () => {
 
     fetchCards();
   }, [chosenSet.setCode, chosenSet.isChosen]); // React to changes in chosenSet
+
+  //maintenance
   useEffect(() => {
     console.log(dataFromSet);
     console.log(randomCard);
-  }, [dataFromSet]); // Loguj tylko, gdy `dataFromSet` się zmieni
+  }, [dataFromSet]);
+  //maintenance
+
+  useEffect(() => {
+    if (showPopup.show) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showPopup.show]);
   function resetSet() {
     setChosenSet({
       setCode: "",
@@ -88,72 +116,82 @@ const GuessTheCard: React.FC = () => {
   }
   function renderPopup() {
     return (
-      <div className="popup-wrap flex justify-center items-center">
-        {showPopup.option === "reset" ? (
-          <div className="popup popup-reset">
-            <h2>Do you want to reset set?</h2>
-            <span className="reset-btns-wrap flex justify-center">
-              <button onClick={() => {
-                resetSet();
-                setShowPopup({ option: "", show: false });
-              }}>Yes</button>
-              <button
-                onClick={() => {
+      <div className="popup-wrap flex justify-center items-center" onClick={() => {
+        setShowPopup({ option: "", show: false });
+      }}>
+        {
+          showPopup.option === "reset" ? (
+            <div className="popup popup-reset" onClick={(e) => e.stopPropagation()}>
+              <h2>Do you want to reset set?</h2>
+              <span className="reset-btns-wrap flex justify-center">
+                <button onClick={() => {
+                  resetSet();
                   setShowPopup({ option: "", show: false });
-                }}
-              >
-                No
-              </button>
-            </span>
-          </div>
-        ) : showPopup.option === "hints" ? (
-          <div className="popup popup-hints">
-            <CloseSvg onClick={() => {
-              setShowPopup({ option: "", show: false });
-            }} />
-            <h2>Hints</h2>
-            <ul>
-              <li>
-                <p>
-                  Formats Legality: <span>Hint unlocked in {3 - guesses.length} guesses</span>
-                  <span></span>
-                </p>
-                <div></div>
-              </li>
-              <li>
-                <p>
-                  Game Changer: <span>Hint unlocked in {6 - guesses.length} guesses</span>
-                  <span></span>
-                </p>
-                <div></div>
-              </li>
-              <li>
-                <p>
-                  Oracle Text: <span>Hint unlocked in {9 - guesses.length} guesses</span>
-                  <span></span>
-                </p>
-                <div></div>
-              </li>
-              <li>
-                <p>
-                  First Letter: <span>Hint unlocked in {12 - guesses.length} guesses</span>
-                  <span></span>
-                </p>
-                <div></div>
-              </li>
-              <li>
-                <p>
-                  Artwork: <span>Hint unlocked in x guesses</span>
-                  <span></span>
-                </p>
-                <div></div>
-              </li>
-            </ul>
-          </div>
-        ) : (
-          <></>
-        )}
-      </div>
+                }}>Yes</button>
+                <button
+                  onClick={() => {
+                    setShowPopup({ option: "", show: false });
+                  }}
+                >
+                  No
+                </button>
+              </span>
+            </div>
+          ) : showPopup.option === "hints" ? (
+            <div className="popup popup-hints" onClick={(e) => e.stopPropagation()}>
+              <CloseSvg className="close-icon" onClick={() => {
+                setShowPopup({ option: "", show: false });
+              }} />
+              <h2>Hints</h2>
+              <ul className="flex flex-col">
+                <li>
+                  <p className="flex items-center">
+                    Formats Legality {guesses.length < 3 ? <span className="hint-counter">Hint in {3 - guesses.length} guesses</span> : <ArrowDownSvg className="arrow-icon" onClick={() => {
+                      setShowHints((prevState) => ({
+                        ...prevState,
+                        formatsLegality: !prevState.formatsLegality,
+                      }));
+                    }} />}
+                  </p>
+                  {showHints.formatsLegality && <ul className="formats">
+                    asdasdasd
+                  </ul>}
+                </li>
+                <li>
+                  <p>
+                    Color <span className="hint-counter">Hint in {6 - guesses.length} guesses</span>
+                    <span></span>
+                  </p>
+                  <div></div>
+                </li>
+                <li>
+                  <p>
+                    Oracle Text <span className="hint-counter">Hint in {9 - guesses.length} guesses</span>
+                    <span></span>
+                  </p>
+                  <div></div>
+                </li>
+                <li>
+                  <p>
+                    First Letter <span className="hint-counter">Hint in {12 - guesses.length} guesses</span>
+                    <span></span>
+                  </p>
+                  <div></div>
+                </li>
+                <li>
+                  <p>
+                    Artwork <span className="hint-counter">Hint in x guesses</span>
+                    <span></span>
+                  </p>
+                  <div></div>
+                </li>
+              </ul>
+            </div>
+          ) : (
+            <></>
+          )
+        }
+      </div >
     );
   }
 
