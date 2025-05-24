@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { CardData } from "../../interfaces/CardsInterface";
 import ChooseSet from "./ChooseSet";
+import GoTopArrow from "../../components/GoTopArrow/GoTopArrow";
 import SendSvg from "../../assets/images/icons/send.svg?react";
 import CloseSvg from "../../assets/images/icons/close.svg?react";
-import ArrowDownSvg from "../../assets/images/icons/arrowDown.svg?react";
 import LoadingCardsAnim from "../../components/LoadingCardsAnim/LoadingCardsAnim";
 import "./guessTheCard.scss";
 
@@ -27,19 +27,8 @@ const GuessTheCard: React.FC = () => {
   const [showPopup, setShowPopup] = useState<{ option: string; show: boolean }>(
     { option: "", show: false }
   );
-  const [showHints, setShowHints] = useState<{
-    formatsLegality: boolean;
-    color: boolean;
-    oracleText: boolean;
-    firstLetter: boolean;
-    artwork: boolean;
-  }>({
-    formatsLegality: false,
-    color: false,
-    oracleText: false,
-    firstLetter: false,
-    artwork: false,
-  });
+  const [cardSymbols, setCardSymbols] = useState<CardSymbolData[]>([]);
+
   const gameCategories = [
     "Card Image",
     "Type",
@@ -84,7 +73,21 @@ const GuessTheCard: React.FC = () => {
 
     fetchCards();
   }, [chosenSet.setCode, chosenSet.isChosen]); // React to changes in chosenSet
-
+  useEffect(() => {
+    const fetchSymbols = async () => {
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        const apiUrl = `https://api.scryfall.com/symbology`;
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error("Failed to fetch data");
+        const data = await response.json();
+        setCardSymbols(data.data);
+      } catch (error) {
+        console.error("Error fetching symbols:", error);
+      }
+    };
+    fetchSymbols();
+  }, []);
   //maintenance
   useEffect(() => {
     console.log(dataFromSet);
@@ -113,6 +116,135 @@ const GuessTheCard: React.FC = () => {
     setRandomCard(undefined);
     setGuesses([]);
     setSearchValue("");
+  }
+  function renderRandomCardImg() {
+    const baseBlur = 4; // starting blur in px
+    const minBlur = 0;  // minimum blur
+    const revealStart = 18; // number of guesses after which blur starts decreasing
+    const revealEnd = 30;   // number of guesses after which blur is gone
+
+    const blurValue =
+      guesses.length < revealStart
+        ? baseBlur
+        : Math.max(
+          minBlur,
+          baseBlur - ((guesses.length - revealStart) * baseBlur) / (revealEnd - revealStart)
+        );
+    if (!randomCard) return null;
+    const typeLine =
+      randomCard?.type_line || randomCard?.card_faces?.[0]?.type_line;
+    if (
+      typeLine?.includes("Room") ||
+      typeLine?.includes("Adventure") ||
+      randomCard?.layout?.includes("flip")
+    ) {
+      return (
+        <img
+          src={randomCard?.image_uris?.normal}
+          className="card-img"
+          alt="Card Art"
+          style={{ filter: `blur(${blurValue}px)` }}
+          draggable={false}
+          onContextMenu={e => e.preventDefault()}
+        />
+      );
+    }
+    return (
+      <img
+        src={
+          randomCard?.card_faces
+            ? randomCard?.card_faces?.[0]?.image_uris?.normal
+            : randomCard?.image_uris?.normal
+        }
+        className="card-img"
+        alt="Card Art"
+        style={{ filter: `blur(${blurValue}px)` }}
+        draggable={false}
+        onContextMenu={e => e.preventDefault()}
+      />
+    );
+  }
+  function renderTextWithSymbols(text: string) {
+    if (!text) return null;
+    const symbolRegex = /\{([^}]+)\}/g;
+    const parts: (string | JSX.Element)[] = [];
+    let lastIndex = 0;
+
+    text.replace(symbolRegex, (match, symbol, offset) => {
+      // Add the text before the current match
+      parts.push(text.slice(lastIndex, offset));
+
+      // Find the symbol data in cardSymbols
+      const symbolData = cardSymbols.find(
+        (symbolData) => symbolData.symbol === `{${symbol}}`
+      );
+
+      // If symbolData is found, render the image
+      if (symbolData) {
+        parts.push(
+          <img
+            key={offset}
+            src={symbolData.svg_uri}
+            alt={`${symbol} symbol`}
+            className="oracle-symbol"
+            style={{ width: 22, height: 22, verticalAlign: "middle", margin: "0 2px" }}
+          />
+        );
+      } else {
+        // If symbolData is not found, render the symbol as text
+        parts.push(match);
+      }
+
+      // Update lastIndex to the end of the current match
+      lastIndex = offset + match.length;
+      return match;
+    });
+
+    // Add the remaining text after the last match
+    parts.push(text.slice(lastIndex));
+
+    return parts;
+  }
+  function renderColorSymbols(colors: string[] = []) {
+    const colorToSymbol: { [key: string]: string } = {
+      W: "{W}",
+      U: "{U}",
+      B: "{B}",
+      R: "{R}",
+      G: "{G}",
+      C: "{C}",
+    };
+
+    // If no colors, render colorless symbol
+    if (!colors || colors.length === 0) {
+      const symbol = cardSymbols.find(s => s.symbol === "{C}");
+      if (symbol) {
+        return (
+          <img
+            key="colorless"
+            src={symbol.svg_uri}
+            alt={symbol.english}
+            className="color-symbol"
+          />
+        );
+      }
+      return <span key="colorless">Colorless</span>;
+    }
+
+    return colors.map((color, idx) => {
+      const symbol = cardSymbols.find(s => s.symbol === colorToSymbol[color]);
+      if (symbol) {
+        return (
+          <img
+            key={color + idx}
+            src={symbol.svg_uri}
+            alt={symbol.english}
+            className="color-symbol"
+          />
+        );
+      }
+      return <span key={color + idx}>{color}</span>;
+    });
   }
   function renderPopup() {
     return (
@@ -143,47 +275,127 @@ const GuessTheCard: React.FC = () => {
                 setShowPopup({ option: "", show: false });
               }} />
               <h2>Hints</h2>
-              <ul className="flex flex-col">
+              <ul className="flex flex-col hints-list">
                 <li>
-                  <p className="flex items-center">
-                    Formats Legality {guesses.length < 3 ? <span className="hint-counter">Hint in {3 - guesses.length} guesses</span> : <ArrowDownSvg className="arrow-icon" onClick={() => {
-                      setShowHints((prevState) => ({
-                        ...prevState,
-                        formatsLegality: !prevState.formatsLegality,
-                      }));
-                    }} />}
+                  <p>
+                    Formats Legality {guesses.length < 3 && <span className="hint-counter">Hint in {3 - guesses.length} guesses</span>}
                   </p>
-                  {showHints.formatsLegality && <ul className="formats">
-                    asdasdasd
-                  </ul>}
+                  {guesses.length >= 3 && randomCard && (
+                    <ul className="formats">
+                      {(() => {
+                        const mtgFormats = [
+                          "Standard",
+                          "Alchemy",
+                          "Pioneer",
+                          "Explorer",
+                          "Modern",
+                          "Historic",
+                          "Legacy",
+                          "Brawl",
+                          "Vintage",
+                          "Commander",
+                          "Pauper",
+                          "Oathbreaker",
+                          "Penny",
+                        ];
+                        const lowercaseLegalities = Object.fromEntries(
+                          Object.entries(randomCard.legalities).map(([key, value]) => [
+                            key.toLowerCase(),
+                            value,
+                          ])
+                        );
+                        return mtgFormats
+                          .filter((format) => lowercaseLegalities[format.toLowerCase()])
+                          .map((format) => {
+                            const legality = lowercaseLegalities[format.toLowerCase()];
+                            switch (legality) {
+                              case "legal":
+                                return (
+                                  <button className={`format-${format} legal`} key={format}>
+                                    {format}
+                                  </button>
+                                );
+                              case "not_legal":
+                                return (
+                                  <button className={`format-${format} not-legal`} key={format}>
+                                    {format}
+                                  </button>
+                                );
+                              case "restricted":
+                                return (
+                                  <button className={`format-${format} restricted`} key={format}>
+                                    {format}
+                                  </button>
+                                );
+                              case "banned":
+                                return (
+                                  <button className={`format-${format} banned`} key={format}>
+                                    {format}
+                                  </button>
+                                );
+                              default:
+                                return null;
+                            }
+                          });
+                      })()}
+                    </ul>
+                  )}
                 </li>
                 <li>
                   <p>
-                    Color <span className="hint-counter">Hint in {6 - guesses.length} guesses</span>
-                    <span></span>
+                    Colors {guesses.length < 6 && <span className="hint-counter">Hint in {6 - guesses.length} guesses</span>}
                   </p>
-                  <div></div>
+                  {guesses.length >= 6 && randomCard && (
+                    <div className="color-hint flex">
+                      {randomCard.colors && randomCard.colors.length > 0
+                        ? renderColorSymbols(randomCard.colors)
+                        : renderColorSymbols([])}
+                    </div>
+                  )}
                 </li>
                 <li>
                   <p>
-                    Oracle Text <span className="hint-counter">Hint in {9 - guesses.length} guesses</span>
-                    <span></span>
+                    Price {guesses.length < 9 && <span className="hint-counter">Hint in {9 - guesses.length} guesses</span>}
                   </p>
-                  <div></div>
+                  {guesses.length >= 9 && randomCard && (
+                    <ul className="price-hint">
+                      {randomCard.prices.eur && <li>{randomCard.prices.eur}<span>€</span></li>}
+                      {randomCard.prices.eur_foil && <li>{randomCard.prices.eur_foil}<span>€ Foil</span></li>}
+                      {randomCard.prices.usd && <li>{randomCard.prices.usd}<span>$</span></li>}
+                      {randomCard.prices.usd_etchced && <li>{randomCard.prices.usd_etchced}<span>$ Foil</span></li>}
+                      {randomCard.prices.usd_foil && <li>{randomCard.prices.usd_foil}<span>$ Foil</span></li>}
+                      {randomCard.prices.tix && <li>{randomCard.prices.tix}<span>tix</span></li>}
+                    </ul>
+                  )}
                 </li>
                 <li>
                   <p>
-                    First Letter <span className="hint-counter">Hint in {12 - guesses.length} guesses</span>
-                    <span></span>
+                    First Letter {guesses.length < 12 && <span className="hint-counter">Hint in {12 - guesses.length} guesses</span>}
                   </p>
-                  <div></div>
+                  {guesses.length >= 12 && randomCard && <span className="first-letter">{randomCard.name.charAt(0)}</span>}
                 </li>
                 <li>
                   <p>
-                    Artwork <span className="hint-counter">Hint in x guesses</span>
-                    <span></span>
+                    Oracle Text {guesses.length < 15 && <span className="hint-counter">Hint in {15 - guesses.length} guesses</span>}
                   </p>
-                  <div></div>
+                  {guesses.length >= 15 && randomCard && (
+                    randomCard.oracle_text
+                      ? <span className="oracle-text">{renderTextWithSymbols(randomCard.oracle_text)}</span>
+                      : "No text"
+                  )}
+                </li>
+
+                <li className="card-art">
+                  <p>
+                    Card Art {guesses.length < 18 && <span className="hint-counter">Hint in {18 - guesses.length} guesses</span>}
+                  </p>
+
+                  {guesses.length >= 18 && randomCard && (
+                    <>
+                      <span>Card will slowly lose blur with each guess.</span>
+                      {renderRandomCardImg()}
+                    </>
+                  )}
                 </li>
               </ul>
             </div>
@@ -199,7 +411,6 @@ const GuessTheCard: React.FC = () => {
     <section className="Guess-the-card">
       <span className="title flex items-end justify-center">
         <h1>Guess The Card</h1>
-        <h3>Beta v1.0</h3>
       </span>
       {!chosenSet.isChosen ? (
         <ChooseSet setChosenSet={setChosenSet} />
@@ -508,6 +719,7 @@ const GuessTheCard: React.FC = () => {
         </>
       )}
       {showPopup.show && renderPopup()}
+      {chosenSet.isChosen && <GoTopArrow />}
     </section>
   );
 };
