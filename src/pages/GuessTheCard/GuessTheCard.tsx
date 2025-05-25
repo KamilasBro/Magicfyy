@@ -7,6 +7,23 @@ import CloseSvg from "../../assets/images/icons/close.svg?react";
 import LoadingCardsAnim from "../../components/LoadingCardsAnim/LoadingCardsAnim";
 import "./guessTheCard.scss";
 
+const getInitialChosenSet = () => {
+  const savedData = localStorage.getItem("savedData");
+  if (savedData) {
+    try {
+      const parsed = JSON.parse(savedData);
+      if (parsed.chosenSet && parsed.chosenSet.isChosen) {
+        return parsed.chosenSet;
+      }
+    } catch (e) { }
+  }
+  return {
+    setCode: "",
+    isChosen: false,
+    icon_svg_uri: "",
+    name: "",
+  };
+};
 
 const GuessTheCard: React.FC = () => {
   const [chosenSet, setChosenSet] = useState<{
@@ -14,21 +31,18 @@ const GuessTheCard: React.FC = () => {
     isChosen: boolean;
     icon_svg_uri: string;
     name: string;
-  }>({
-    setCode: "",
-    isChosen: false,
-    icon_svg_uri: "",
-    name: "",
-  });
+  }>(getInitialChosenSet());
+
   const [dataFromSet, setDataFromSet] = useState<CardData[]>([]);
   const [randomCard, setRandomCard] = useState<CardData>();
+  const [randomCardIndex, setRandomCardIndex] = useState<number | null>(null);
   const [searchValue, setSearchValue] = useState<string>("");
   const [guesses, setGuesses] = useState<CardData[]>([]);
   const [showPopup, setShowPopup] = useState<{ option: string; show: boolean }>(
     { option: "", show: false }
   );
   const [cardSymbols, setCardSymbols] = useState<CardSymbolData[]>([]);
-
+  const [winTheGame, setWinTheGame] = useState<boolean>(false);
   const gameCategories = [
     "Card Image",
     "Type",
@@ -38,16 +52,27 @@ const GuessTheCard: React.FC = () => {
     "Art Author",
     "Super Type",
   ];
+  const loadedRandomCard = React.useRef(false);
+  const [loading, setLoading] = useState(false);
+  // When set is chosen, start loading
+  useEffect(() => {
+    if (chosenSet.isChosen && chosenSet.setCode) {
+      setLoading(true);
+    }
+  }, [chosenSet.isChosen, chosenSet.setCode]);
+
   useEffect(() => {
     const fetchCards = async () => {
       try {
         if (chosenSet.isChosen && chosenSet.setCode) {
+          setLoading(true); // Ensure loading is true
+          const minLoading = new Promise((resolve) => setTimeout(resolve, 1000));
           let hasMore = true;
           let page = 1;
-          const allCards: CardData[] = []; // Temporary array for all cards
+          const allCards: CardData[] = [];
 
           while (hasMore) {
-            await new Promise((resolve) => setTimeout(resolve, 50)); // Set a timeout of 50ms
+            await new Promise((resolve) => setTimeout(resolve, 50));
             const apiUrl = `https://api.scryfall.com/cards/search?q=e:${chosenSet.setCode}&page=${page}`;
             const response = await fetch(apiUrl);
 
@@ -56,23 +81,50 @@ const GuessTheCard: React.FC = () => {
             }
 
             const data = await response.json();
-            allCards.push(...data.data); // Add fetched cards to the temporary array
-            hasMore = data.has_more; // Check if there are more pages
+            allCards.push(...data.data);
+            hasMore = data.has_more;
             page++;
           }
 
-          // After fetching, set the data and choose a random card
           setDataFromSet(allCards);
-          const randomIndex = Math.floor(Math.random() * allCards.length);
-          setRandomCard(allCards[randomIndex]);
+
+          // Only pick a new random card index if not already loaded from localStorage
+          if (!loadedRandomCard.current) {
+            const savedData = localStorage.getItem("savedData");
+            let savedRandomCardIndex: number | null = null;
+            if (savedData) {
+              try {
+                const parsed = JSON.parse(savedData);
+                savedRandomCardIndex = typeof parsed.randomCardIndex === "number" ? parsed.randomCardIndex : null;
+              } catch (e) { }
+            }
+            if (
+              savedRandomCardIndex !== null &&
+              savedRandomCardIndex >= 0 &&
+              savedRandomCardIndex < allCards.length
+            ) {
+              setRandomCardIndex(savedRandomCardIndex);
+              setRandomCard(allCards[savedRandomCardIndex]);
+              loadedRandomCard.current = true;
+            } else {
+              const randomIndex = Math.floor(Math.random() * allCards.length);
+              setRandomCardIndex(randomIndex);
+              setRandomCard(allCards[randomIndex]);
+              loadedRandomCard.current = true;
+            }
+          }
+          await minLoading;
+          setLoading(false);
         }
       } catch (error) {
+        setLoading(false);
         console.error("Error fetching data:", error);
       }
     };
 
     fetchCards();
-  }, [chosenSet.setCode, chosenSet.isChosen]); // React to changes in chosenSet
+  }, [chosenSet.setCode, chosenSet.isChosen]);
+
   useEffect(() => {
     const fetchSymbols = async () => {
       try {
@@ -105,18 +157,40 @@ const GuessTheCard: React.FC = () => {
       document.body.style.overflow = "";
     };
   }, [showPopup.show]);
-  function resetSet() {
-    setChosenSet({
-      setCode: "",
-      isChosen: false,
-      icon_svg_uri: "",
-      name: "",
-    });
-    setDataFromSet([]);
-    setRandomCard(undefined);
-    setGuesses([]);
-    setSearchValue("");
-  }
+
+  // Load from localStorage
+  useEffect(() => {
+    const savedData = localStorage.getItem("savedData");
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(savedData);
+        if (parsed.chosenSet) setChosenSet(parsed.chosenSet);
+        if (typeof parsed.randomCardIndex === "number") setRandomCardIndex(parsed.randomCardIndex);
+        if (parsed.guesses) setGuesses(parsed.guesses);
+        if (typeof parsed.winTheGame === "boolean") setWinTheGame(parsed.winTheGame);
+      } catch (e) {
+        // Ignore parse errors
+      }
+    }
+  }, []);
+  useEffect(() => {
+    // Only save if a set is chosen
+    if (chosenSet.isChosen) {
+      localStorage.setItem(
+        "savedData",
+        JSON.stringify({
+          chosenSet,
+          randomCardIndex,
+          guesses,
+          winTheGame,
+        })
+      );
+    } else {
+      // If not chosen, remove savedData
+      localStorage.removeItem("savedData");
+    }
+  }, [chosenSet, randomCardIndex, guesses, winTheGame]);
+
   function renderRandomCardImg() {
     const baseBlur = 4; // starting blur in px
     const minBlur = 0;  // minimum blur
@@ -406,7 +480,25 @@ const GuessTheCard: React.FC = () => {
       </div >
     );
   }
+  function resetSet() {
+    // Remove all relevant localStorage keys
+    localStorage.removeItem("savedData");
 
+    // Reset all state
+    setChosenSet({
+      setCode: "",
+      isChosen: false,
+      icon_svg_uri: "",
+      name: "",
+    });
+    setRandomCardIndex(null);
+    setRandomCard(undefined);
+    setDataFromSet([]);
+    setGuesses([]);
+    setWinTheGame(false);
+    loadedRandomCard.current = false;
+    //localStorage.clear();
+  }
   return (
     <section className="Guess-the-card">
       <span className="title flex items-end justify-center">
@@ -421,7 +513,7 @@ const GuessTheCard: React.FC = () => {
               <img src={chosenSet.icon_svg_uri} alt="set-icon" />
               <h2>{chosenSet.name}</h2>
             </span>
-            {!randomCard && dataFromSet.length === 0 ? <LoadingCardsAnim /> :
+            {loading || (!randomCard && dataFromSet.length === 0) ? <LoadingCardsAnim /> :
               <>
                 <div className="search-input flex justify-center">
                   <div>
@@ -432,6 +524,7 @@ const GuessTheCard: React.FC = () => {
                         onChange={(event) => {
                           setSearchValue(event.target.value);
                         }}
+                        disabled={winTheGame}
                       />
                       <div className="send-wrap flex justify-center items-center">
                         <SendSvg />
@@ -455,6 +548,7 @@ const GuessTheCard: React.FC = () => {
                                 onClick={() => {
                                   setGuesses((prevState) => [...prevState, card]);
                                   setSearchValue("");
+                                  card.name === randomCard?.name && setWinTheGame(true);
                                 }}
                               >
                                 <span className="card-name">{card.name}</span>
@@ -468,9 +562,11 @@ const GuessTheCard: React.FC = () => {
                 <div className="panel flex justify-center">
                   <div className="btns-wrap flex  items-center">
                     <button
-                      onClick={() => setShowPopup({ option: "reset", show: true })}
+                      onClick={() => (
+                        winTheGame ? resetSet() : setShowPopup({ option: "reset", show: true })
+                      )}
                     >
-                      Reset Set
+                      {!winTheGame ? "Reset Set" : "Play Again"}
                     </button>
                     <button
                       onClick={() => setShowPopup({ option: "hints", show: true })}
@@ -478,7 +574,9 @@ const GuessTheCard: React.FC = () => {
                       Hints
                     </button>
                     <div className="guesses-counter">
-                      Your guesses: <span>{guesses.length}</span>
+                      {!winTheGame ? (
+                        <>Your guesses: <span>{guesses.length}</span></>
+                      ) : <>You won in <span>{guesses.length}</span> guesses!</>}
                     </div>
                   </div>
                 </div>
