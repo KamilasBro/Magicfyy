@@ -69,7 +69,7 @@ const Sets: React.FC = () => {
                   </li>
                 </Link>
               ))
-          : Array(9)
+          : Array(18)
               .fill(null)
               .map((_, index) => (
                 <li
