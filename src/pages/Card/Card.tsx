@@ -132,10 +132,12 @@ const Card: React.FC = () => {
     fetchSymbols();
   }, []);
   useEffect(() => {
+    if (!printMinature.show) return;
+
     const handleMouseMove = (event: MouseEvent) => {
       setMousePosition({
         x: event.clientX,
-        y: event.clientY + window.scrollY, // Adjust for scroll position
+        y: event.clientY + window.scrollY,
       });
     };
 
@@ -144,7 +146,7 @@ const Card: React.FC = () => {
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
     };
-  }, []);
+  }, [printMinature.show]);
   useEffect(() => {
     if (isFetched.cardFetched) {
       const fetchSetIcon = async () => {
@@ -299,15 +301,31 @@ const Card: React.FC = () => {
     });
   };
   const renderViewBackButton = () => {
+    const twoFacedLayouts = [
+      "transform",
+      "modal_dfc",
+      "meld",
+      "flip",
+      "split",
+      "adventure",
+      "aftermath",
+      "reversible_card",
+      "battle",
+    ];
     const typeLine =
       cardData?.type_line ||
       cardData?.card_faces?.[0]?.type_line ||
       cardData?.card_faces?.[1]?.type_line;
 
+    const hasTwoFaces =
+      Array.isArray(cardData?.card_faces) && cardData.card_faces.length > 1;
+
+    const isSpecialLayout =
+      cardData?.layout && twoFacedLayouts.includes(cardData.layout);
+
     if (
-      (cardData && cardData?.layout !== "normal") ||
-      typeLine?.includes("Token") ||
-      typeLine?.includes("Emblem")
+      !typeLine?.includes("Token") &&
+      (hasTwoFaces || isSpecialLayout)
     ) {
       return (
         <button
@@ -320,7 +338,90 @@ const Card: React.FC = () => {
         </button>
       );
     }
+    return null;
   };
+  function getBestEurPrice(prices: any, purchase_uris: any) {
+    if (prices.eur) {
+      return (
+        <span
+          className="price-link"
+          onClick={e => {
+            e.stopPropagation();
+            e.preventDefault();
+            window.open(purchase_uris.cardmarket, "_blank");
+          }}
+          title="Buy on Cardmarket"
+        >
+          {prices.eur}€
+        </span>
+      );
+    }
+    if (prices.eur_foil) {
+      return (
+        <span
+          className="price-link"
+          onClick={e => {
+            e.stopPropagation();
+            e.preventDefault();
+            window.open(purchase_uris.cardmarket, "_blank");
+          }}
+          title="Buy on Cardmarket"
+        >
+          {prices.eur_foil}€
+        </span>
+      );
+    }
+    return null;
+  }
+
+  function getBestUsdPrice(prices: any, purchase_uris: any) {
+    if (prices.usd) {
+      return (
+        <span
+          className="price-link"
+          onClick={e => {
+            e.stopPropagation();
+            e.preventDefault();
+            window.open(purchase_uris.tcgplayer, "_blank");
+          }}
+          title="Buy on TCGPlayer"
+        >
+          {prices.usd}$
+        </span>
+      );
+    }
+    if (prices.usd_foil) {
+      return (
+        <span
+          className="price-link"
+          onClick={e => {
+            e.stopPropagation();
+            e.preventDefault();
+            window.open(purchase_uris.tcgplayer, "_blank");
+          }}
+          title="Buy on TCGPlayer"
+        >
+          {prices.usd_foil}$
+        </span>
+      );
+    }
+    if (prices.usd_etched) {
+      return (
+        <span
+          className="price-link"
+          onClick={e => {
+            e.stopPropagation();
+            e.preventDefault();
+            window.open(purchase_uris.tcgplayer, "_blank");
+          }}
+          title="Buy on TCGPlayer"
+        >
+          {prices.usd_etched}$
+        </span>
+      );
+    }
+    return null;
+  }
   console.log(cardData);
   return (
     <section className="Card">
@@ -346,13 +447,13 @@ const Card: React.FC = () => {
                 {cardData.card_faces?.[showCardBack ? 1 : 0]?.name ||
                   cardData.name}
                 {cardData.card_faces?.[showCardBack ? 1 : 0]?.mana_cost ||
-                (cardData.card_faces && cardData.card_faces[1] && !showCardBack
-                  ? null
-                  : cardData.mana_cost)
+                  (cardData.card_faces && cardData.card_faces[1] && !showCardBack
+                    ? null
+                    : cardData.mana_cost)
                   ? renderTextWithSymbols(
-                      cardData.card_faces?.[showCardBack ? 1 : 0]?.mana_cost ||
-                        cardData.mana_cost
-                    )
+                    cardData.card_faces?.[showCardBack ? 1 : 0]?.mana_cost ||
+                    cardData.mana_cost
+                  )
                   : null}
               </h2>
               <h3>
@@ -382,14 +483,11 @@ const Card: React.FC = () => {
                 )
               )}
               {cardData.card_faces?.[showCardBack ? 1 : 0]?.power &&
-              cardData.card_faces?.[showCardBack ? 1 : 0]?.toughness ? (
-                <p>{`${cardData.card_faces[showCardBack ? 1 : 0].power}/${
-                  cardData.card_faces[showCardBack ? 1 : 0].toughness
-                } (Power ${
-                  cardData.card_faces[showCardBack ? 1 : 0].power
-                }, Toughness ${
-                  cardData.card_faces[showCardBack ? 1 : 0].toughness
-                })`}</p>
+                cardData.card_faces?.[showCardBack ? 1 : 0]?.toughness ? (
+                <p>{`${cardData.card_faces[showCardBack ? 1 : 0].power}/${cardData.card_faces[showCardBack ? 1 : 0].toughness
+                  } (Power ${cardData.card_faces[showCardBack ? 1 : 0].power
+                  }, Toughness ${cardData.card_faces[showCardBack ? 1 : 0].toughness
+                  })`}</p>
               ) : (
                 cardData.power &&
                 cardData.toughness && (
@@ -409,9 +507,8 @@ const Card: React.FC = () => {
                   <img src={setIconUrl} alt="Set Icon" className="set-icon" />
                 )}
                 <span>
-                  {`${cardData.set_name} (${cardData.set.toUpperCase()}) #${
-                    cardData.collector_number
-                  } · `}
+                  {`${cardData.set_name} (${cardData.set.toUpperCase()}) #${cardData.collector_number
+                    } · `}
                   <span className="capitalize">{cardData.rarity}</span>
                 </span>
               </h3>
@@ -450,14 +547,18 @@ const Card: React.FC = () => {
                 >
                   <li className="flex items-center">
                     <StarSvg
-                      className={`${
-                        print.set_name === cardData?.set_name &&
+                      className={`${print.set_name === cardData?.set_name &&
                         print.collector_number === cardData?.collector_number &&
                         "active"
-                      } flex-shrink-0`}
+                        } flex-shrink-0`}
                     />
-                    <p>
+                    <p className="flex flex-col">
                       {print.set_name} #{print.collector_number}
+                      <span className="prices">
+                        {getBestEurPrice(print.prices, print.purchase_uris)}
+                        {getBestEurPrice(print.prices, print.purchase_uris) && getBestUsdPrice(print.prices, print.purchase_uris) && " | "}
+                        {getBestUsdPrice(print.prices, print.purchase_uris)}
+                      </span>
                     </p>
                   </li>
                 </Link>

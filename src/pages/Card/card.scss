@@ -1,4 +1,5 @@
 @import "../../assets/scss/partials/colors";
+
 .Card {
   display: grid;
   grid-template-columns: repeat(2, auto);
@@ -6,91 +7,113 @@
   grid-column-gap: 0px;
   grid-row-gap: 0px;
 }
+
 .Card .print-minature {
   width: 200px;
   z-index: 2;
   border-radius: 10px;
 }
+
 .Card .card-info {
   grid-area: 1 / 1 / 2 / 2;
 }
+
 .Card .card-info .card-img {
   flex-shrink: 0;
   width: 330px;
   min-width: 330px;
   border-radius: 20px;
 }
+
 .Card .card-info .view-back {
   margin-top: 25px;
   background-color: $orange;
 }
+
 .Card .card-info .view-back:hover {
   background-color: $red;
 }
+
 .Card .card-info .card-details {
   gap: 25px;
   margin-left: 25px;
   width: 700px;
 }
+
 .Card .card-info .card-details h2 img {
   width: 24px;
   margin-left: 5px;
 }
+
 .Card h2 {
   font-size: 28px;
   font-weight: 600;
 }
+
 .Card h3 {
   font-size: 20px;
   font-weight: 400;
 }
+
 .Card h3 img {
   width: 32px;
   margin-right: 10px;
   filter: invert(35%) sepia(100%) saturate(7500%) hue-rotate(30deg);
 }
+
 .Card p {
   font-size: 16px;
   font-weight: 300;
 }
+
 .Card p.flavor {
   color: $orange;
 }
+
 .Card p img {
   width: 18px;
   display: inline;
   margin-right: 2.5px;
 }
+
 .Card p img:first-child {
   margin-left: 0px;
 }
+
 .Card .card-info .card-formats {
   gap: 15px;
 }
+
 .Card .card-info .card-formats button {
   cursor: default;
 }
+
 .Card .card-info .card-formats button.legal {
   background-color: $green;
 }
+
 .Card .card-info .card-formats button.restricted {
   background-color: $yellow;
 }
+
 .Card .card-info .card-formats button.banned {
   background-color: $crimsonRed;
 }
+
 .Card .prints {
   grid-area: 1 / 2 / 2 / 3;
   margin-left: auto;
-  width: 300px;
+  width: 350px;
   background-color: $transparentBlack;
   border-radius: 10px;
   min-height: 100%;
 }
+
 .Card .prints h2,
 .prints ul {
   margin-top: 25px;
 }
+
 .Card .prints ul {
   padding-inline: 25px;
   padding-bottom: 25px;
@@ -98,23 +121,42 @@
   overflow-y: auto;
   gap: 25px;
 }
+
 .Card .prints ul li {
   cursor: pointer;
 }
+
+.Card .prints ul li .prices span,
+.Card .prints ul li .prices {
+  font-size: 15px;
+  font-weight: 400;
+  color: $gray;
+  transition: 300ms;
+}
+
+
+.Card .prints ul li .prices span:hover {
+  color: $orange;
+}
+
 .Card .prints svg {
   width: 25px;
   height: 25px;
 }
+
 .Card .prints svg path {
   fill: $gray;
 }
+
 .Card .prints svg.active path {
   fill: $orange;
 }
+
 .Card .prints p {
   font-weight: 400;
   margin-left: 10px;
 }
+
 .Card .rules {
   grid-area: 2 / 1 / 3 / 3;
   background-color: $transparentBlack;
@@ -122,26 +164,32 @@
   padding-block: 25px;
   border-radius: 10px;
 }
+
 .Card .rules h2,
 .rules ul {
   padding-inline: 150px;
 }
+
 .Card .rules ul {
   max-height: 400px;
   overflow-y: auto;
   margin-top: 25px;
   gap: 25px;
 }
+
 .Card .rules h3 {
   color: $orange;
   font-weight: 600;
 }
+
 .Card .rules p {
   margin-top: 10px;
 }
+
 .Card .rules a {
   color: $orange;
 }
+
 .Card .set-icon {
   height: 32px;
 }
