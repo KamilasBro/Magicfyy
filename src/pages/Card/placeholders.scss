@@ -1,17 +1,23 @@
 @import "../../assets/scss/partials/colors";
+
 .Card .card-info .card-placeholder {
   width: 330px;
   height: 460px;
+  margin-right: 46px;
 }
+
 .Card .card-info .card-placeholder-img {
   height: 170px;
 }
+
 .Card .card-info .card-placeholder-content {
   row-gap: 25px;
 }
+
 .Card .card-info .card-placeholder-content div {
   height: 20px;
 }
+
 @-webkit-keyframes shine {
   from {
     -webkit-mask-position: 150%;
@@ -33,60 +39,59 @@
     mask-position: -50%;
   }
 }
+
 .Card .card-info .card-details-placeholders {
   gap: 50px;
   background-color: $transparentBlack;
   border-radius: 10px;
   padding: 25px;
-  -webkit-mask-image: linear-gradient(
-    -75deg,
-    rgba(255, 255, 255, 0.6) 30%,
-    #fff 50%,
-    rgba(255, 255, 255, 0.6) 70%
-  ); // White mask
+  -webkit-mask-image: linear-gradient(-75deg,
+      rgba(255, 255, 255, 0.6) 30%,
+      #fff 50%,
+      rgba(255, 255, 255, 0.6) 70%); // White mask
   -webkit-mask-size: 200%;
-  mask-image: linear-gradient(
-    -75deg,
-    rgba(255, 255, 255, 0.6) 30%,
-    #fff 50%,
-    rgba(255, 255, 255, 0.6) 70%
-  );
+  mask-image: linear-gradient(-75deg,
+      rgba(255, 255, 255, 0.6) 30%,
+      #fff 50%,
+      rgba(255, 255, 255, 0.6) 70%);
   mask-size: 200%;
   animation: shine 2s infinite;
+  height: 460px;
 }
+
 .Card .card-info .card-details-placeholder {
   height: 20px;
   width: 40%;
   border-radius: 10px;
   background-color: $gray;
 }
+
 .Card .card-info .card-details-placeholder:first-child {
   height: 40px;
   width: 100%;
 }
+
 .Card .card-info .card-details-placeholder:nth-child(3),
 .Card .card-info .card-details-placeholder:nth-child(4) {
   width: 100%;
 }
+
 .Card .prints .placeholder,
 .Card .rules .placeholder {
-  -webkit-mask-image: linear-gradient(
-    -75deg,
-    rgba(255, 255, 255, 0.6) 30%,
-    #fff 50%,
-    rgba(255, 255, 255, 0.6) 70%
-  ); // White mask
+  -webkit-mask-image: linear-gradient(-75deg,
+      rgba(255, 255, 255, 0.6) 30%,
+      #fff 50%,
+      rgba(255, 255, 255, 0.6) 70%); // White mask
   -webkit-mask-size: 200%;
-  mask-image: linear-gradient(
-    -75deg,
-    rgba(255, 255, 255, 0.6) 30%,
-    #fff 50%,
-    rgba(255, 255, 255, 0.6) 70%
-  );
+  mask-image: linear-gradient(-75deg,
+      rgba(255, 255, 255, 0.6) 30%,
+      #fff 50%,
+      rgba(255, 255, 255, 0.6) 70%);
   mask-size: 200%;
   animation: shine 2s infinite;
-  gap: 25px;
+  gap: 30px;
 }
+
 .Card .prints .placeholder div,
 .Card .rules .placeholder div {
   background-color: $gray;
@@ -94,7 +99,122 @@
   width: 100%;
   border-radius: 10px;
 }
-.Card .rules .placeholder div:nth-child(1),
-.Card .rules .placeholder div:nth-child(3) {
+
+.Card .rules .placeholder div:nth-child(odd) {
   width: 15%;
+}
+
+@media screen and (max-width: 1600px) {
+  .Card .card-info .card-details-placeholder:first-child {
+    height: 40px;
+    width: 70%;
+  }
+
+  .Card .prints .placeholder,
+  .Card .rules .placeholder {
+    height: 400px;
+  }
+
+  .Card .rules .placeholder div:nth-child(odd) {
+    width: 25%;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .Card .card-info .card-placeholder {
+    width: 300px;
+    height: 430px;
+  }
+
+  .Card .card-info .card-details-placeholders {
+    gap: 40px;
+    height: 430px;
+  }
+
+  .Card .rules .placeholder div:nth-child(odd) {
+    width: 35%;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .Mobile-card .card-placeholder {
+    height: 475px;
+    width: 330px;
+    border-radius: 20px;
+  }
+
+  .Mobile-card .card-placeholder-img {
+    height: 170px;
+  }
+
+  .Mobile-card .card-placeholder-content {
+    row-gap: 30px;
+  }
+
+  .Mobile-card .card-placeholder-content div {
+    height: 20px;
+  }
+
+  .Mobile-card .card-details {
+    width: 100%;
+  }
+  .Mobile-card .card-details-placeholders {
+    gap: 50px;
+    border-radius: 10px;
+    -webkit-mask-image: linear-gradient(-75deg,
+        rgba(255, 255, 255, 0.6) 30%,
+        #fff 50%,
+        rgba(255, 255, 255, 0.6) 70%); // White mask
+    -webkit-mask-size: 200%;
+    mask-image: linear-gradient(-75deg,
+        rgba(255, 255, 255, 0.6) 30%,
+        #fff 50%,
+        rgba(255, 255, 255, 0.6) 70%);
+    mask-size: 200%;
+    animation: shine 2s infinite;
+    width: 100%;
+  }
+
+  .Mobile-card .card-details-placeholder {
+    height: 25px;
+    width: 50%;
+    border-radius: 10px;
+    background-color: $gray;
+  }
+
+  .Mobile-card .card-details-placeholder:first-child {
+    height: 40px;
+    width: 100%;
+  }
+
+  .Mobile-card .card-details-placeholder:nth-child(3),
+  .Mobile-card .card-details-placeholder:nth-child(4) {
+    width: 100%;
+  }
+
+  .Mobile-card .rules .placeholder {
+    -webkit-mask-image: linear-gradient(-75deg,
+        rgba(255, 255, 255, 0.6) 30%,
+        #fff 50%,
+        rgba(255, 255, 255, 0.6) 70%); // White mask
+    -webkit-mask-size: 200%;
+    mask-image: linear-gradient(-75deg,
+        rgba(255, 255, 255, 0.6) 30%,
+        #fff 50%,
+        rgba(255, 255, 255, 0.6) 70%);
+    mask-size: 200%;
+    animation: shine 2s infinite;
+    gap: 30px;
+  }
+
+  .Mobile-card .rules .placeholder div {
+    background-color: $gray;
+    height: 20px;
+    width: 100%;
+    border-radius: 10px;
+  }
+
+  .Mobile-card .rules .placeholder div:nth-child(odd) {
+    width: 15%;
+  }
 }

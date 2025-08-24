@@ -32,7 +32,6 @@ const Colors: React.FC<ColorsProps> = ({
     { name: "C", Svg: ColorlessSvg },
   ];
 
-
   const handleColorClick = (color: string) => {
     setSelectedColors((prevColors) => {
       if (color === "C") {
@@ -65,7 +64,9 @@ const Colors: React.FC<ColorsProps> = ({
     };
 
     const handleScroll = () => {
-      setShowDropdown(false);
+      if (window.innerWidth > 800) {
+        setShowDropdown(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);

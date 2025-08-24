@@ -52,7 +52,9 @@ const ManaCost: React.FC<ManaCostProps> = ({ manaCost, setManaCost }) => {
     };
 
     const handleScroll = () => {
-      setShowDropdown(false);
+      if (window.innerWidth > 800) {
+        setShowDropdown(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);

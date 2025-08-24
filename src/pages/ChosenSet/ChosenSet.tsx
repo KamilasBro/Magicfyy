@@ -144,39 +144,42 @@ const ChosenSet: React.FC = () => {
             />
           </div>
         </div>
-        <ul className="cards flex flex-wrap">
-          {isLoading ? (
-            <LoadingCardsAnim />
-          ) : (
-            <>
-              {isFetched.cardsFetched &&
-                dataFromSet
-                  .filter((card: CardData) =>
-                    searchedName
-                      ? card.name
-                          .toLowerCase()
-                          .includes(searchedName.toLowerCase())
-                      : true
-                  )
-                  .slice(0, visibleCards) // Display only visible cards
-                  .map((card: CardData, index: number) => (
+
+        {isLoading ? (
+          <LoadingCardsAnim />
+        ) : (
+          <ul className="cards flex flex-wrap">
+            {isFetched.cardsFetched &&
+              dataFromSet
+                .filter((card: CardData) =>
+                  searchedName
+                    ? card.name
+                      .toLowerCase()
+                      .includes(searchedName.toLowerCase())
+                    : true
+                )
+                .slice(0, visibleCards)
+                .map((card: CardData, index: number) => {
+                  const isArvinox =
+                    card.name === "Arvinox, the Mind Flail" && card.set === "sld";
+                  return (
                     <Link
                       to={`/card/${card.set}/${card.collector_number}`}
                       key={card.id}
                     >
                       <li>
-                        {!loadedCards[index] && <CardPlaceholder />}{" "}
-                        {/* Placeholder */}
+                        {!loadedCards[index] && <CardPlaceholder />}
                         {card.image_uris ? (
                           <img
                             className="card"
                             src={card.image_uris.normal}
                             alt="Card"
                             loading="eager"
-                            onLoad={() => handleImageLoad(index)} // Update load state
+                            onLoad={() => handleImageLoad(index)}
                             style={{
                               display: loadedCards[index] ? "block" : "none",
-                            }} // Hide until loaded
+                              ...(isArvinox ? { transform: "rotate(180deg)" } : {}),
+                            }}
                           />
                         ) : (
                           card.card_faces && (
@@ -188,16 +191,18 @@ const ChosenSet: React.FC = () => {
                               onLoad={() => handleImageLoad(index)}
                               style={{
                                 display: loadedCards[index] ? "block" : "none",
+                                ...(isArvinox ? { transform: "rotate(180deg)" } : {}),
                               }}
                             />
                           )
                         )}
                       </li>
                     </Link>
-                  ))}
-            </>
-          )}
-        </ul>
+                  );
+                })}
+          </ul>
+        )}
+
         <div id="sentinel" style={{ height: "1px" }}></div>
         <GoTopArrow />
       </>

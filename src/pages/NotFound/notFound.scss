@@ -1,16 +1,94 @@
 @import "../../assets/scss/partials/colors";
+
 .Not-found {
   gap: 25px;
-  margin-bottom: 400px;
 }
+
 .Not-found h1 {
   font-size: 48px;
   font-weight: 600;
 }
+
 .Not-found button {
   margin-top: 25px;
   background-color: $orange;
 }
+
 .Not-found button:hover {
   background-color: $red;
+}
+
+@media (max-width: 1600px) {
+  .Not-found h1 {
+    font-size: 46px;
+  }
+}
+
+@media (max-width: 1280px) {
+  .Not-found h1 {
+    font-size: 44px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .Not-found {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .Not-found>div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .Not-found svg {
+    height: initial;
+    width: 250px;
+  }
+
+  .Not-found h1 {
+    font-size: 42px;
+  }
+
+  .Not-found button {
+    font-size: 14px;
+    padding: 20px;
+    padding-inline: 50px;
+  }
+
+  .Not-found button:hover {
+    background-color: $orange;
+  }
+}
+
+@media (max-width: 800px) {
+  .Not-found h1 {
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .Not-found h1 {
+    font-size: 38px;
+  }
+
+  .Not-found button {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 425px) {
+  .Not-found svg {
+    width: 220px;
+  }
+
+  .Not-found h1 {
+    font-size: 32px;
+  }
+
+  .Not-found button {
+    font-size: 12px;
+  }
 }

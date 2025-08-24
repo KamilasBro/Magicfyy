@@ -7,6 +7,7 @@ import {
 } from "../../interfaces/CardsInterface";
 import { useParams, Link } from "react-router-dom";
 import CardPlaceholder from "../../components/CardPlaceholder/CardPlaceholder";
+import MobileCard from "./MobileCard";
 import "./card.scss";
 import "./placeholders.scss";
 const Card: React.FC = () => {
@@ -25,6 +26,7 @@ const Card: React.FC = () => {
   const [printMinature, setPrintMinature] = useState({
     show: false,
     imgSrc: "",
+    isArvinox: false,
   });
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [setIconUrl, setSetIconUrl] = useState<string>(""); // Track set icon URL
@@ -43,7 +45,21 @@ const Card: React.FC = () => {
     "Oathbreaker",
     "Penny",
   ];
+  const [isMobile, setIsMobile] = useState(false);
   const params = useParams();
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 1024);
+    };
+
+    handleResize(); // set initial value on mount
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   useEffect(() => {
     const fetchCard = async () => {
       try {
@@ -251,15 +267,26 @@ const Card: React.FC = () => {
   function renderCardImg() {
     const typeLine =
       cardData?.type_line || cardData?.card_faces?.[0]?.type_line;
+    const isArvinox =
+      ((cardData?.card_faces?.[showCardBack ? 1 : 0]?.name || cardData?.name) === "Arvinox, the Mind Flail") &&
+      (cardData?.set === "sld");
+    // Check if the card is Arvinox, the Mind Flail in the SLD set cause it is upside down from API
+
     if (
       typeLine?.includes("Room") ||
       typeLine?.includes("Adventure") ||
       cardData?.layout.includes("flip")
     ) {
-      return <img src={cardData?.image_uris?.normal} className="card-img" />;
+      return (
+        <img
+          src={cardData?.image_uris?.normal}
+          className="card-img"
+          style={isArvinox ? { transform: "rotate(180deg)" } : undefined}
+        />
+      );
     }
     if (cardData?.card_back_id && showCardBack) {
-      const [firstChar, secondChar] = cardData.card_back_id.split("-")[0]; // Get the first and second characters from the ID
+      const [firstChar, secondChar] = cardData.card_back_id.split("-")[0];
       return (
         <img
           src={`https://backs.scryfall.io/normal/${firstChar}/${secondChar}/${cardData.card_back_id}.jpg?1665006175`}
@@ -275,31 +302,11 @@ const Card: React.FC = () => {
               : cardData?.image_uris?.normal
           }
           className="card-img"
+          style={isArvinox ? { transform: "rotate(180deg)" } : undefined}
         />
       );
     }
   }
-
-  const handleMouseEnter = (print: CardData) => {
-    if (
-      cardData?.set !== print.set ||
-      cardData?.collector_number !== print.collector_number
-    ) {
-      setPrintMinature({
-        show: true,
-        imgSrc: print.card_faces
-          ? print.card_faces[0]?.image_uris?.normal ?? ""
-          : print.image_uris?.normal ?? "",
-      });
-    }
-  };
-
-  const handleMouseLeave = () => {
-    setPrintMinature({
-      show: false,
-      imgSrc: "",
-    });
-  };
   const renderViewBackButton = () => {
     const twoFacedLayouts = [
       "transform",
@@ -334,7 +341,7 @@ const Card: React.FC = () => {
             setShowCardBack((prevState) => !prevState);
           }}
         >
-          View Back
+          {"View " + (showCardBack ? "Front" : "Back")}
         </button>
       );
     }
@@ -422,188 +429,233 @@ const Card: React.FC = () => {
     }
     return null;
   }
+  const handleMouseEnter = (print: CardData) => {
+    const isArvinox = print.name === "Arvinox, the Mind Flail" && print.set === "sld";
+    setPrintMinature({
+      show: true,
+      imgSrc: print.card_faces
+        ? print.card_faces[0]?.image_uris?.normal ?? ""
+        : print.image_uris?.normal ?? "",
+      isArvinox,
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setPrintMinature({
+      show: false,
+      imgSrc: "",
+      isArvinox: false, // <-- reset this too
+    });
+  };
+
   console.log(cardData);
   return (
-    <section className="Card">
-      {printMinature.show && (
-        <img
-          src={printMinature.imgSrc}
-          className="print-minature absolute"
-          style={{
-            left: `${mousePosition.x - 225}px`,
-            top: `${mousePosition.y - 75}px`,
-          }}
-        />
-      )}
-      <div className="card-info flex">
-        <div className="flex flex-col items-center">
-          {isFetched.cardFetched ? renderCardImg() : <CardPlaceholder />}
-          {renderViewBackButton()}
-        </div>
-        <ul className="card-details flex flex-col">
-          {isFetched.cardFetched && isFetched.symbolsFetched && cardData ? (
-            <>
-              <h2 className="flex items-center">
-                {cardData.card_faces?.[showCardBack ? 1 : 0]?.name ||
-                  cardData.name}
-                {cardData.card_faces?.[showCardBack ? 1 : 0]?.mana_cost ||
-                  (cardData.card_faces && cardData.card_faces[1] && !showCardBack
-                    ? null
-                    : cardData.mana_cost)
-                  ? renderTextWithSymbols(
-                    cardData.card_faces?.[showCardBack ? 1 : 0]?.mana_cost ||
-                    cardData.mana_cost
-                  )
-                  : null}
-              </h2>
-              <h3>
-                {cardData.card_faces?.[showCardBack ? 1 : 0]?.type_line ||
-                  cardData.type_line}
-              </h3>
-              {cardData.card_faces?.[showCardBack ? 1 : 0]?.oracle_text ? (
-                <p className="whitespace-pre-wrap">
-                  {renderTextWithSymbols(
-                    cardData.card_faces[showCardBack ? 1 : 0].oracle_text
-                  )}
-                </p>
-              ) : (
-                cardData.oracle_text && (
-                  <p className="whitespace-pre-wrap">
-                    {renderTextWithSymbols(cardData.oracle_text)}
-                  </p>
-                )
-              )}
-              {cardData.card_faces?.[showCardBack ? 1 : 0]?.flavor_text ? (
-                <p className="italic flavor">
-                  {cardData.card_faces[showCardBack ? 1 : 0].flavor_text}
-                </p>
-              ) : (
-                cardData.flavor_text && (
-                  <p className="italic flavor">{cardData.flavor_text}</p>
-                )
-              )}
-              {cardData.card_faces?.[showCardBack ? 1 : 0]?.power &&
-                cardData.card_faces?.[showCardBack ? 1 : 0]?.toughness ? (
-                <p>{`${cardData.card_faces[showCardBack ? 1 : 0].power}/${cardData.card_faces[showCardBack ? 1 : 0].toughness
-                  } (Power ${cardData.card_faces[showCardBack ? 1 : 0].power
-                  }, Toughness ${cardData.card_faces[showCardBack ? 1 : 0].toughness
-                  })`}</p>
-              ) : (
-                cardData.power &&
-                cardData.toughness && (
-                  <p>{`${cardData.power}/${cardData.toughness} (Power ${cardData.power}, Toughness ${cardData.toughness})`}</p>
-                )
-              )}
-              {cardData.card_faces?.[0]?.loyalty ? (
-                <p>
-                  Loyalty {cardData.card_faces[showCardBack ? 1 : 0].loyalty}
-                </p>
-              ) : (
-                cardData.loyalty && <p>Loyalty {cardData.loyalty}</p>
-              )}
-              <p className="italic">Illustrated by {cardData.artist}</p>
-              <h3 className="flex items-center">
-                {setIconUrl && (
-                  <img src={setIconUrl} alt="Set Icon" className="set-icon" />
-                )}
-                <span>
-                  {`${cardData.set_name} (${cardData.set.toUpperCase()}) #${cardData.collector_number
-                    } · `}
-                  <span className="capitalize">{cardData.rarity}</span>
-                </span>
-              </h3>
-              <ul className="card-formats flex flex-wrap">
-                {compareData(cardData.released_at) ? (
-                  <button key={`format-unreleased`}>Unreleased</button>
-                ) : (
-                  renderLegalities(cardData)
-                )}
-              </ul>
-            </>
-          ) : (
-            <div className="card-details-placeholders flex flex-col">
-              <div className="card-details-placeholder"></div>
-              <div className="card-details-placeholder"></div>
-              <div className="card-details-placeholder"></div>
-              <div className="card-details-placeholder"></div>
-              <div className="card-details-placeholder"></div>
-              <div className="card-details-placeholder"></div>
-            </div>
+    <>
+      {isMobile ? <MobileCard
+        isFetched={isFetched}
+        cardData={cardData}
+        printsData={printsData}
+        rulingsData={rulingsData}
+        cardSymbols={cardSymbols}
+        showCardBack={showCardBack}
+        setIconUrl={setIconUrl}
+        mtgFormats={mtgFormats}
+        renderTextWithSymbols={renderTextWithSymbols}
+        compareData={compareData}
+        renderLegalities={renderLegalities}
+        renderCardImg={renderCardImg}
+        renderViewBackButton={renderViewBackButton}
+        getBestEurPrice={getBestEurPrice}
+        getBestUsdPrice={getBestUsdPrice}
+      /> :
+
+        <section className="Card">
+          {printMinature.show && (
+            <img
+              src={printMinature.imgSrc}
+              className="print-minature absolute"
+              style={{
+                left: `${mousePosition.x - 225}px`,
+                top: `${mousePosition.y - 75}px`,
+                ...(printMinature.isArvinox ? { transform: "rotate(180deg)" } : {}),
+              }}
+            />
           )}
-        </ul>
-      </div>
-      <div className="prints">
-        <h2 className="text-center">Prints</h2>
-        <ul className="flex flex-col">
-          {isFetched.printsFetched ? (
-            printsData.map((print: CardData) => {
-              return (
-                <Link
-                  onMouseEnter={() => handleMouseEnter(print)}
-                  onMouseLeave={handleMouseLeave}
-                  onClick={handleMouseLeave}
-                  to={`/card/${print.set}/${print.collector_number}`}
-                  key={"print " + print.id}
-                >
-                  <li className="flex items-center">
-                    <StarSvg
-                      className={`${print.set_name === cardData?.set_name &&
-                        print.collector_number === cardData?.collector_number &&
-                        "active"
-                        } flex-shrink-0`}
-                    />
-                    <p className="flex flex-col">
-                      {print.set_name} #{print.collector_number}
-                      <span className="prices">
-                        {getBestEurPrice(print.prices, print.purchase_uris)}
-                        {getBestEurPrice(print.prices, print.purchase_uris) && getBestUsdPrice(print.prices, print.purchase_uris) && " | "}
-                        {getBestUsdPrice(print.prices, print.purchase_uris)}
-                      </span>
+          <div className="card-info flex">
+            <div className="flex flex-col items-center">
+              {isFetched.cardFetched ? renderCardImg() : <CardPlaceholder />}
+              {renderViewBackButton()}
+            </div>
+            <ul className="card-details flex flex-col">
+              {isFetched.cardFetched && isFetched.symbolsFetched && cardData ? (
+                <>
+                  <h2 className="flex items-center">
+                    {cardData.card_faces?.[showCardBack ? 1 : 0]?.name ||
+                      cardData.name}
+                    {cardData.card_faces?.[showCardBack ? 1 : 0]?.mana_cost ||
+                      (cardData.card_faces && cardData.card_faces[1] && !showCardBack
+                        ? null
+                        : cardData.mana_cost)
+                      ? renderTextWithSymbols(
+                        cardData.card_faces?.[showCardBack ? 1 : 0]?.mana_cost ||
+                        cardData.mana_cost
+                      )
+                      : null}
+                  </h2>
+                  <h3>
+                    {cardData.card_faces?.[showCardBack ? 1 : 0]?.type_line ||
+                      cardData.type_line}
+                  </h3>
+                  {cardData.card_faces?.[showCardBack ? 1 : 0]?.oracle_text ? (
+                    <p className="whitespace-pre-wrap">
+                      {renderTextWithSymbols(
+                        cardData.card_faces[showCardBack ? 1 : 0].oracle_text
+                      )}
                     </p>
-                  </li>
-                </Link>
-              );
-            })
-          ) : (
-            <div className="placeholder flex flex-col">
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
-          )}
-        </ul>
-      </div>
-      <div className="rules">
-        <h2>Rules</h2>
-        <ul className="flex flex-col">
-          {isFetched.rulesFetched ? (
-            rulingsData.length > 0 ? (
-              rulingsData.map((rule: RulingsData, index: number) => (
-                <li
-                  className="flex flex-col"
-                  key={"rule " + rule.oracle_id + index}
-                >
-                  <h3>{rule.published_at}</h3>
-                  <p>{renderTextWithSymbols(rule.comment)}</p>
-                </li>
-              ))
-            ) : (
-              <p>There is no rules for this card.</p>
-            )
-          ) : (
-            <div className="placeholder flex flex-col">
-              <div></div>
-              <div></div>
-              <div></div>
-              <div></div>
-            </div>
-          )}
-        </ul>
-      </div>
-    </section>
+                  ) : (
+                    cardData.oracle_text && (
+                      <p className="whitespace-pre-wrap">
+                        {renderTextWithSymbols(cardData.oracle_text)}
+                      </p>
+                    )
+                  )}
+                  {cardData.card_faces?.[showCardBack ? 1 : 0]?.flavor_text ? (
+                    <p className="italic flavor">
+                      {cardData.card_faces[showCardBack ? 1 : 0].flavor_text}
+                    </p>
+                  ) : (
+                    cardData.flavor_text && (
+                      <p className="italic flavor">{cardData.flavor_text}</p>
+                    )
+                  )}
+                  {cardData.card_faces?.[showCardBack ? 1 : 0]?.power &&
+                    cardData.card_faces?.[showCardBack ? 1 : 0]?.toughness ? (
+                    <p>{`${cardData.card_faces[showCardBack ? 1 : 0].power}/${cardData.card_faces[showCardBack ? 1 : 0].toughness
+                      } (Power ${cardData.card_faces[showCardBack ? 1 : 0].power
+                      }, Toughness ${cardData.card_faces[showCardBack ? 1 : 0].toughness
+                      })`}</p>
+                  ) : (
+                    cardData.power &&
+                    cardData.toughness && (
+                      <p>{`${cardData.power}/${cardData.toughness} (Power ${cardData.power}, Toughness ${cardData.toughness})`}</p>
+                    )
+                  )}
+                  {cardData.card_faces?.[0]?.loyalty ? (
+                    <p>
+                      Loyalty {cardData.card_faces[showCardBack ? 1 : 0].loyalty}
+                    </p>
+                  ) : (
+                    cardData.loyalty && <p>Loyalty {cardData.loyalty}</p>
+                  )}
+                  <p className="italic">Illustrated by {cardData.artist}</p>
+                  <h3 className="flex items-center">
+                    {setIconUrl && (
+                      <img src={setIconUrl} alt="Set Icon" className="set-icon" />
+                    )}
+                    <span>
+                      {`${cardData.set_name} (${cardData.set.toUpperCase()}) #${cardData.collector_number
+                        } · `}
+                      <span className="capitalize">{cardData.rarity}</span>
+                    </span>
+                  </h3>
+                  <ul className="card-formats flex flex-wrap">
+                    {compareData(cardData.released_at) ? (
+                      <button key={`format-unreleased`}>Unreleased</button>
+                    ) : (
+                      renderLegalities(cardData)
+                    )}
+                  </ul>
+                </>
+              ) : (
+                <div className="card-details-placeholders flex flex-col">
+                  <div className="card-details-placeholder"></div>
+                  <div className="card-details-placeholder"></div>
+                  <div className="card-details-placeholder"></div>
+                  <div className="card-details-placeholder"></div>
+                  <div className="card-details-placeholder"></div>
+                  <div className="card-details-placeholder"></div>
+                </div>
+              )}
+            </ul>
+          </div>
+          <div className="prints">
+            <h2 className="text-center">Prints</h2>
+            <ul className="flex flex-col">
+              {isFetched.printsFetched ? (
+                printsData.map((print: CardData) => {
+                  return (
+                    <Link
+                      onMouseEnter={() => handleMouseEnter(print)}
+                      onMouseLeave={handleMouseLeave}
+                      onClick={handleMouseLeave}
+                      to={`/card/${print.set}/${print.collector_number}`}
+                      key={"print " + print.id}
+                    >
+                      <li className="flex items-center">
+                        <StarSvg
+                          className={`${print.set_name === cardData?.set_name &&
+                            print.collector_number === cardData?.collector_number &&
+                            "active"
+                            } flex-shrink-0`}
+                        />
+                        <p className="flex flex-col">
+                          {print.set_name} #{print.collector_number}
+                          <span className="prices">
+                            {getBestEurPrice(print.prices, print.purchase_uris)}
+                            {getBestEurPrice(print.prices, print.purchase_uris) && getBestUsdPrice(print.prices, print.purchase_uris) && " | "}
+                            {getBestUsdPrice(print.prices, print.purchase_uris)}
+                          </span>
+                        </p>
+                      </li>
+                    </Link>
+                  );
+                })
+              ) : (
+                <div className="placeholder flex flex-col">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+              )}
+            </ul>
+          </div>
+          <div className="rules">
+            <h2>Rules</h2>
+            <ul className="flex flex-col">
+              {isFetched.rulesFetched ? (
+                rulingsData.length > 0 ? (
+                  rulingsData.map((rule: RulingsData, index: number) => (
+                    <li
+                      className="flex flex-col"
+                      key={"rule " + rule.oracle_id + index}
+                    >
+                      <h3>{rule.published_at}</h3>
+                      <p>{renderTextWithSymbols(rule.comment)}</p>
+                    </li>
+                  ))
+                ) : (
+                  <p>There is no rules for this card.</p>
+                )
+              ) : (
+                <div className="placeholder flex flex-col">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                </div>
+              )}
+            </ul>
+          </div>
+        </section>}
+    </>
+
   );
 };
 

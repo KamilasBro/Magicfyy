@@ -22,8 +22,17 @@ export interface CardData {
   loyalty?: number;
   set_name: string;
   rarity: string;
+  colors: string[];
+  cmc: number;
+  purchase_uris: {
+    [key: string]: string;
+  };
+  prices: {
+    [key: string]: string;
+  };
   image_uris?: {
     normal: string;
+    art_crop: string;
   };
   card_faces?: {
     mana_cost: string;
@@ -34,8 +43,10 @@ export interface CardData {
     flavor_text: string;
     name: string;
     loyalty?: number;
+    colors: string[];
     image_uris: {
       normal: string;
+      art_crop: string;
     };
   }[];
   prints_search_uri: string;

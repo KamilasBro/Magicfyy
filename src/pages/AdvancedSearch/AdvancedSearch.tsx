@@ -108,7 +108,9 @@ const AdvancedSearch: React.FC = () => {
   };
 
   const buildRarityQuery = (rarities: string[]) => {
-    return rarities.length > 0 ? `rarity:${rarities.join(",")}` : "";
+    if (rarities.length === 0) return "";
+    if (rarities.length === 1) return `rarity:${rarities[0]}`;
+    return `(${rarities.map(r => `rarity:${r}`).join(" OR ")})`;
   };
 
   const buildFlavorQuery = (flavor: string) => {
@@ -133,14 +135,23 @@ const AdvancedSearch: React.FC = () => {
     rarityQuery: string,
     flavorQuery: string
   ) => {
-    const query = `q=${name ? `name:${name}` : ""}${textQuery ? `+${textQuery}` : ""
-      }${gameModesQuery ? `+(${gameModesQuery})` : ""}${typeQuery ? `+${typeQuery}` : ""
-      }${colorsQuery ? `+${colorsQuery}` : ""}${manaCostQuery ? `+${manaCostQuery}` : ""
-      }${statsQuery ? `+${statsQuery}` : ""}${formatsQuery ? `+${formatsQuery}` : ""
-      }${setsQuery ? `+${setsQuery}` : ""}${rarityQuery ? `+${rarityQuery}` : ""
-      }${flavorQuery ? `+${flavorQuery}` : ""}`;
+    // Helper to add + only if needed and not before (
+    const addPart = (part: string) =>
+      part ? (part.startsWith("(") ? part : `+${part}`) : "";
 
-    const hasFilters = query !== "q="; // Check if query contains any filters
+    const query = `q=${name ? `name:${name}` : ""}`
+      + addPart(textQuery)
+      + (gameModesQuery ? `+(${gameModesQuery})` : "")
+      + addPart(typeQuery)
+      + addPart(colorsQuery)
+      + addPart(manaCostQuery)
+      + addPart(statsQuery)
+      + addPart(formatsQuery)
+      + addPart(setsQuery)
+      + addPart(rarityQuery)
+      + addPart(flavorQuery);
+
+    const hasFilters = query !== "q=";
     return hasFilters ? `${query}&lang:en&page=1` : `${query}lang:en&page=1`;
   };
 
@@ -172,18 +183,18 @@ const AdvancedSearch: React.FC = () => {
     navigate(`/search?${query}`);
   };
 
-  // const handleKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
-  //   if (event.key === "Enter") {
-  //     event.preventDefault();
-  //   }
-  // };
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+    }
+  };
 
   return (
     <section className="Advanced-search flex justify-center">
       <form
         className="inner"
         onSubmit={handleFormSubmit}
-      // onKeyDown={handleKeyDown}
+        onKeyDown={handleKeyDown}
       >
         <h1>Advanced Search</h1>
         <ul className="filters flex flex-col">

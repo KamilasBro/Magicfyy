@@ -5,6 +5,7 @@ import GoTopArrow from "../../components/GoTopArrow/GoTopArrow";
 import SendSvg from "../../assets/images/icons/send.svg?react";
 import CloseSvg from "../../assets/images/icons/close.svg?react";
 import LoadingCardsAnim from "../../components/LoadingCardsAnim/LoadingCardsAnim";
+import { CardSymbolData } from "../../interfaces/CardsInterface";
 import "./guessTheCard.scss";
 
 const getInitialChosenSet = () => {
@@ -32,7 +33,12 @@ const GuessTheCard: React.FC = () => {
     icon_svg_uri: string;
     name: string;
   }>(getInitialChosenSet());
-
+  // const [commanders, setCommanders] = useState<{
+  //   setCode: string;
+  //   isChosen: boolean;
+  //   icon_svg_uri: string;
+  //   name: string;
+  // }>();
   const [dataFromSet, setDataFromSet] = useState<CardData[]>([]);
   const [randomCard, setRandomCard] = useState<CardData>();
   const [randomCardIndex, setRandomCardIndex] = useState<number | null>(null);
@@ -54,6 +60,25 @@ const GuessTheCard: React.FC = () => {
   ];
   const loadedRandomCard = React.useRef(false);
   const [loading, setLoading] = useState(false);
+  const filteredCards = dataFromSet.filter((card) => {
+    return (
+      !guesses.some((guess) => guess.name === card.name) &&
+      card.name.toLowerCase().startsWith(searchValue.toLowerCase())
+    );
+  });
+  const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
+  const dropdownRefs = React.useRef<(HTMLLIElement | null)[]>([]);
+  useEffect(() => {
+    if (
+      highlightedIndex >= 0 &&
+      dropdownRefs.current[highlightedIndex]
+    ) {
+      dropdownRefs.current[highlightedIndex]?.scrollIntoView({
+        block: "nearest",
+        behavior: "smooth",
+      });
+    }
+  }, [highlightedIndex, filteredCards.length]);
   // When set is chosen, start loading
   useEffect(() => {
     if (chosenSet.isChosen && chosenSet.setCode) {
@@ -146,6 +171,10 @@ const GuessTheCard: React.FC = () => {
     console.log(randomCard);
   }, [dataFromSet]);
   //maintenance
+
+  useEffect(() => {
+    setHighlightedIndex(0);
+  }, [searchValue]);
 
   useEffect(() => {
     if (showPopup.show) {
@@ -328,7 +357,7 @@ const GuessTheCard: React.FC = () => {
         {
           showPopup.option === "reset" ? (
             <div className="popup popup-reset" onClick={(e) => e.stopPropagation()}>
-              <h2>Do you want to reset set?</h2>
+              <h2>Do you want to reset?</h2>
               <span className="reset-btns-wrap flex justify-center">
                 <button onClick={() => {
                   resetSet();
@@ -524,37 +553,71 @@ const GuessTheCard: React.FC = () => {
                         onChange={(event) => {
                           setSearchValue(event.target.value);
                         }}
+                        onKeyDown={(event) => {
+                          if (event.key === "ArrowDown") {
+                            event.preventDefault();
+                            setHighlightedIndex((prev) =>
+                              prev < filteredCards.length - 1 ? prev + 1 : 0
+                            );
+                          } else if (event.key === "ArrowUp") {
+                            event.preventDefault();
+                            setHighlightedIndex((prev) =>
+                              prev > 0 ? prev - 1 : filteredCards.length - 1
+                            );
+                          } else if (event.key === "Enter") {
+                            if (highlightedIndex >= 0 && filteredCards[highlightedIndex] && !winTheGame) {
+                              const card = filteredCards[highlightedIndex];
+                              setGuesses((prevState) => [...prevState, card]);
+                              setSearchValue("");
+                              setHighlightedIndex(-1);
+                              if (card.name === randomCard?.name) setWinTheGame(true);
+                            } else if (filteredCards.length === 1 && !winTheGame) {
+                              const card = filteredCards[0];
+                              setGuesses((prevState) => [...prevState, card]);
+                              setSearchValue("");
+                              setHighlightedIndex(-1);
+                              if (card.name === randomCard?.name) setWinTheGame(true);
+                            }
+                          }
+                        }}
                         disabled={winTheGame}
                       />
-                      <div className="send-wrap flex justify-center items-center">
+                      <div
+                        className="send-wrap flex justify-center items-center"
+                        onClick={() => {
+                          if (
+                            filteredCards.length === 1 &&
+                            !winTheGame
+                          ) {
+                            const card = filteredCards[0];
+                            setGuesses((prevState) => [...prevState, card]);
+                            setSearchValue("");
+                            if (card.name === randomCard?.name) setWinTheGame(true);
+                          }
+                        }}
+                      >
                         <SendSvg />
                       </div>
                     </div>
-                    {searchValue && (
+                    {searchValue && filteredCards.length > 0 && (
                       <ul className="dropdown">
-                        {dataFromSet
-                          .filter((card) => {
-                            // Sprawdź, czy karta nie jest już w zgadywanych i czy nazwa zaczyna się od wpisanej frazy
-                            return (
-                              !guesses.some((guess) => guess.name === card.name) && // Sprawdź, czy karta nie jest już zgadywana
-                              card.name.toLowerCase().startsWith(searchValue.toLowerCase()) // Sprawdź, czy nazwa karty zaczyna się od wpisanej frazy
-                            );
-                          })
-                          .map((card) => {
-                            return (
-                              <li
-                                key={card.id}
-                                className="flex"
-                                onClick={() => {
-                                  setGuesses((prevState) => [...prevState, card]);
-                                  setSearchValue("");
-                                  card.name === randomCard?.name && setWinTheGame(true);
-                                }}
-                              >
-                                <span className="card-name">{card.name}</span>
-                              </li>
-                            );
-                          })}
+                        {filteredCards.map((card, idx) => (
+                          <li
+                            key={card.id}
+                            ref={el => (dropdownRefs.current[idx] = el)}
+                            className={`flex${highlightedIndex === idx ? " highlighted" : ""}`}
+                            onMouseEnter={() => setHighlightedIndex(idx)}
+                            onMouseLeave={() => setHighlightedIndex(-1)}
+                            onClick={() => {
+                              setGuesses((prevState) => [...prevState, card]);
+                              setSearchValue("");
+                              setHighlightedIndex(-1);
+                              card.name === randomCard?.name && setWinTheGame(true);
+                            }}
+                          >
+                            <span className="card-name">{card.name}</span>
+                          </li>
+                        ))}
                       </ul>
                     )}
                   </div>

@@ -21,7 +21,7 @@ const Type: React.FC<TypeProps> = ({ setSelectedTypes }) => {
     { type: string; isIncluded: boolean }[]
   >([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
+  const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     const fetchCardTypes = async () => {
       try {
@@ -110,11 +110,15 @@ const Type: React.FC<TypeProps> = ({ setSelectedTypes }) => {
         !dropdownRef.current.contains(event.target as Node)
       ) {
         setShowDropdown(false);
+        inputRef.current?.blur();
       }
     };
 
     const handleScroll = () => {
-      setShowDropdown(false);
+      if (window.innerWidth > 800) {
+        setShowDropdown(false);
+        inputRef.current?.blur();
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -155,9 +159,9 @@ const Type: React.FC<TypeProps> = ({ setSelectedTypes }) => {
     setSelectedTypesState(updatedTypes);
   };
 
-  const handlePartialMatchesChange = () => {
-    // No functionality needed, keep the radio button for UI purposes only
-  };
+  // const handlePartialMatchesChange = () => {
+  //   // currently no partialMatch functionality
+  // };
 
   const filteredItems = (items: string[]) =>
     items.filter(
@@ -180,9 +184,8 @@ const Type: React.FC<TypeProps> = ({ setSelectedTypes }) => {
                 {selectedTypes.map(({ type, isIncluded }) => (
                   <li key={type} className="type-tag flex items-center">
                     <div
-                      className={`if-not flex items-center justify-center ${
-                        isIncluded ? "included" : "excluded"
-                      }`}
+                      className={`if-not flex items-center justify-center ${isIncluded ? "included" : "excluded"
+                        }`}
                       onClick={() => toggleTypeInclusion(type)}
                     >
                       {isIncluded ? "IS" : "NOT"}
@@ -194,6 +197,7 @@ const Type: React.FC<TypeProps> = ({ setSelectedTypes }) => {
               </ul>
             )}
             <input
+              ref={inputRef}
               className="type-input"
               placeholder="Enter a type and choose from the list"
               value={typeInput}
@@ -291,14 +295,14 @@ const Type: React.FC<TypeProps> = ({ setSelectedTypes }) => {
               </div>
             )}
           </div>
-          <div className="flex items-center radio-wrap">
+          {/* <div className="flex items-center radio-wrap">
             <input
               type="checkbox"
               className="radio"
               onChange={handlePartialMatchesChange}
             />
             <span>Allow partial type matches</span>
-          </div>
+          </div> */}
           <span className="subnote">
             Click the "IS" or "NOT" button to toggle between including and
             excluding a type.

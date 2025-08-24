@@ -31,7 +31,7 @@ const ChooseSet: React.FC<setChosenSetInterface> = ({ setChosenSet }) => {
         setSets(
           data.data.filter(
             (set: any) =>
-              set.card_count > 0 &&
+              set.card_count > 20 && //filter the sets with small amount of cards
               (set.set_type === "expansion" || set.set_type === "core")
           )
         );
@@ -93,6 +93,14 @@ const ChooseSet: React.FC<setChosenSetInterface> = ({ setChosenSet }) => {
           </ul>
         </div>
         <span className="btn-wrap flex">
+          {/* <button
+            disabled={!setFetched}
+            onClick={() => {
+
+            }}
+          >
+            Commanders
+          </button> */}
           <button
             disabled={!setFetched}
             onClick={() => {

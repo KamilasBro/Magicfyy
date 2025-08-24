@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [svgr(), react()],
   base: './',
   server: {
-    host: '0.0.0.0',
-    port: 5173, // lub inny, jeśli chcesz
+    host: '192.168.1.115',
+    port: 5173,
   },
 });

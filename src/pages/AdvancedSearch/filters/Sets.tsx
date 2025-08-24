@@ -25,7 +25,7 @@ const Sets: React.FC<SetsProps> = ({
   const [blocksInput, setBlocksInput] = useState("");
   const [sets, setSets] = useState<Set[]>([]);
   const blocks = [
-    { name: "Commander", code: "cmr" },
+    { name: "Commander", code: "cmd" },
     { name: "Conspiracy", code: "cns" },
     { name: "Magic Player Rewards", code: "mpr" },
     { name: "Arena League", code: "arl" },
@@ -96,7 +96,9 @@ const Sets: React.FC<SetsProps> = ({
     };
 
     const handleScroll = () => {
-      setShowDropdown(null);
+      if (window.innerWidth > 800) {
+        setShowDropdown(null);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);

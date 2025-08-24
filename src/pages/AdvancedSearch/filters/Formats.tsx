@@ -50,9 +50,10 @@ const Formats: React.FC<FormatsProps> = ({ formatsList, setFormatsList }) => {
     };
 
     const handleScroll = () => {
-      setShowDropdown(null);
+      if (window.innerWidth > 800) {
+        setShowDropdown(null);
+      }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     window.addEventListener("scroll", handleScroll);
     return () => {

@@ -10,33 +10,44 @@ body {
   background-color: $background;
   font-family: "Rubik", sans-serif;
   letter-spacing: 1px;
+  -webkit-tap-highlight-color: transparent;
 }
+
+
 ::-webkit-scrollbar {
   width: 5px;
+  height: 2px;
 }
+
 body::-webkit-scrollbar-track {
   background: $black;
 }
+
 ::-webkit-scrollbar-thumb {
   background: $orange;
   border-radius: 10px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: $red;
   border-radius: 10px;
 }
+
 .background-container {
   position: relative;
   width: 100%;
   height: 100%;
 }
+
 .background-container .bg-placeholder {
   background-color: $background;
 }
+
 .background-container img {
   filter: brightness(25%);
   object-fit: cover;
 }
+
 button {
   font-size: 14px;
   font-weight: 300;
@@ -45,17 +56,21 @@ button {
   background-color: $transparentBlack;
   transition: 300ms;
 }
+
 main {
   margin-top: 175px;
   width: 1520px;
 }
+
 input {
   border: none;
   outline: none;
 }
+
 input::placeholder {
   color: $white;
 }
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -68,26 +83,125 @@ input[type="number"] {
   -moz-appearance: textfield;
   appearance: textfield;
 }
+
 @keyframes cardFadeIn {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
 }
+
 .cards {
-  min-height: 300px;
   column-gap: 46px;
   row-gap: 50px;
 }
+
 .card {
   cursor: pointer;
   width: 215px;
   height: 300px;
-  transition: 300ms;
   border-radius: 12px;
+  image-rendering: auto; // Try 'auto', 'crisp-edges', or 'pixelated'
+  backface-visibility: hidden; // Helps with GPU artifacts
+  will-change: transform;
 }
+
 .card:hover {
   filter: drop-shadow(0px 0px 6px $orange);
+}
+
+@media screen and (max-width: 1600px) {
+  main {
+    width: 1300px;
+  }
+
+  button {
+    font-size: 13px;
+  }
+
+  .cards {
+    column-gap: 56px;
+  }
+}
+
+@media screen and (max-width: 1440px) {
+  main {
+    width: 1200px;
+  }
+
+  button {
+    font-size: 12px;
+  }
+
+  .cards {
+    column-gap: 31px;
+    row-gap: 40px;
+  }
+
+
+
+}
+
+@media screen and (max-width: 1280px) {
+  main {
+    width: 1000px;
+    margin-top: 135px;
+  }
+
+  .cards {
+    column-gap: 46px;
+  }
+
+}
+
+@media screen and (max-width: 1024px) {
+  main {
+    width: 770px;
+    margin-top: 135px;
+  }
+
+  .cards {
+    column-gap: 60px;
+  }
+
+  button {
+    font-size: 11px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  main {
+    width: 550px;
+    margin-top: 125px;
+  }
+
+  .cards {
+    column-gap: 60px;
+    justify-content: center;
+  }
+
+  button {
+    font-size: 10px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  main {
+    width: 400px;
+    margin-top: 115px;
+  }
+
+  button {
+    font-size: 10px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  main {
+    width: 315px;
+    margin-top: 105px;
+  }
 }

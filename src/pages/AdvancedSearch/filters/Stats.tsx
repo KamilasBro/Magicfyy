@@ -37,7 +37,9 @@ const Stats: React.FC<StatsProps> = ({ statsList, setStatsList }) => {
     };
 
     const handleScroll = () => {
-      setShowDropdown(null);
+      if (window.innerWidth > 800) {
+        setShowDropdown(null);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
@@ -123,10 +125,10 @@ const Stats: React.FC<StatsProps> = ({ statsList, setStatsList }) => {
                   {stat === "cmc"
                     ? "Mana value"
                     : stat === "pow"
-                    ? "Power"
-                    : stat === "tou"
-                    ? "Toughness"
-                    : "Loyality"}
+                      ? "Power"
+                      : stat === "tou"
+                        ? "Toughness"
+                        : "Loyality"}
                 </span>
                 <ArrowDownSvg
                   className={`arrow ${showDropdown === "stat" && "active"}`}
@@ -150,19 +152,18 @@ const Stats: React.FC<StatsProps> = ({ statsList, setStatsList }) => {
                   {condition === "="
                     ? "Equal to"
                     : condition === ">"
-                    ? "Greater than"
-                    : condition === "<"
-                    ? "Less than"
-                    : condition === "<="
-                    ? "Less than or equal to"
-                    : condition === ">="
-                    ? "Greater than or equal to"
-                    : "Not equal to"}
+                      ? "Greater than"
+                      : condition === "<"
+                        ? "Less than"
+                        : condition === "<="
+                          ? "Less than or equal to"
+                          : condition === ">="
+                            ? "Greater than or equal to"
+                            : "Not equal to"}
                 </span>
                 <ArrowDownSvg
-                  className={`arrow ${
-                    showDropdown === "condition" && "active"
-                  }`}
+                  className={`arrow ${showDropdown === "condition" && "active"
+                    }`}
                 />
               </div>
               {showDropdown === "condition" && (
@@ -184,14 +185,16 @@ const Stats: React.FC<StatsProps> = ({ statsList, setStatsList }) => {
                 </ul>
               )}
             </div>
-            <input
-              type="text"
-              className="stat-value"
-              placeholder="Any number ex. “2”"
-              value={statValue}
-              onChange={handleStatValueChange}
-            />
-            <AddSvg className="add-btn" onClick={handleAddStat} />
+            <div className="flex items-center">
+              <input
+                type="text"
+                className="stat-value"
+                placeholder="Any number ex. “2”"
+                value={statValue}
+                onChange={handleStatValueChange}
+              />
+              <AddSvg className="add-btn" onClick={handleAddStat} />
+            </div>
           </div>
         </div>
       </div>

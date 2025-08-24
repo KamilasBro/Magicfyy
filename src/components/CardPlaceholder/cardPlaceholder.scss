@@ -1,4 +1,5 @@
 @import "../../assets/scss/partials/colors";
+
 .card-placeholder {
   width: 215px;
   height: 300px;
@@ -6,19 +7,15 @@
   border-radius: 10px;
   padding: 25px;
   background-color: $transparentBlack; // Gray background color
-  -webkit-mask-image: linear-gradient(
-    -75deg,
-    rgba(255, 255, 255, 0.6) 30%,
-    #fff 50%,
-    rgba(255, 255, 255, 0.6) 70%
-  ); // White mask
+  -webkit-mask-image: linear-gradient(-75deg,
+      rgba(255, 255, 255, 0.6) 30%,
+      #fff 50%,
+      rgba(255, 255, 255, 0.6) 70%); // White mask
   -webkit-mask-size: 200%;
-  mask-image: linear-gradient(
-    -75deg,
-    rgba(255, 255, 255, 0.6) 30%,
-    #fff 50%,
-    rgba(255, 255, 255, 0.6) 70%
-  );
+  mask-image: linear-gradient(-75deg,
+      rgba(255, 255, 255, 0.6) 30%,
+      #fff 50%,
+      rgba(255, 255, 255, 0.6) 70%);
   mask-size: 200%;
   animation: shine 2s infinite;
 }
@@ -44,20 +41,29 @@
     mask-position: -50%;
   }
 }
+
 .card-placeholder-img {
   width: 100%;
   border-radius: 10px;
   background-color: $gray;
   height: 100px;
 }
+
 .card-placeholder-content {
   margin-top: auto;
   width: 100%;
   row-gap: 15px;
 }
+
 .card-placeholder-content div {
   border-radius: 10px;
   height: 10px;
   width: inherit;
   background-color: $gray;
 }
+
+@media screen and (max-width: 1600px) {}
+
+@media screen and (max-width: 1440px) {}
+
+@media screen and (max-width: 1280px) {}
