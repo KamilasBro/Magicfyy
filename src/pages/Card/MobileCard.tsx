@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 import StarSvg from "../../assets/images/icons/rarity.svg?react";
 import CardPlaceholder from "../../components/CardPlaceholder/CardPlaceholder";
 import { CardData, RulingsData, CardSymbolData } from "../../interfaces/CardsInterface";
