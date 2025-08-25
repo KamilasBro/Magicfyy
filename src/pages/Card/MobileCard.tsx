@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import StarSvg from "../../assets/images/icons/rarity.svg?react";
 import CardPlaceholder from "../../components/CardPlaceholder/CardPlaceholder";
 import { CardData, RulingsData, CardSymbolData } from "../../interfaces/CardsInterface";
@@ -30,7 +30,49 @@ interface MobileCardProps {
 }
 const MobileCard: React.FC<MobileCardProps> = (props) => {
     const [currentTab, setCurrentTab] = useState("card");
-    console.log(props.printsData)
+    const touchStartRef = useRef({ x: 0, y: 0 });
+    const touchActiveRef = useRef(false);
+    const SWIPE_THRESHOLD = 150; // pixels, tweak to taste
+    const TABS = ["card", "cardDetails", "prints", "rules"];
+
+    const goToNextTab = () => {
+        const idx = TABS.indexOf(currentTab);
+        const next = Math.min(TABS.length - 1, idx + 1);
+        if (next !== idx) setCurrentTab(TABS[next]);
+    };
+    const goToPrevTab = () => {
+        const idx = TABS.indexOf(currentTab);
+        const prev = Math.max(0, idx - 1);
+        if (prev !== idx) setCurrentTab(TABS[prev]);
+    };
+
+    const handleTouchStart = (e: React.TouchEvent) => {
+        const t = e.touches[0];
+        touchStartRef.current = { x: t.clientX, y: t.clientY };
+        touchActiveRef.current = true;
+    };
+
+    const handleTouchEnd = (e: React.TouchEvent) => {
+        if (!touchActiveRef.current) return;
+        const t = e.changedTouches[0];
+        const dx = t.clientX - touchStartRef.current.x;
+        const dy = t.clientY - touchStartRef.current.y;
+
+        // only trigger when horizontal movement is dominant and over threshold
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > SWIPE_THRESHOLD) {
+            if (dx < 0) {
+                goToNextTab(); // swipe left -> next tab
+            } else {
+                goToPrevTab(); // swipe right -> prev tab
+            }
+        }
+
+        touchActiveRef.current = false;
+    };
+
+    const handleTouchCancel = () => {
+        touchActiveRef.current = false;
+    };
     function renderPrintsImg(printData: CardData) {
         const typeLine =
             printData.type_line || printData?.card_faces?.[0]?.type_line;
@@ -217,14 +259,12 @@ const MobileCard: React.FC<MobileCardProps> = (props) => {
                                 );
                             })
                         ) : (
-                            <div className="placeholder flex flex-col">
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                            </div>
+                            Array.from({ length: 6 }, (_, index) => (
+                                <div className="placeholder" key={index}>
+                                    <CardPlaceholder />
+                                    <div className="print-detail"></div>
+                                </div>
+                            ))
                         )}
                     </ul>
                 );
@@ -262,7 +302,10 @@ const MobileCard: React.FC<MobileCardProps> = (props) => {
         }
     }
     return (
-        <section className="Mobile-card">
+        <section className="Mobile-card"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            onTouchCancel={handleTouchCancel}>
             <ul className="mobile-card-menu">
                 <li className={currentTab === "card" ? "active" : ""} onClick={() => setCurrentTab("card")}>Card</li>
                 <li className={currentTab === "cardDetails" ? "active" : ""} onClick={() => setCurrentTab("cardDetails")}>Card Details</li>

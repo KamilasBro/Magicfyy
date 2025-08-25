@@ -137,27 +137,34 @@
 }
 
 @media screen and (max-width: 1024px) {
-  .Mobile-card .card-placeholder {
+  .Mobile-card .card-tab .card-placeholder {
     height: 475px;
     width: 330px;
     border-radius: 20px;
   }
 
-  .Mobile-card .card-placeholder-img {
+
+  .Mobile-card .card-tab .card-placeholder-img {
     height: 170px;
   }
 
-  .Mobile-card .card-placeholder-content {
+
+  .Mobile-card .card-tab .card-placeholder-content {
     row-gap: 30px;
   }
 
-  .Mobile-card .card-placeholder-content div {
+  .Mobile-card .card-tab .card-placeholder-content div {
     height: 20px;
+  }
+
+  .Mobile-card .prints .card-placeholder-content {
+    row-gap: 10px;
   }
 
   .Mobile-card .card-details {
     width: 100%;
   }
+
   .Mobile-card .card-details-placeholders {
     gap: 50px;
     border-radius: 10px;
@@ -192,6 +199,37 @@
     width: 100%;
   }
 
+
+  .Mobile-card .prints .card-placeholder {
+    height: 244px;
+    width: 175px;
+    border-radius: 10px;
+  }
+
+  .Mobile-card .prints .card-placeholder-img {
+    height: 80px;
+  }
+
+  .Mobile-card .prints .print-detail {
+    margin-top: 10px;
+    border-radius: 5px;
+    -webkit-mask-image: linear-gradient(-75deg,
+        rgba(255, 255, 255, 0.6) 30%,
+        #fff 50%,
+        rgba(255, 255, 255, 0.6) 70%); // White mask
+    -webkit-mask-size: 200%;
+    mask-image: linear-gradient(-75deg,
+        rgba(255, 255, 255, 0.6) 30%,
+        #fff 50%,
+        rgba(255, 255, 255, 0.6) 70%);
+    mask-size: 200%;
+    animation: shine 2s infinite;
+    width: 100%;
+    height: 25px;
+    background-color: $gray;
+  }
+
+
   .Mobile-card .rules .placeholder {
     -webkit-mask-image: linear-gradient(-75deg,
         rgba(255, 255, 255, 0.6) 30%,
@@ -207,6 +245,10 @@
     gap: 30px;
   }
 
+  .Mobile-card .rules {
+    width: 100%;
+  }
+
   .Mobile-card .rules .placeholder div {
     background-color: $gray;
     height: 20px;
@@ -217,4 +259,5 @@
   .Mobile-card .rules .placeholder div:nth-child(odd) {
     width: 15%;
   }
+
 }
