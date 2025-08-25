@@ -93,15 +93,6 @@ const MobileCard: React.FC<MobileCardProps> = (props) => {
                     style={isArvinox ? { transform: "rotate(180deg)" } : undefined}
                 />
             );
-        }
-        if (printData?.card_back_id && props.showCardBack) {
-            const [firstChar, secondChar] = printData.card_back_id.split("-")[0];
-            return (
-                <img
-                    src={`https://backs.scryfall.io/normal/${firstChar}/${secondChar}/${printData.card_back_id}.jpg?1665006175`}
-                    className="card-img"
-                />
-            );
         } else {
             return (
                 <img
