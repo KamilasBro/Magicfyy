@@ -1,4 +1,4 @@
-import logo from "../../assets/images/logo/logo.webp";
+import LogoSvg from "../../assets/images/logo/footerLogo.svg?react";
 import { Link } from "react-router-dom";
 import "./footer.scss";
 const Footer: React.FC = () => {
@@ -6,7 +6,7 @@ const Footer: React.FC = () => {
     <footer className="footer flex items-center justify-center">
       <div className="inner-footer flex items-center justify-between">
         <Link to={"/"}>
-          <img src={logo} alt="logo" />
+          <LogoSvg className="logo"/>
         </Link>
         <p>
           All names and trademarks used on this website belong to their

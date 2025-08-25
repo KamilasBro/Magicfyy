@@ -1,21 +1,190 @@
 @import "../../assets/scss/partials/colors";
-.navbar{
-    height: 100px;
-    transition: 300ms;
+
+.navbar {
+  height: 100px;
+  transition: 300ms;
 }
-.navbar .inner-nav{
-    width: 1520px;
+
+.MobileNavbar {
+  display: none;
 }
-.navbar .nav-links{
+
+.navbar .inner-nav {
+  width: 1520px;
+}
+
+.navbar .hamburger {
+  display: none;
+}
+
+.navbar .nav-links {
+  gap: 30px;
+}
+
+.navbar .nav-link {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.navbar .nav-link a:hover {
+  transition: 300ms;
+  color: $orange;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0%);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@media (max-width: 1600px) {
+  .navbar .inner-nav {
+    width: 1300px;
+  }
+
+  .navbar .nav-links {
+    gap: 25px;
+  }
+
+  .navbar .nav-link {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 1440px) {
+  .navbar .inner-nav {
+    width: 1200px;
+  }
+}
+
+@media (max-width: 1280px) {
+  .navbar {
+    height: 90px;
+  }
+
+  .navbar .inner-nav {
+    width: 1000px;
+  }
+
+  .navbar .logo {
+    width: 160px;
+  }
+
+  .navbar .nav-link {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .navbar {
+    height: 80px;
+  }
+
+  .navbar .inner-nav {
+    width: 770px;
+  }
+
+  .navbar .nav-links {
+    display: none;
+  }
+
+  .navbar .logo {
+    display: none;
+  }
+
+  .navbar .hamburger {
+    display: block;
+  }
+
+  .MobileNavbar {
+    width: 500px;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: $background;
+    padding-inline: 50px;
+    padding-block: 25px;
+    animation-name: slideIn;
+    animation-duration: 250ms;
+    overflow: auto;
+  }
+
+  .MobileNavbar a {
+    width: fit-content;
+  }
+
+  .MobileNavbar .close-icon {
+    width: 40px;
+    position: absolute;
+    right: 25px;
+    top: 5px;
+
+    path {
+      stroke-width: 5px;
+    }
+  }
+
+  .MobileNavbar .nav-links {
+    flex-direction: column;
     gap: 30px;
+    margin-top: 50px;
+  }
 }
-.navbar .nav-link{
-    font-size: 16px;
-    font-weight: 400;
+
+@media (max-width: 800px) {
+  .navbar {
+    height: 70px;
+  }
+
+  .navbar .inner-nav {
+    width: 550px;
+  }
 }
-.navbar .nav-link:hover{
-    font-size: 16px;
-    font-weight: 400;
-    transition: 300ms;
-    color: $orange;
+
+@media (max-width: 600px) {
+  .navbar {
+    height: 60px;
+  }
+
+  .navbar .inner-nav {
+    width: 400px;
+  }
+
+  .navbar .hamburger {
+    width: 35px;
+    height: 35px;
+  }
+
+  .MobileNavbar {
+    width: 100%;
+  }
+
+}
+
+@media (max-width: 425px) {
+  .navbar .inner-nav {
+    width: 315px;
+  }
+
+  .MobileNavbar .close-icon {
+    width: 35px;
+  }
+
+  .MobileNavbar .nav-links {
+    text-align: center;
+  }
 }

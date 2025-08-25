@@ -5,6 +5,7 @@ import { CardData, CardlistData } from "../../interfaces/CardsInterface";
 import GoTopArrow from "../../components/GoTopArrow/GoTopArrow";
 import "./searched.scss";
 import NotFound from "../NotFound/NotFound";
+import LoadingCardsAnim from "../../components/LoadingCardsAnim/LoadingCardsAnim";
 
 const Searched: React.FC = () => {
   const location = useLocation();
@@ -34,7 +35,7 @@ const Searched: React.FC = () => {
       data: [],
     }); // Reset card list data
     setLoadedCards([]); // Reset loaded cards state
-    setVisibleCards(25); // Reset visible cards
+    setVisibleCards(50); // Reset visible cards
 
     if (currentPage !== null && isNaN(parseInt(currentPage))) {
       return navigate(handlePage("start"));
@@ -63,13 +64,22 @@ const Searched: React.FC = () => {
   }, [currentPage]);
 
   useEffect(() => {
-    observer.current = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setVisibleCards((prevVisibleCards) => Math.min(prevVisibleCards + 25, searchedCards.data.length));
-        }
-      });
-    });
+    observer.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisibleCards((prevVisibleCards) =>
+              Math.min(prevVisibleCards + 25, searchedCards.data.length)
+            );
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: "0px 0px 150px 0px",
+        threshold: 0,
+      }
+    );
 
     const sentinel = document.querySelector("#sentinel");
     if (sentinel) {
@@ -98,9 +108,15 @@ const Searched: React.FC = () => {
           break;
         case "end":
           if (searchedCards.total_cards % 175 === 0) {
-            urlParams.set("page", `${Math.floor(searchedCards.total_cards / 175)}`);
+            urlParams.set(
+              "page",
+              `${Math.floor(searchedCards.total_cards / 175)}`
+            );
           } else {
-            urlParams.set("page", `${Math.floor(searchedCards.total_cards / 175) + 1}`);
+            urlParams.set(
+              "page",
+              `${Math.floor(searchedCards.total_cards / 175) + 1}`
+            );
           }
           break;
       }
@@ -133,15 +149,17 @@ const Searched: React.FC = () => {
 
   function returnCardsCounter() {
     return (
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center cards-counter-wrap">
         <div className="cards-counter">
           {searchedCards.data.length > 0
-            ? `${handleCardCounter(1)} - ${handleCardCounter(2)} of ${searchedCards.total_cards} cards`
-            : `Searching for cards`}
+            ? `${handleCardCounter(1)} - ${handleCardCounter(2)} of ${searchedCards.total_cards
+            } cards`
+            : `Searching`}
         </div>
         <ul className={"counter-buttons-wrap flex"}>
           <button
-            className={`${currentPage && parseInt(currentPage) > 1 && "active"}`}
+            className={`${currentPage && parseInt(currentPage) > 1 && "active"
+              }`}
             disabled={!!currentPage && parseInt(currentPage) === 1}
             onClick={() => {
               navigate(handlePage("start"));
@@ -150,7 +168,8 @@ const Searched: React.FC = () => {
             {"<<"}
           </button>
           <button
-            className={`${currentPage && parseInt(currentPage) > 1 && "active"}`}
+            className={`${currentPage && parseInt(currentPage) > 1 && "active"
+              }`}
             disabled={!!currentPage && parseInt(currentPage) === 1}
             onClick={() => {
               navigate(handlePage("remove"));
@@ -180,47 +199,69 @@ const Searched: React.FC = () => {
       </div>
     );
   }
-
   return (
     <section className="Searched">
       {cardNotFound ? (
-        <NotFound message="Cards" />
+        <NotFound />
       ) : (
         <>
           <GoTopArrow />
           {returnCardsCounter()}
-          <ul className="cards flex flex-wrap">
-            {searchedCards.data.slice(0, visibleCards).map((card: CardData, index: number) => (
-              <Link to={`/card/${card.set}/${card.collector_number}`} key={card.id}>
-                <li>
-                  {!loadedCards[index] && <CardPlaceholder />} {/* Placeholder */}
-                  {card.image_uris ? (
-                    <img
-                      className="card"
-                      src={card.image_uris.normal}
-                      alt="Card"
-                      loading="eager"
-                      onLoad={() => handleImageLoad(index)} // Update load state
-                      style={{ display: loadedCards[index] ? "block" : "none" }} // Hide until loaded
-                    />
-                  ) : (
-                    card.card_faces && (
-                      <img
-                        className="card"
-                        src={card.card_faces[0].image_uris.normal}
-                        alt="Card"
-                        loading="eager"
-                        onLoad={() => handleImageLoad(index)}
-                        style={{ display: loadedCards[index] ? "block" : "none" }}
-                      />
-                    )
-                  )}
-                </li>
-              </Link>
-            ))}
-          </ul>
-          <div id="sentinel" style={{ height: "1px" }}></div>
-          {returnCardsCounter()}
+          {searchedCards.data.length === 0 ? (
+            <LoadingCardsAnim />
+          ) : (
+            <>
+              <ul className="cards flex flex-wrap">
+                {searchedCards.data
+                  .slice(0, visibleCards)
+                  .map((card: CardData, index: number) => {
+                    const isArvinox =
+                      card.name === "Arvinox, the Mind Flail" && card.set === "sld";
+                    return (
+                      <Link
+                        to={`/card/${card.set}/${card.collector_number}`}
+                        key={card.id}
+                      >
+                        <li>
+                          {!loadedCards[index] && <CardPlaceholder />}
+                          {/* Placeholder */}
+                          {card.image_uris ? (
+                            <img
+                              className="card"
+                              src={card.image_uris.normal}
+                              alt="Card"
+                              loading="eager"
+                              onLoad={() => handleImageLoad(index)}
+                              style={{
+                                display: loadedCards[index] ? "block" : "none",
+                                ...(isArvinox ? { transform: "rotate(180deg)" } : {}),
+                              }}
+                            />
+                          ) : (
+                            card.card_faces && (
+                              <img
+                                className="card"
+                                src={card.card_faces[0].image_uris.normal}
+                                alt="Card"
+                                loading="eager"
+                                onLoad={() => handleImageLoad(index)}
+                                style={{
+                                  display: loadedCards[index] ? "block" : "none",
+                                  ...(isArvinox ? { transform: "rotate(180deg)" } : {}),
+                                }}
+                              />
+                            )
+                          )}
+                        </li>
+                      </Link>
+                    );
+                  })}
+              </ul>
+              <div id="sentinel" style={{ height: "1px" }}></div>
+            </>
+          )}
+
+          {searchedCards.data.length > 0 && returnCardsCounter()}
         </>
       )}
     </section>

@@ -1,22 +1,84 @@
 @import "../../assets/scss/partials/colors";
 
-.Searched .cards-counter{
+.Searched .cards-counter {
     font-size: 28px;
     font-weight: 400;
     padding: 10px 30px 10px 30px;
     background-color: $transparentBlack;
     border-radius: 10px;
 }
-.Searched .counter-buttons-wrap{
+
+.Searched .counter-buttons-wrap {
     column-gap: 15px;
 }
-.Searched .counter-buttons-wrap .active{
+
+.Searched .counter-buttons-wrap .active {
     background-color: $orange;
     transition: 300ms;
 }
-.Searched .counter-buttons-wrap .active:hover{
+
+.Searched .counter-buttons-wrap .active:hover {
     background-color: $red;
 }
-.Searched .cards{
+
+.Searched .cards {
     margin-block: 100px;
+}
+
+@media (max-width: 1600px) {
+    .Searched .cards-counter {
+        font-size: 26px;
+    }
+}
+
+@media (max-width: 1440px) {
+    .Searched .cards-counter {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 1280px) {
+    .Searched .cards-counter {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .Searched .counter-buttons-wrap .active:hover {
+        background-color: $orange;
+    }
+
+    .Searched .cards-counter {
+        font-size: 20px;
+    }
+
+    .Searched .cards {
+        margin-block: 75px;
+    }
+}
+
+@media (max-width: 800px) {
+    .Searched .cards-counter {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 600px) {
+    .Searched .cards-counter-wrap {
+        flex-direction: column;
+        row-gap: 25px;
+    }
+
+
+    .Searched .cards-counter {
+        font-size: 18px;
+    }
+
+    .Searched .counter-buttons-wrap button {
+        font-size: 14px;
+    }
+
+    .Searched .cards {
+        margin-block: 50px;
+    }
 }

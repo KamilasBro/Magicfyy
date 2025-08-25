@@ -1,13 +1,16 @@
 @import "../../assets/scss/partials/colors";
+
 .Chosen-set h1 {
   font-size: 42px;
   font-weight: 600;
 }
+
 .Chosen-set .h1-set-icon {
   width: 50px;
   margin-right: 25px;
   filter: invert(35%) sepia(100%) saturate(7500%) hue-rotate(30deg);
 }
+
 .Chosen-set .search-bar {
   margin-top: 50px;
   margin-bottom: 25px;
@@ -15,23 +18,28 @@
   background-color: $transparentBlack;
   border-radius: 10px;
 }
+
 .Chosen-set .search-wrap {
   border-radius: 10px 0px 0px 10px;
   height: 70px;
   width: 70px;
   transition: 300ms;
 }
+
 .Chosen-set .search-wrap svg {
   width: 32px;
   height: 32px;
 }
+
 .Chosen-set .search-wrap svg path {
   stroke: $white;
   stroke-width: 8px;
 }
+
 .Chosen-set .input-wrap {
   width: 90%;
 }
+
 .Chosen-set input {
   font-size: 20px;
   font-weight: 400;
@@ -41,11 +49,162 @@
   padding-inline: 10px;
   height: 100%;
 }
-.Chosen-set .sets-wrap {
-  margin-top: 100px;
-  column-gap: 100px;
-  row-gap: 75px;
-}
+
+// .Chosen-set .sets-wrap {
+//   margin-top: 100px;
+//   column-gap: 100px;
+//   row-gap: 75px;
+// }
+
 .Chosen-set .cards {
   margin-top: 100px;
+}
+
+@media screen and (max-width: 1600px) {
+
+  .Chosen-set .search-bar {
+    width: 600px;
+  }
+
+  .Chosen-set .search-wrap {
+    height: 67px;
+    width: 67px;
+  }
+
+  .Chosen-set .search-wrap svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .Chosen-set input {
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 1440px) {
+
+  .Chosen-set .search-bar {
+    width: 550px;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .Chosen-set .search-bar {
+    width: 500px;
+  }
+
+  .Chosen-set .search-wrap {
+    height: 65px;
+    width: 65px;
+  }
+
+  .Chosen-set .search-wrap svg {
+    width: 25px;
+    height: 25px;
+  }
+
+  .Chosen-set input {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .Chosen-set {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+
+  .Chosen-set .search-wrap {
+    height: 63px;
+    width: 63px;
+  }
+
+  .Chosen-set input {
+    font-size: 14px;
+  }
+
+  .Chosen-set .cards {
+    margin-top: 75px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .Chosen-set h1 {
+    font-size: 40px;
+  }
+
+  .Chosen-set .search-wrap {
+    height: 61px;
+    width: 61px;
+  }
+
+  .Chosen-set input {
+    font-size: 13px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .Chosen-set h1 {
+    font-size: 34px;
+  }
+
+  .Chosen-set .h1-set-icon {
+    width: 40px;
+  }
+
+  .Chosen-set .search-bar {
+    width: 400px;
+  }
+
+  .Chosen-set .search-wrap {
+    height: 59px;
+    width: 59px;
+  }
+
+  .Chosen-set .search-wrap svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .Chosen-set input {
+    font-size: 12px;
+  }
+
+  .Chosen-set .cards {
+    margin-top: 50px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .Chosen-set h1 {
+    font-size: 26px;
+  }
+
+  .Chosen-set .h1-set-icon {
+    width: 35px;
+  }
+
+  .Chosen-set .search-bar {
+    width: 315px;
+  }
+
+  .Chosen-set .search-wrap {
+    height: 50px;
+    width: 50px;
+  }
+
+  .Chosen-set .search-wrap svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .Chosen-set input {
+    font-size: 12px;
+  }
+
+  .Chosen-set .cards {
+    margin-top: 50px;
+  }
 }

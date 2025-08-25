@@ -1,8 +1,15 @@
 @import "../../assets/scss/partials/colors";
+
+.Home {
+  width: 100%;
+  overflow-x: visible; // or unset, but NOT hidden
+}
+
 .Home h1 {
   font-size: 48px;
   font-weight: 600;
 }
+
 .Home .search-bar {
   margin-top: 50px;
   margin-bottom: 25px;
@@ -10,6 +17,7 @@
   background-color: $transparentBlack;
   border-radius: 10px;
 }
+
 .Home .search-wrap {
   cursor: pointer;
   background-color: $orange;
@@ -18,20 +26,25 @@
   width: 70px;
   transition: 300ms;
 }
+
 .Home .search-wrap:hover {
   background-color: $red;
 }
+
 .Home .search-wrap svg {
   width: 32px;
   height: 32px;
 }
+
 .Home .search-wrap svg path {
   stroke: $white;
   stroke-width: 8px;
 }
+
 .Home .input-wrap {
   width: 90%;
 }
+
 .Home input {
   font-size: 20px;
   font-weight: 400;
@@ -41,12 +54,222 @@
   padding-inline: 25px;
   height: 100%;
 }
+
 .Home ul {
   gap: 15px;
 }
+
 .Home ul button:hover {
   background-color: $orange;
 }
+
 .Home .cards {
+  will-change: transform;
   margin-top: 50px;
+  overflow: hidden;
+  padding-block: 20px;
+}
+
+.Home .cards .card {
+  flex-shrink: 0;
+  max-width: 1520px;
+  margin-right: 50px;
+}
+
+.Home .card-placeholder {
+  margin-right: 50px;
+}
+
+.carousel {
+  display: flex;
+  flex-direction: row;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  scroll-behavior: auto;
+  padding-block: 20px;
+}
+
+@media screen and (max-width: 1600px) {
+  .Home h1 {
+    font-size: 46px;
+  }
+
+  .Home .search-bar {
+    width: 650px;
+  }
+
+  .Home .search-wrap {
+    height: 67px;
+    width: 67px;
+  }
+
+  .Home input {
+    font-size: 18px;
+    padding-inline: 23px;
+  }
+
+  .Home .cards {
+    padding: 10px;
+  }
+
+  .Home .cards .card {
+    max-width: 1300px;
+  }
+}
+
+
+
+@media screen and (max-width: 1440px) {
+  .Home .search-bar {
+    width: 600px;
+  }
+
+  .Home .cards .card {
+    max-width: 1200px;
+  }
+}
+
+@media screen and (max-width: 1280px) {
+  .Home h1 {
+    font-size: 44px;
+  }
+
+  .Home .search-bar {
+    width: 500px;
+  }
+
+  .Home .search-wrap {
+    height: 65px;
+    width: 65px;
+  }
+
+  .Home .search-wrap svg {
+    width: 25px;
+    height: 25px;
+  }
+
+  .Home input {
+    font-size: 16px;
+  }
+
+  .Home .cards .card {
+    max-width: 1000px;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .Home .search {
+    align-items: center;
+  }
+
+  .Home h1 {
+    font-size: 42px;
+  }
+
+  .Home .search-wrap {
+    height: 63px;
+    width: 63px;
+  }
+
+  .Home input {
+    font-size: 14px;
+  }
+
+  .Home .search-buttons {
+    width: 500px;
+  }
+
+  .Home .cards .card {
+    max-width: 770px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .Home h1 {
+    font-size: 40px;
+  }
+
+  .Home .search-wrap {
+    height: 61px;
+    width: 61px;
+  }
+
+  .Home input {
+    font-size: 13px;
+  }
+
+  .Home .cards .card {
+    max-width: 550px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .Home h1 {
+    font-size: 38px;
+  }
+
+  .Home .search-bar {
+    width: 400px;
+  }
+
+  .Home .search-wrap {
+    height: 59px;
+    width: 59px;
+  }
+
+  .Home .search-wrap svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .Home input {
+    font-size: 12px;
+  }
+
+  .Home .search-buttons {
+    width: 400px;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .Home .cards .card {
+    max-width: 400px;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .Home h1 {
+    font-size: 32px;
+  }
+
+  .Home .search-bar {
+    margin-top: 25px;
+    width: 315px;
+  }
+
+  .Home .search-wrap {
+    height: 50px;
+    width: 50px;
+  }
+
+  .Home .search-wrap svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .Home .search-buttons {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: left;
+    gap: 15px;
+  }
+
+  .Home .cards {
+    margin-top: 25px;
+    padding-block: 0px;
+  }
+
+  .Home .cards .card {
+    max-width: 315px;
+  }
 }

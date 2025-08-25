@@ -8,6 +8,9 @@ const images = [bg1, bg2, bg3, bg4, bg5];
 
 const BackgroundSlideshow = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imagesLoaded, setImagesLoaded] = useState<boolean[]>(
+    Array(images.length).fill(false)
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -17,21 +20,42 @@ const BackgroundSlideshow = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const handleImageLoad = (index: number) => {
+    setImagesLoaded((prevState) => {
+      const updatedState = [...prevState];
+      updatedState[index] = true; // Mark the image as loaded
+      return updatedState;
+    });
+  };
+
   return (
     <div className="background-container">
       {images.map((image, index) => (
         <img
-        className="fixed top-0 left-0 w-screen h-screen"
+          className="fixed top-0 left-0 w-screen h-screen"
           key={`bg` + index}
           src={image}
           alt={`Background ${index + 1}`}
+          onLoad={() => handleImageLoad(index)}
           style={{
             transition: "opacity 0.5s",
-            opacity: index === currentImageIndex ? 1 : 0, // Show current image
+            opacity: imagesLoaded[index]
+              ? index === currentImageIndex
+                ? 1
+                : 0
+              : 0, // Show current image if loaded
             zIndex: -index - 1, // Decreasing z-index for subsequent images
           }}
         />
       ))}
+      {!imagesLoaded[currentImageIndex] && (
+        <div
+          className="fixed top-0 left-0 w-screen h-screen bg-placeholder"
+          style={{
+            zIndex: -images.length - 1, // Ensure placeholder is behind all images
+          }}
+        />
+      )}
     </div>
   );
 };

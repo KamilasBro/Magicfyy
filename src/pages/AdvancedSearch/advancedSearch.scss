@@ -1,43 +1,811 @@
 @import "../../assets/scss/partials/colors";
-.Advanced_search .inner {
+
+//Generic styles
+.Advanced-search .inner {
   width: 1000px;
+  user-select: none;
 }
-.Advanced_search h1 {
+
+.Advanced-search h1 {
   font-size: 42px;
   font-weight: 600;
 }
-.Advanced_search .filters {
+
+.Advanced-search .filters {
   margin-top: 75px;
   gap: 50px;
 }
-.Advanced_search .filter-tag {
-  width: 250px;
+
+.Advanced-search .filter-label {
+  margin-top: 7.5px;
   font-size: 28px;
   font-weight: 500;
 }
-.Advanced_search .filter-tag svg {
+
+.Advanced-search .filter-label svg {
   height: 40px;
   width: 40px;
   margin-right: 25px;
 }
-.Advanced_search hr {
-  width: 100%;
-  border-color: rgba(234, 75, 18, 0.55);
-  margin-top: 25px;
+
+.Advanced-search .input-wrap {
+  width: 750px;
+  position: relative;
 }
-.Advanced_search .filter .input-wrap {
+
+.Advanced-search .filter input:not([type="checkbox"]) {
   width: 100%;
-}
-.Advanced_search .filter input {
-  width: 100%;
-  height: auto;
   padding: 18px;
-  font-size: 18px;
-  font-weight: 500;
-  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 400;
+  border: none;
   outline: none;
+  border-radius: 10px;
   background-color: $transparentBlack;
 }
-.Advanced_search .filter-name input {
+
+.Advanced-search .dropdown {
+  position: absolute;
+  z-index: 5;
+  border-radius: 10px;
+  padding: 18px;
+  background-color: $transparentBlack;
+}
+
+.Advanced-search .subnote {
+  font-size: 12px;
+  font-weight: 300;
+}
+
+.Advanced-search .arrow.active {
+  transform: rotate(180deg);
+}
+
+.Advanced-search hr {
   width: 100%;
+  margin-top: 25px;
+  border-color: rgba(234, 75, 18, 0.55);
+}
+
+.Advanced-search .search-btn {
+  background-color: $orange;
+  font-size: 16px;
+  font-weight: 400px;
+  padding: 10px;
+  margin-top: 60px;
+  transition: 300ms;
+}
+
+.Advanced-search .add-btn {
+  height: 40px;
+  width: 40px;
+  margin-left: 25px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.Advanced-search .add-btn path {
+  transition: 300ms;
+}
+
+.Advanced-search .add-btn path:hover {
+  fill: $red;
+}
+
+.Advanced-search .search-btn:hover {
+  background-color: $red;
+}
+
+// Radio button styles
+.Advanced-search .radio-wrap {
+  gap: 10px;
+  margin-block: 10px;
+}
+
+.Advanced-search .radio {
+  height: 18px;
+  width: 18px;
+  appearance: none;
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  background-color: $white;
+  margin: 0; // Ensure no margin is applied
+  padding: 0; // Ensure no padding is applied
+  border: 1px solid $orange;
+}
+
+.Advanced-search .radio:checked {
+  background-color: $orange;
+}
+
+.Advanced-search .radio:checked::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: $white;
+}
+
+//Type
+.Advanced-search .type-tags {
+  font-size: 12px;
+  font-weight: 500;
+  gap: 10px;
+  padding: 10px 18px 0px 18px;
+}
+
+.Advanced-search .type-tag {
+  gap: 5px;
+}
+
+.Advanced-search .type-tag-name {
+  color: $orange;
+}
+
+.Advanced-search .if-not {
+  cursor: pointer;
+  background-color: $green;
+  width: 30px;
+  border-radius: 5px;
+  letter-spacing: 0px;
+}
+
+.Advanced-search .if-not.excluded {
+  background-color: $red;
+}
+
+.Advanced-search .type-tags svg {
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+}
+
+.Advanced-search .type-tags svg path {
+  stroke-width: 7px;
+}
+
+.Advanced-search .filter-type .type-wrap {
+  background-color: $transparentBlack;
+  border-radius: 10px;
+}
+
+.Advanced-search .type-input {
+  background-color: transparent !important;
+}
+
+.Advanced-search .filter-type .dropdown {
+  overflow-y: scroll;
+  max-height: 250px;
+  width: 100%;
+}
+
+.Advanced-search .type-category {
+  color: $orange;
+  font-weight: 600;
+}
+
+.Advanced-search .type {
+  font-size: 15px;
+  font-weight: 300;
+  transition: 300ms;
+  cursor: pointer;
+}
+
+.Advanced-search .type:hover {
+  color: $orange;
+}
+
+//colors
+.Advanced-search .filter-colors {
+  margin-top: 0px !important;
+}
+
+.Advanced-search .colors-input {
+  @extend input;
+  cursor: pointer;
+  width: 240px !important;
+}
+
+.Advanced-search .filter-colors .dropdown {
+  overflow-y: scroll;
+  max-height: 250px;
+  width: 240px !important;
+}
+
+.Advanced-search .filter-colors .dropdown li {
+  padding-block: 5px;
+  cursor: pointer;
+  transition: 300ms;
+}
+
+.Advanced-search .filter-colors .dropdown li:hover {
+  cursor: pointer;
+  color: $orange;
+}
+
+.Advanced-search .color-icons {
+  gap: 30px;
+  cursor: pointer;
+}
+
+.Advanced-search .color-icons svg {
+  flex-shrink: 0;
+}
+
+//mana cost
+.Advanced-search .filter-mana-cost .mana-cost-input input {
+  width: 375px;
+}
+
+
+.Advanced-search .filter-mana-cost .dropdown {
+  overflow-y: scroll;
+  max-height: 250px;
+  width: 375px;
+}
+
+.Advanced-search .filter-mana-cost .dropdown li {
+  padding-block: 5px;
+  cursor: pointer;
+  transition: 300ms;
+}
+
+.Advanced-search .filter-mana-cost .dropdown li:hover {
+  color: $orange;
+}
+
+.Advanced-search .filter-mana-cost .subnote {
+  margin-top: 10px;
+}
+
+//Stats
+.Advanced-search .stats-list {
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.Advanced-search .stats-list li {
+  background-color: $orange;
+  color: $black;
+  font-weight: 500;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+.Advanced-search .stats-list li svg {
+  width: 15px;
+  height: 15px;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.Advanced-search .stats-list li svg path {
+  stroke: $black;
+  stroke-width: 7px;
+}
+
+.Advanced-search .stats-wrap {
+  gap: 25px;
+}
+
+.Advanced-search .stats-input {
+  @extend input;
+  cursor: pointer;
+  gap: 10px;
+}
+
+.Advanced-search .filter-stats .stat-value {
+  width: 200px !important;
+}
+
+.Advanced-search .filter-stats .stat-dropdown {
+  width: 151px;
+}
+
+.Advanced-search .filter-stats .dropdown li {
+  cursor: pointer;
+  transition: 300ms;
+}
+
+.Advanced-search .filter-stats .dropdown li:hover {
+  color: $orange;
+}
+
+.Advanced-search .stats-wrap .add-btn {
+  margin-left: 9px;
+}
+
+//games
+.Advanced-search .filter-games .input-wrap {
+  gap: 50px;
+}
+
+.Advanced-search .filter-games span {
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.Advanced-search .filter-games .radio {
+  height: 24px;
+  width: 24px;
+}
+
+
+//formats
+.Advanced-search .formats-list {
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.Advanced-search .formats-list li {
+  background-color: $orange;
+  color: $black;
+  font-weight: 500;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+.Advanced-search .formats-list li.legal {
+  background-color: $green;
+}
+
+.Advanced-search .formats-list li.restricted {
+  background-color: $yellow;
+}
+
+.Advanced-search .formats-list li.banned {
+  background-color: $crimsonRed;
+}
+
+.Advanced-search .formats-list li svg {
+  width: 15px;
+  height: 15px;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.Advanced-search .formats-list li svg path {
+  stroke: $black;
+  stroke-width: 7px;
+}
+
+.Advanced-search .formats-wrap {
+  gap: 25px;
+}
+
+.Advanced-search .formats-input {
+  @extend input;
+  cursor: pointer;
+  gap: 10px;
+}
+
+.Advanced-search .filter-formats .dropdown li {
+  cursor: pointer;
+  transition: 300ms;
+}
+
+.Advanced-search .filter-formats .dropdown li:hover {
+  color: $orange;
+}
+
+.Advanced-search .formats-wrap .add-btn {
+  margin-left: 9px;
+}
+
+//sets
+.Advanced-search .filter-set .input-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.Advanced-search .set-tags {
+  font-size: 12px;
+  font-weight: 500;
+  gap: 10px;
+  padding: 10px 18px 0px 18px;
+}
+
+.Advanced-search .set-tag {
+  gap: 5px;
+}
+
+.Advanced-search .set-tag-name {
+  color: $orange;
+}
+
+.Advanced-search .set-tags svg {
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+}
+
+.Advanced-search .set-tags svg path {
+  stroke-width: 7px;
+}
+
+.Advanced-search .filter-set .set-wrap {
+  background-color: $transparentBlack;
+  border-radius: 10px;
+}
+
+.Advanced-search .set-input {
+  background-color: transparent !important;
+}
+
+.Advanced-search .filter-set .dropdown {
+  overflow-y: scroll;
+  max-height: 250px;
+  width: 100%;
+}
+
+.Advanced-search .sets-list {
+  gap: 5px;
+  flex-direction: column;
+  display: flex;
+}
+
+.Advanced-search .set,
+.Advanced-search .block {
+  gap: 5px;
+  font-size: 15px;
+  font-weight: 300;
+  transition: 300ms;
+  cursor: pointer;
+}
+
+.Advanced-search .set:hover,
+.Advanced-search .block:hover {
+  color: $orange;
+}
+
+.Advanced-search .set-icon {
+  width: 25px;
+  height: 25px;
+  filter: invert(35%) sepia(100%) saturate(7500%) hue-rotate(30deg);
+}
+
+//rarity
+.Advanced-search .filter-rarity .input-wrap {
+  gap: 50px;
+}
+
+.Advanced-search .filter-rarity span {
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.Advanced-search .filter-rarity .radio {
+  height: 24px;
+  width: 24px;
+}
+
+.Advanced-search .filter-rarity .radio:checked::before {
+  width: 50%;
+  height: 50%;
+}
+
+@media (max-width: 1024px) {
+
+  //Generic styles 
+  .Advanced-search .inner {
+    width: 770px;
+  }
+
+  .Advanced-search h1 {
+    text-align: center;
+  }
+
+  .Advanced-search .filter-label {
+    font-size: 24px;
+  }
+
+  .Advanced-search .filter-label svg {
+    height: 35px;
+    width: 35px;
+  }
+
+  .Advanced-search .input-wrap {
+    width: 550px;
+  }
+
+  .Advanced-search .filter input:not([type="checkbox"]) {
+    font-size: 14px;
+  }
+
+  .Advanced-search .subnote {
+    font-size: 11px;
+  }
+
+  .Advanced-search .search-btn {
+    font-size: 14px;
+    padding: 20px;
+    padding-inline: 50px;
+    margin-top: 50px;
+  }
+
+  .Advanced-search .search-btn:hover {
+    background-color: $orange;
+  }
+
+  .Advanced-search .add-btn {
+    height: 35px;
+    width: 35px;
+  }
+
+  //type
+  .Advanced-search .type-category {
+    font-size: 14px;
+  }
+
+  .Advanced-search .type {
+    font-size: 13px;
+  }
+
+  //colors
+  .Advanced-search .filter-colors .input-wrap {
+    flex-direction: column;
+    align-items: start;
+    row-gap: 25px;
+  }
+
+  .Advanced-search .filter-colors .dropdown li {
+    font-size: 14px;
+  }
+
+  //mana cost
+  .Advanced-search .filter-mana-cost .dropdown li {
+    font-size: 14px;
+  }
+
+  //Stats
+
+  .Advanced-search .stats-wrap {
+    flex-direction: column;
+    align-items: start;
+  }
+
+  .Advanced-search .filter-stats .stat-dropdown {
+    width: auto;
+  }
+
+  .Advanced-search .filter-stats .dropdown li {
+    font-size: 14px;
+  }
+
+  .Advanced-search .stats-wrap .add-btn {
+    margin-left: 25px;
+  }
+
+  //games
+  .Advanced-search .filter-games .input-wrap {
+    flex-direction: column;
+    gap: 25px;
+    margin-block: 10px;
+  }
+
+  .Advanced-search .filter-games .radio-wrap {
+    margin-block: 0px;
+  }
+
+  //formats
+
+  .Advanced-search .formats-wrap .dropdown li {
+    font-size: 14px;
+  }
+
+  .Advanced-search .formats-wrap .add-btn {
+    margin-left: 9px;
+  }
+
+  //sets
+
+  .Advanced-search .set,
+  .Advanced-search .block {
+    font-size: 14px;
+  }
+
+  //rarity
+  .Advanced-search .filter-rarity .input-wrap {
+    gap: 25px;
+    flex-direction: column;
+  }
+
+  .Advanced-search .filter-rarity .radio-wrap {
+    margin-block: 0px;
+  }
+}
+
+@media (max-width: 800px) {
+
+  //Generic styles 
+  .Advanced-search .inner {
+    width: 550px;
+  }
+
+  .Advanced-search h1 {
+    font-size: 40px;
+  }
+
+  .Advanced-search .filters .filter>div {
+    flex-direction: column;
+    row-gap: 25px;
+  }
+
+  .Advanced-search .filter-label {
+    margin-top: 0px;
+  }
+
+  .Advanced-search .input-wrap {
+    width: 100%;
+  }
+
+  //mana cost
+  .Advanced-search .filter-mana-cost .mana-cost-input input {
+    width: 100%;
+  }
+
+  .Advanced-search .filter-mana-cost .dropdown {
+    width: 490px;
+  }
+
+  .Advanced-search .color-icons svg {
+    width: 35px;
+    height: 35px;
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  //Generic styles 
+  .Advanced-search .inner {
+    width: 400px;
+  }
+
+  .Advanced-search h1 {
+    font-size: 38px;
+  }
+
+  .Advanced-search .filters {
+    margin-top: 50px;
+  }
+
+  .Advanced-search .search-btn {
+    font-size: 13px;
+  }
+
+  //mana cost
+  .Advanced-search .filter-mana-cost .dropdown {
+    width: 340px;
+  }
+
+  .Advanced-search .color-icons svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  //rarity
+
+  .Advanced-search .filter-rarity span {
+    font-size: 20px;
+  }
+
+  .Advanced-search .filter-rarity .radio {
+    height: 20px;
+    width: 20px;
+  }
+}
+
+@media (max-width: 425px) {
+
+  //Generic styles 
+  .Advanced-search .inner {
+    width: 315px;
+  }
+
+  .Advanced-search h1 {
+    font-size: 32px;
+  }
+
+  .Advanced-search .filter-label {
+    font-size: 20px;
+  }
+
+  .Advanced-search .filter input:not([type="checkbox"]) {
+    font-size: 12px;
+  }
+
+  .Advanced-search .subnote {
+    font-size: 9px;
+  }
+
+  .Advanced-search .search-btn {
+    font-size: 12px;
+  }
+
+  //type
+  .Advanced-search .type-category {
+    font-size: 14px;
+  }
+
+  .Advanced-search .type {
+    font-size: 13px;
+  }
+
+  //colors
+
+  .Advanced-search .filter-colors .dropdown li {
+    font-size: 12px;
+  }
+
+  //mana cost
+  .Advanced-search .filter-mana-cost .dropdown {
+    width: 255px;
+  }
+
+  .Advanced-search .filter-mana-cost .dropdown li {
+    font-size: 12px;
+  }
+
+  .Advanced-search .color-icons {
+    justify-content: space-between;
+    gap: 0px;
+    width: 100%;
+  }
+
+  //stats
+  .Advanced-search .filter-stats .dropdown li {
+    font-size: 12px;
+  }
+
+  //games
+  .Advanced-search .filter-games span {
+    font-size: 18px;
+  }
+
+  .Advanced-search .filter-games .radio {
+    height: 18px;
+    width: 18px;
+  }
+
+  //formats
+  .Advanced-search .formats-wrap .dropdown li {
+    font-size: 12px;
+  }
+
+  //sets
+
+  .Advanced-search .set,
+  .Advanced-search .block {
+    font-size: 12px;
+  }
+
+  //rarity
+
+  .Advanced-search .filter-rarity span {
+    font-size: 18px;
+  }
+
+  .Advanced-search .filter-rarity .radio {
+    height: 18px;
+    width: 18px;
+  }
+}
+
+@media (max-height: 600px) {
+
+  //formats
+  .Advanced-search .filter-formats .dropdown {
+    max-height: 150px;
+    overflow: scroll;
+  }
 }

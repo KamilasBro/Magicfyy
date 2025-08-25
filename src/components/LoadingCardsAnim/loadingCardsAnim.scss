@@ -1,0 +1,78 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shuffleCard {
+  0% {
+    transform: translateX(0px);
+    z-index: 3;
+  }
+
+  50% {
+    transform: translateX(-250px) rotate(-15deg);
+  }
+
+  100% {
+    transform: translateX(0px) rotate(0deg);
+    z-index: 0;
+  }
+}
+
+.Loading-cards {
+  animation: fadeIn 2s;
+}
+
+.Loading-cards-wrap {
+  margin-top: 50px;
+  height: 350px;
+  position: relative;
+}
+
+.Loading-cards-svg {
+  position: absolute;
+}
+
+.Loading-cards-svg:nth-child(1) {
+  z-index: 1;
+}
+
+.Loading-cards-svg:nth-child(2) {
+  z-index: 2;
+}
+
+.Loading-cards-svg:nth-child(3) {
+  z-index: 3;
+  animation: shuffleCard 2.5s ease-in-out infinite;
+}
+
+@media screen and (max-width: 800px) {
+  .Loading-cards-wrap {
+    height: 250px;
+  }
+
+  @keyframes shuffleCard {
+    0% {
+      transform: translateX(0px);
+      z-index: 3;
+    }
+
+    50% {
+      transform: translateX(-190px) rotate(-15deg);
+    }
+
+    100% {
+      transform: translateX(0px) rotate(0deg);
+      z-index: 0;
+    }
+  }
+
+  .Loading-cards svg {
+    height: 225px;
+  }
+}
