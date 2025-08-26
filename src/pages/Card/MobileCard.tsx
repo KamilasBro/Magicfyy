@@ -34,7 +34,7 @@ const MobileCard: React.FC<MobileCardProps> = (props) => {
     const touchActiveRef = useRef(false);
     const SWIPE_THRESHOLD = 150; // pixels, tweak to taste
     const TABS = ["card", "cardDetails", "prints", "rules"];
-
+    const [loadedPrints, setLoadedPrints] = useState<Record<string, boolean>>({});
     const goToNextTab = () => {
         const idx = TABS.indexOf(currentTab);
         const next = Math.min(TABS.length - 1, idx + 1);
@@ -79,31 +79,58 @@ const MobileCard: React.FC<MobileCardProps> = (props) => {
         const isArvinox =
             ((printData?.card_faces?.[props.showCardBack ? 1 : 0]?.name || printData?.name) === "Arvinox, the Mind Flail") &&
             (printData?.set === "sld");
-        // Check if the card is Arvinox, the Mind Flail in the SLD set cause it is upside down from API
 
+        // helper to mark this print as loaded
+        const markLoaded = (id?: string) => {
+            if (!id) return;
+            setLoadedPrints((prev) => ({ ...prev, [id]: true }));
+        };
+
+        const loaded = !!loadedPrints[printData.id];
+
+        // Check if the card is Arvinox, the Mind Flail in the SLD set cause it is upside down from API
         if (
             typeLine?.includes("Room") ||
             typeLine?.includes("Adventure") ||
             printData?.layout.includes("flip")
         ) {
             return (
-                <img
-                    src={printData?.image_uris?.normal}
-                    className="card-img"
-                    style={isArvinox ? { transform: "rotate(180deg)" } : undefined}
-                />
+                <>
+                    {!loaded && <CardPlaceholder />}
+                    <img
+                        src={printData?.image_uris?.normal}
+                        className="card-img"
+                        alt={printData.name}
+                        onLoad={() => markLoaded(printData.id)}
+                        onError={() => markLoaded(printData.id)}
+                        style={{
+                            display: loaded ? undefined : "none",
+                            ...(isArvinox ? { transform: "rotate(180deg)" } : undefined),
+                        }}
+                    />
+                </>
             );
         } else {
+            const faceImg =
+                printData?.card_faces
+                    ? printData?.card_faces?.[props.showCardBack ? 1 : 0]?.image_uris?.normal
+                    : printData?.image_uris?.normal;
+
             return (
-                <img
-                    src={
-                        printData?.card_faces
-                            ? printData?.card_faces?.[props.showCardBack ? 1 : 0]?.image_uris?.normal
-                            : printData?.image_uris?.normal
-                    }
-                    className="card-img"
-                    style={isArvinox ? { transform: "rotate(180deg)" } : undefined}
-                />
+                <>
+                    {!loaded && <CardPlaceholder />}
+                    <img
+                        src={faceImg}
+                        className="card-img"
+                        alt={printData.name}
+                        onLoad={() => markLoaded(printData.id)}
+                        onError={() => markLoaded(printData.id)}
+                        style={{
+                            display: loaded ? undefined : "none",
+                            ...(isArvinox ? { transform: "rotate(180deg)" } : undefined),
+                        }}
+                    />
+                </>
             );
         }
     }
