@@ -1,4 +1,4 @@
-@import "../../assets/scss/partials/colors";
+@use "../../assets/scss/partials/importer" as *;
 
 .Card .card-info .card-placeholder {
   width: 330px;
@@ -104,7 +104,7 @@
   width: 15%;
 }
 
-@media screen and (max-width: 1600px) {
+@media screen and (max-width: $xlg) {
   .Card .card-info .card-details-placeholder:first-child {
     height: 40px;
     width: 70%;
@@ -120,7 +120,7 @@
   }
 }
 
-@media screen and (max-width: 1280px) {
+@media screen and (max-width: $md) {
   .Card .card-info .card-placeholder {
     width: 300px;
     height: 430px;
@@ -136,7 +136,7 @@
   }
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: $sm) {
   .Mobile-card .card-tab .card-placeholder {
     height: 475px;
     width: 330px;
@@ -157,9 +157,6 @@
     height: 20px;
   }
 
-  .Mobile-card .prints .card-placeholder-content {
-    row-gap: 10px;
-  }
 
   .Mobile-card .card-details {
     width: 100%;
@@ -199,11 +196,18 @@
     width: 100%;
   }
 
+  .Mobile-card .prints .placeholder {
+    width: 190px;
+  }
 
   .Mobile-card .prints .card-placeholder {
     height: 244px;
     width: 175px;
     border-radius: 10px;
+  }
+
+  .Mobile-card .prints .card-placeholder-content {
+    row-gap: 10px;
   }
 
   .Mobile-card .prints .card-placeholder-img {
@@ -258,6 +262,50 @@
 
   .Mobile-card .rules .placeholder div:nth-child(odd) {
     width: 15%;
+  }
+
+}
+
+@media screen and (max-width: $tablet) {
+  .Mobile-card .card-tab .card-placeholder {
+    height: 431px;
+    width: 300px;
+    border-radius: 15px;
+  }
+
+
+  .Mobile-card .card-tab .card-placeholder-img {
+    height: 140px;
+  }
+
+
+  .Mobile-card .card-tab .card-placeholder-content {
+    row-gap: 25px;
+  }
+
+  .Mobile-card .card-tab .card-placeholder-content div {
+    height: 20px;
+  }
+
+  .Mobile-card .card-details-placeholder {
+    height: 20px;
+  }
+
+  .Mobile-card .card-details-placeholder:first-child {
+    height: 35px;
+  }
+
+  .Mobile-card .rules .placeholder div:nth-child(odd) {
+    width: 25%;
+  }
+
+}
+
+@media screen and (max-width: $mobile) {
+  .Mobile-card .card-tab .card-placeholder {
+    height: 402px;
+    width: 280px;
+    border-radius: 20px;
   }
 
 }

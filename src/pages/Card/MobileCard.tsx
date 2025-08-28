@@ -32,7 +32,7 @@ const MobileCard: React.FC<MobileCardProps> = (props) => {
     const [currentTab, setCurrentTab] = useState("card");
     const touchStartRef = useRef({ x: 0, y: 0 });
     const touchActiveRef = useRef(false);
-    const SWIPE_THRESHOLD = 150; // pixels, tweak to taste
+    const SWIPE_THRESHOLD = 100; // pixels to trigger swipe
     const TABS = ["card", "cardDetails", "prints", "rules"];
     const [loadedPrints, setLoadedPrints] = useState<Record<string, boolean>>({});
     const goToNextTab = () => {
@@ -157,10 +157,10 @@ const MobileCard: React.FC<MobileCardProps> = (props) => {
                                         (props.cardData.card_faces && props.cardData.card_faces[1] && !props.showCardBack
                                             ? null
                                             : props.cardData.mana_cost)
-                                        ? props.renderTextWithSymbols(
+                                        ? <span className="flex">{props.renderTextWithSymbols(
                                             props.cardData.card_faces?.[props.showCardBack ? 1 : 0]?.mana_cost ||
                                             props.cardData.mana_cost
-                                        )
+                                        )}</span>
                                         : null}
                                 </h2>
                                 <h3>
@@ -226,6 +226,10 @@ const MobileCard: React.FC<MobileCardProps> = (props) => {
                                         props.renderLegalities(props.cardData)
                                     )}
                                 </ul>
+                                {/*render backbutton only if second card face exists*/}
+                                {props.cardData.card_faces?.[1] && <span className="flex justify-center">
+                                    {props.renderViewBackButton()}
+                                </span>}
                             </>
                         ) : (
                             <div className="card-details-placeholders flex flex-col">
@@ -278,10 +282,10 @@ const MobileCard: React.FC<MobileCardProps> = (props) => {
                             })
                         ) : (
                             Array.from({ length: 6 }, (_, index) => (
-                                <div className="placeholder" key={index}>
+                                <li className="placeholder flex flex-col items-center" key={index}>
                                     <CardPlaceholder />
                                     <div className="print-detail"></div>
-                                </div>
+                                </li>
                             ))
                         )}
                     </ul>
@@ -301,7 +305,7 @@ const MobileCard: React.FC<MobileCardProps> = (props) => {
                                     </li>
                                 ))
                             ) : (
-                                <p className="no-rules">There is no rules for this card.</p>
+                                <p className="no-rules">There are no rules for this card.</p>
                             )
                         ) : (
                             <div className="placeholder flex flex-col">
@@ -320,17 +324,16 @@ const MobileCard: React.FC<MobileCardProps> = (props) => {
         }
     }
     return (
-        <section className="Mobile-card"
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-            onTouchCancel={handleTouchCancel}>
+        <section className="Mobile-card">
             <ul className="mobile-card-menu">
                 <li className={currentTab === "card" ? "active" : ""} onClick={() => setCurrentTab("card")}>Card</li>
                 <li className={currentTab === "cardDetails" ? "active" : ""} onClick={() => setCurrentTab("cardDetails")}>Card Details</li>
                 <li className={currentTab === "prints" ? "active" : ""} onClick={() => setCurrentTab("prints")}>Prints</li>
                 <li className={currentTab === "rules" ? "active" : ""} onClick={() => setCurrentTab("rules")}>Rules</li>
             </ul>
-            <div>
+            <div onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+                onTouchCancel={handleTouchCancel}>
                 {renderTabs()}
             </div>
             <ul className="mobile-card-menu-indicators">

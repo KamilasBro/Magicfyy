@@ -637,7 +637,7 @@ const Card: React.FC = () => {
                     </li>
                   ))
                 ) : (
-                  <p>There is no rules for this card.</p>
+                  <p>There are no rules for this card.</p>
                 )
               ) : (
                 <div className="placeholder flex flex-col">

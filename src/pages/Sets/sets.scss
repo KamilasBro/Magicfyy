@@ -1,4 +1,8 @@
-@import "../../assets/scss/partials/colors";
+@use "../../assets/scss/partials/importer" as *;
+
+.Sets {
+  width: $fhdContainer;
+}
 
 .Sets h1 {
   font-size: 42px;
@@ -16,7 +20,7 @@
   border-radius: 10px 0px 0px 10px;
   height: 70px;
   width: 70px;
-  transition: 300ms;
+  transition: stroke 300ms;
 }
 
 .Sets .search-wrap svg {
@@ -113,7 +117,11 @@
   background-color: $black;
 }
 
-@media screen and (max-width: 1600px) {
+@media screen and (max-width: $xlg) {
+  .Sets {
+    width: $xlgContainer;
+  }
+
   .Sets .search-bar {
     width: 650px;
   }
@@ -144,9 +152,9 @@
   }
 }
 
-@media screen and (max-width: 1440px) {
-  .Sets .search-bar {
-    width: 600px;
+@media screen and (max-width: $lg) {
+  .Sets {
+    width: $lgContainer;
   }
 
   .Sets .search-wrap {
@@ -177,9 +185,9 @@
   }
 }
 
-@media screen and (max-width: 1280px) {
-  .Sets .search-bar {
-    width: 550px;
+@media screen and (max-width: $md) {
+  .Sets {
+    width: $mdContainer;
   }
 
   .Sets .search-wrap {
@@ -210,11 +218,9 @@
 
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: $sm) {
   .Sets {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: $smContainer;
   }
 
   .Sets .search-bar {
@@ -241,13 +247,13 @@
 
 }
 
-@media screen and (max-width: 800px) {
-  .Sets h1 {
-    font-size: 40px;
+@media screen and (max-width: $tablet) {
+  .Sets {
+    width: $tabletContainer;
   }
 
   .Sets .search-bar {
-    width: 500px;
+    width: 100%;
   }
 
   .Sets .sets-wrap {
@@ -272,13 +278,13 @@
   }
 }
 
-@media screen and (max-width: 600px) {
-  .Sets h1 {
-    font-size: 38px;
+@media screen and (max-width: $lmobile) {
+  .Sets {
+    width: $lmobileContainer;
   }
 
-  .Sets .search-bar {
-    width: 400px;
+  .Sets h1 {
+    font-size: 38px;
   }
 
   .Sets .set-tile,
@@ -309,13 +315,9 @@
   }
 }
 
-@media screen and (max-width: 425px) {
-  .Sets h1 {
-    font-size: 34px;
-  }
-
-  .Sets .search-bar {
-    width: 315px;
+@media screen and (max-width: $mobile) {
+  .Sets {
+    width: $mobileContainer;
   }
 
   .Sets .set-tile,

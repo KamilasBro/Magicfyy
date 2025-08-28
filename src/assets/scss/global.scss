@@ -1,16 +1,19 @@
+@use "./partials/importer" as *;
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
-@import "./partials/colors";
 @import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 
 body {
+  width: 100vw;
   margin: 0;
+  padding: 0;
   color: $white;
   background-color: $background;
   font-family: "Rubik", sans-serif;
   letter-spacing: 1px;
   -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
 }
 
 
@@ -54,12 +57,19 @@ button {
   padding: 10px;
   border-radius: 10px;
   background-color: $transparentBlack;
-  transition: 300ms;
+  transition: background-color 300ms;
+
+  &:focus {
+    outline: transparent;
+  }
 }
 
 main {
   margin-top: 175px;
-  width: 1520px;
+  margin-bottom: 175px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 input {
@@ -107,15 +117,16 @@ input[type="number"] {
   image-rendering: auto; // Try 'auto', 'crisp-edges', or 'pixelated'
   backface-visibility: hidden; // Helps with GPU artifacts
   will-change: transform;
+  transition: filter 300ms;
 }
 
 .card:hover {
   filter: drop-shadow(0px 0px 6px $orange);
 }
 
-@media screen and (max-width: 1600px) {
+@media screen and (max-width: $xlg) {
   main {
-    width: 1300px;
+    margin-bottom: 150px;
   }
 
   button {
@@ -127,9 +138,9 @@ input[type="number"] {
   }
 }
 
-@media screen and (max-width: 1440px) {
+@media screen and (max-width: $lg) {
   main {
-    width: 1200px;
+    margin-bottom: 140px;
   }
 
   button {
@@ -145,10 +156,10 @@ input[type="number"] {
 
 }
 
-@media screen and (max-width: 1280px) {
+@media screen and (max-width: $md) {
   main {
-    width: 1000px;
     margin-top: 135px;
+    margin-bottom: 130px;
   }
 
   .cards {
@@ -157,10 +168,9 @@ input[type="number"] {
 
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: $sm) {
   main {
-    width: 770px;
-    margin-top: 135px;
+    margin-bottom: 50px;
   }
 
   .cards {
@@ -172,9 +182,8 @@ input[type="number"] {
   }
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: $tablet) {
   main {
-    width: 550px;
     margin-top: 125px;
   }
 
@@ -188,9 +197,8 @@ input[type="number"] {
   }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: $lmobile) {
   main {
-    width: 400px;
     margin-top: 115px;
   }
 
@@ -199,9 +207,8 @@ input[type="number"] {
   }
 }
 
-@media screen and (max-width: 425px) {
+@media screen and (max-width: $mobile) {
   main {
-    width: 315px;
     margin-top: 105px;
   }
 }

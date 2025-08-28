@@ -1,4 +1,4 @@
-@import "../../assets/scss/partials/colors";
+@use "../../assets/scss/partials/importer" as *;
 
 // Main section and title
 .Guess-the-card h1 {
@@ -50,7 +50,7 @@
   padding-block: 10px;
   padding-inline: 15px;
   cursor: pointer;
-  transition: 300ms;
+  transition: color 300ms;
   gap: 15px;
 }
 
@@ -73,7 +73,7 @@
   font-weight: 400;
   background-color: $orange;
   padding: 10px;
-  transition: 300ms;
+  transition: background-color 300ms;
 }
 
 .Guess-the-card .choose-set button:hover {
@@ -212,7 +212,7 @@
 .Guess-the-card .search-input .dropdown li {
   color: $white;
   cursor: pointer;
-  transition: 300ms;
+  transition: color 300ms;
   gap: 15px;
 }
 

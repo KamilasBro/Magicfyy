@@ -1,4 +1,8 @@
-@import "../../assets/scss/partials/colors";
+@use "../../assets/scss/partials/importer" as *;
+
+.Searched {
+    width: $fhdContainer;
+}
 
 .Searched .cards-counter {
     font-size: 28px;
@@ -14,7 +18,7 @@
 
 .Searched .counter-buttons-wrap .active {
     background-color: $orange;
-    transition: 300ms;
+    transition: background-color 300ms;
 }
 
 .Searched .counter-buttons-wrap .active:hover {
@@ -25,25 +29,41 @@
     margin-block: 100px;
 }
 
-@media (max-width: 1600px) {
+@media (max-width: $xlg) {
+    .Searched {
+        width: $xlgContainer;
+    }
+
     .Searched .cards-counter {
         font-size: 26px;
     }
 }
 
-@media (max-width: 1440px) {
+@media (max-width: $lg) {
+    .Searched {
+        width: $lgContainer;
+    }
+
     .Searched .cards-counter {
         font-size: 24px;
     }
 }
 
-@media (max-width: 1280px) {
+@media (max-width: $md) {
+    .Searched {
+        width: $mdContainer;
+    }
+
     .Searched .cards-counter {
         font-size: 22px;
     }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: $sm) {
+    .Searched {
+        width: $smContainer;
+    }
+
     .Searched .counter-buttons-wrap .active:hover {
         background-color: $orange;
     }
@@ -57,13 +77,21 @@
     }
 }
 
-@media (max-width: 800px) {
+@media (max-width: $tablet) {
+    .Searched {
+        width: $tabletContainer;
+    }
+
     .Searched .cards-counter {
         font-size: 18px;
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: $lmobile) {
+    .Searched {
+        width: $lmobileContainer;
+    }
+
     .Searched .cards-counter-wrap {
         flex-direction: column;
         row-gap: 25px;
@@ -80,5 +108,11 @@
 
     .Searched .cards {
         margin-block: 50px;
+    }
+}
+
+@media (max-width: $mobile) {
+    .Searched {
+        width: $mobileContainer;
     }
 }

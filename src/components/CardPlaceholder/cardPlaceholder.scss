@@ -1,4 +1,4 @@
-@import "../../assets/scss/partials/colors";
+@use "../../assets/scss/partials/importer" as *;
 
 .card-placeholder {
   width: 215px;
