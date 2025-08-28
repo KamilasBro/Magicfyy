@@ -52,7 +52,7 @@ const Navbar: React.FC = () => {
 
         </div>
       </nav>
-      {isMobile && <MobileNavbar setIsMobile={setIsMobile} />}
+      {isMobile && <MobileNavbar isMobile={isMobile} setIsMobile={setIsMobile} />}
 
     </>
 
