@@ -1,4 +1,5 @@
-@import "../../assets/scss/partials/colors";
+@use "../../assets/scss/partials/importer" as *;
+
 .go-top-box {
   top: 50%;
   right: -120px;
@@ -12,27 +13,32 @@
   font-weight: 300;
   transition: 300ms;
 }
+
 .go-top-box.show-box {
   right: 0px;
 }
+
 .go-top-box .hide-show-arrow {
   cursor: pointer;
   top: 50%;
   left: -20px;
   transform: translateY(-50%) rotate(180deg);
-  transition: 500ms;
+  transition: transform 500ms;
 }
+
 .go-top-box.show-box .hide-show-arrow {
   transform: translateY(-50%) rotate(0deg);
 }
+
 .go-top-box .go-top-arrow {
   cursor: pointer;
   height: 60px;
   width: 60px;
   margin-bottom: 10px;
 }
+
 .go-top-box .go-top-arrow path {
-  transition: 300ms;
+  transition: fill 300ms;
 }
 
 .go-top-box .go-top-arrow:hover path {

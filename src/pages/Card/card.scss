@@ -1,6 +1,7 @@
-@import "../../assets/scss/partials/colors";
+@use "../../assets/scss/partials/importer" as *;
 
 .Card {
+  width: $fhdContainer;
   display: grid;
   grid-template-columns: repeat(2, auto);
   grid-template-rows: repeat(2, auto);
@@ -139,7 +140,7 @@
   font-size: 15px;
   font-weight: 400;
   color: $gray;
-  transition: 300ms;
+  transition: color 300ms;
 }
 
 
@@ -202,8 +203,9 @@
   height: 32px;
 }
 
-@media (max-width: 1600px) {
+@media (max-width: $xlg) {
   .Card {
+    width: $xlgContainer;
     grid-column-gap: 25px;
     grid-row-gap: 50px;
   }
@@ -238,13 +240,21 @@
   }
 }
 
-@media (max-width: 1440px) {
+@media (max-width: $lg) {
+  .Card {
+    width: $lgContainer;
+  }
+
   .Card .rules {
     width: 825px;
   }
 }
 
-@media (max-width: 1280px) {
+@media (max-width: $md) {
+  .Card {
+    width: $mdContainer;
+  }
+
   .Card .card-info .card-details {
     width: 100%;
   }
@@ -281,14 +291,14 @@
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: $sm) {
   .Card {
     display: none;
   }
 
   .Mobile-card {
-    height: 800px;
-    width: 100%;
+    height: 815px;
+    width: $smContainer;
     background-color: $transparentBlack;
     border-radius: 10px;
 
@@ -313,7 +323,7 @@
     padding-inline: 25px;
     border-bottom: 2px solid;
     border-color: transparent;
-    transition: 300ms;
+    transition: color 300ms, border-color 300ms;
     padding-block: 20px;
 
     &.active {
@@ -340,12 +350,16 @@
 
   .Mobile-card .mobile-card-menu-indicators .indicator button {
     background-color: $gray;
-    height: 20px;
-    width: 20px;
-    transition: 300ms;
+    height: 15px;
+    width: 15px;
+    transition: background-color 300ms;
 
     &.active {
       background-color: $orange;
+    }
+
+    :focus {
+      outline: transparent;
     }
   }
 
@@ -363,11 +377,11 @@
     border-radius: 20px;
   }
 
-  .Mobile-card .card-tab .view-back {
+  .Mobile-card .view-back {
     margin-top: 25px;
-    padding-inline: 50px;
     padding-block: 20px;
     background-color: $orange;
+    width: 150px;
   }
 
 
@@ -378,6 +392,7 @@
 
   .Mobile-card .card-details h2 img {
     width: 24px;
+    height: 24px;
     margin-left: 5px;
   }
 
@@ -443,8 +458,10 @@
   }
 
   .Mobile-card .prints {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    justify-items: center;
     padding-inline: 50px;
-    column-gap: 47.5px; //scroll takes space too, might change later
     row-gap: 25px;
     width: 100%;
   }
@@ -519,5 +536,187 @@
       font-weight: 400;
       text-align: center;
     }
+  }
+}
+
+@media (max-width: $tablet) {
+  .Mobile-card {
+    width: $tabletContainer;
+    flex-grow: 1;
+    height: 790px;
+  }
+
+  .Mobile-card>div {
+    padding-top: 25px;
+  }
+
+  .Mobile-card .mobile-card-menu li {
+    padding-inline: 15px;
+  }
+
+  .Mobile-card .card-tab .card-img {
+    height: 431px;
+    width: 300px;
+    border-radius: 15px;
+  }
+
+
+  .Mobile-card .card-details {
+    gap: 20px;
+    padding-inline: 25px;
+  }
+
+  .Mobile-card .card-details h2 img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .Mobile-card h2 {
+    font-size: 22px;
+  }
+
+  .Mobile-card h3 {
+    font-size: 14px;
+  }
+
+  .Mobile-card p {
+    font-size: 12px;
+  }
+
+  .Mobile-card p img {
+    width: 12px;
+  }
+
+  .Mobile-card .rules {
+    padding-inline: 25px;
+  }
+
+  .Mobile-card .rules h3 {
+    font-size: 16px;
+  }
+
+  .Mobile-card .rules p {
+    font-size: 13px;
+
+    &.no-rules {
+      font-size: 20px;
+    }
+  }
+}
+
+@media (max-width: $lmobile) {
+
+  //exception for main to make section on whole screen
+  main:has(.Mobile-card) {
+    margin-top: 60px;
+    margin-bottom: 0px;
+  }
+
+  .Mobile-card {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  .Mobile-card .mobile-card-menu {
+    height: 70px;
+    column-gap: 15px;
+    border-radius: 0;
+    position: fixed;
+    width: 100%;
+    z-index: 10;
+  }
+
+  .Mobile-card .mobile-card-menu li {
+    font-size: 18px;
+    padding-inline: 10px;
+  }
+
+  .Mobile-card>div {
+    min-height: 550px;
+    height: 60vh;
+    margin-top: 70px; //height of mobile-card-menu
+  }
+
+  .Mobile-card .card-details {
+    gap: 20px;
+    padding-inline: 25px;
+  }
+
+  .Mobile-card .card-details h2 img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .Mobile-card h2 {
+    font-size: 20px;
+  }
+
+  .Mobile-card h3 {
+    font-size: 13px;
+  }
+
+  .Mobile-card p {
+    font-size: 11px;
+  }
+
+  .Mobile-card p img {
+    width: 11px;
+  }
+
+  .Mobile-card .prints {
+    padding-inline: 15px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    row-gap: 15px;
+    justify-items: center;
+  }
+}
+
+@media (max-width: $mobile) {
+  .Mobile-card .mobile-card-menu {
+    height: 60px;
+    column-gap: 10px;
+  }
+
+  .Mobile-card .mobile-card-menu li {
+    font-size: 16px;
+    padding-inline: 5px;
+    padding-block: 15px;
+  }
+
+  .Mobile-card>div {
+    min-height: 520px;
+    margin-top: 60px; //height of mobile-card-menu
+  }
+
+  .Mobile-card .card-tab .card-img {
+    height: 402px;
+    width: 280px;
+    border-radius: 20px;
+  }
+
+  .Mobile-card .card-details {
+    padding-inline: 15px;
+    gap: 15px;
+  }
+
+  .Mobile-card h2 {
+    flex-direction: column;
+    align-items: start;
+    row-gap: 5px;
+  }
+
+  .Mobile-card h2 img:first-child {
+    margin-left: 0px;
+  }
+
+  .Mobile-card .prints {
+    padding-inline: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
   }
 }

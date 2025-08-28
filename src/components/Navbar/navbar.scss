@@ -1,8 +1,11 @@
-@import "../../assets/scss/partials/colors";
+@use "../../assets/scss/partials/importer" as *;
 
 .navbar {
   height: 100px;
-  transition: 300ms;
+  transition: background-color 300ms;
+  &.scrolled{
+    background-color: $black;
+  }
 }
 
 .MobileNavbar {
@@ -10,7 +13,7 @@
 }
 
 .navbar .inner-nav {
-  width: 1520px;
+  width: $fhdContainer;
 }
 
 .navbar .hamburger {
@@ -27,7 +30,7 @@
 }
 
 .navbar .nav-link a:hover {
-  transition: 300ms;
+  transition: color 300ms;
   color: $orange;
 }
 
@@ -51,9 +54,9 @@
   }
 }
 
-@media (max-width: 1600px) {
+@media (max-width: $xlg) {
   .navbar .inner-nav {
-    width: 1300px;
+    width: $xlgContainer;
   }
 
   .navbar .nav-links {
@@ -65,19 +68,19 @@
   }
 }
 
-@media (max-width: 1440px) {
+@media (max-width: $lg) {
   .navbar .inner-nav {
-    width: 1200px;
+    width: $lgContainer;
   }
 }
 
-@media (max-width: 1280px) {
+@media (max-width: $md) {
   .navbar {
     height: 90px;
   }
 
   .navbar .inner-nav {
-    width: 1000px;
+    width: $mdContainer;
   }
 
   .navbar .logo {
@@ -89,13 +92,14 @@
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: $sm) {
   .navbar {
     height: 80px;
+    background-color: $black;
   }
 
   .navbar .inner-nav {
-    width: 770px;
+    width: $smContainer;
   }
 
   .navbar .nav-links {
@@ -145,23 +149,23 @@
   }
 }
 
-@media (max-width: 800px) {
+@media (max-width: $tablet) {
   .navbar {
     height: 70px;
   }
 
   .navbar .inner-nav {
-    width: 550px;
+    width: $tabletContainer;
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: $lmobile) {
   .navbar {
     height: 60px;
   }
 
   .navbar .inner-nav {
-    width: 400px;
+    width: $lmobileContainer;
   }
 
   .navbar .hamburger {
@@ -175,9 +179,9 @@
 
 }
 
-@media (max-width: 425px) {
+@media (max-width: $mobile) {
   .navbar .inner-nav {
-    width: 315px;
+    width: $mobileContainer;
   }
 
   .MobileNavbar .close-icon {

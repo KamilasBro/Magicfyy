@@ -28,10 +28,7 @@ const Navbar: React.FC = () => {
   return (
     <>
       <nav
-        className="navbar w-screen flex items-center justify-center fixed z-10"
-        style={
-          Ypos === true ? { background: "transparent" } : { background: "black" }
-        }
+        className={`${!Ypos && "scrolled"} navbar w-screen flex items-center justify-center fixed z-10`}
       >
         <div className="inner-nav flex items-center justify-between">
           <HamburgerSvg className="hamburger" onClick={() => setIsMobile(!isMobile)} />

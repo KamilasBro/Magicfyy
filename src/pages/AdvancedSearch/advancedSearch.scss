@@ -1,4 +1,4 @@
-@import "../../assets/scss/partials/colors";
+@use "../../assets/scss/partials/importer" as *;
 
 //Generic styles
 .Advanced-search .inner {
@@ -73,7 +73,7 @@
   font-weight: 400px;
   padding: 10px;
   margin-top: 60px;
-  transition: 300ms;
+  transition: background-color 300ms;
 }
 
 .Advanced-search .add-btn {
@@ -85,7 +85,7 @@
 }
 
 .Advanced-search .add-btn path {
-  transition: 300ms;
+  transition: fill 300ms;
 }
 
 .Advanced-search .add-btn path:hover {
@@ -221,7 +221,7 @@
 .Advanced-search .filter-colors .dropdown li {
   padding-block: 5px;
   cursor: pointer;
-  transition: 300ms;
+  transition: color 300ms;
 }
 
 .Advanced-search .filter-colors .dropdown li:hover {
@@ -253,7 +253,7 @@
 .Advanced-search .filter-mana-cost .dropdown li {
   padding-block: 5px;
   cursor: pointer;
-  transition: 300ms;
+  transition: color 300ms;
 }
 
 .Advanced-search .filter-mana-cost .dropdown li:hover {
@@ -311,7 +311,7 @@
 
 .Advanced-search .filter-stats .dropdown li {
   cursor: pointer;
-  transition: 300ms;
+  transition: color 300ms;
 }
 
 .Advanced-search .filter-stats .dropdown li:hover {
@@ -389,7 +389,7 @@
 
 .Advanced-search .filter-formats .dropdown li {
   cursor: pointer;
-  transition: 300ms;
+  transition: color 300ms;
 }
 
 .Advanced-search .filter-formats .dropdown li:hover {
@@ -458,7 +458,7 @@
   gap: 5px;
   font-size: 15px;
   font-weight: 300;
-  transition: 300ms;
+  transition: color 300ms;
   cursor: pointer;
 }
 
@@ -493,11 +493,11 @@
   height: 50%;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: $sm) {
 
   //Generic styles 
   .Advanced-search .inner {
-    width: 770px;
+    width: $smContainer;
   }
 
   .Advanced-search h1 {
@@ -624,11 +624,11 @@
   }
 }
 
-@media (max-width: 800px) {
+@media (max-width: $tablet) {
 
   //Generic styles 
   .Advanced-search .inner {
-    width: 550px;
+    width: $tabletContainer;
   }
 
   .Advanced-search h1 {
@@ -664,11 +664,11 @@
 
 }
 
-@media (max-width: 600px) {
+@media (max-width: $lmobile) {
 
   //Generic styles 
   .Advanced-search .inner {
-    width: 400px;
+    width: $lmobileContainer;
   }
 
   .Advanced-search h1 {
@@ -705,11 +705,11 @@
   }
 }
 
-@media (max-width: 425px) {
+@media (max-width: $mobile) {
 
   //Generic styles 
   .Advanced-search .inner {
-    width: 315px;
+    width: $mobileContainer;
   }
 
   .Advanced-search h1 {

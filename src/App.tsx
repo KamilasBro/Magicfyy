@@ -21,20 +21,18 @@ const App: React.FC = () => {
       <BgAnim />
       <Navbar />
       <div className="flex flex-col justify-between min-h-screen">
-        <div className="flex justify-center">
-          <main>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/advanced" element={<AdvancedSearch />} />
-              <Route path="/:query" element={<Searched />} />
-              <Route path="/sets" element={<Sets />} />
-              <Route path="/sets/:setCode" element={<ChosenSet />} />
-              <Route path="/card/:set/:code" element={<Card />} />
-              <Route path="/guess" element={<GuessTheCard />} />
-              <Route path="/*" element={<NotFound />} />
-            </Routes>
-          </main>
-        </div>
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/advanced" element={<AdvancedSearch />} />
+            <Route path="/:query" element={<Searched />} />
+            <Route path="/sets" element={<Sets />} />
+            <Route path="/sets/:setCode" element={<ChosenSet />} />
+            <Route path="/card/:set/:code" element={<Card />} />
+            <Route path="/guess" element={<GuessTheCard />} />
+            <Route path="/*" element={<NotFound />} />
+          </Routes>
+        </main>
         <Footer />
       </div>
     </Router>

@@ -1,4 +1,4 @@
-@import "../../assets/scss/partials/colors";
+@use "../../assets/scss/partials/importer" as *;
 
 .Not-found {
   gap: 25px;
@@ -18,19 +18,19 @@
   background-color: $red;
 }
 
-@media (max-width: 1600px) {
+@media (max-width: $xlg) {
   .Not-found h1 {
     font-size: 46px;
   }
 }
 
-@media (max-width: 1280px) {
+@media (max-width: $md) {
   .Not-found h1 {
     font-size: 44px;
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: $sm) {
   .Not-found {
     flex-direction: column;
     align-items: center;
@@ -62,13 +62,13 @@
   }
 }
 
-@media (max-width: 800px) {
+@media (max-width: $tablet) {
   .Not-found h1 {
     font-size: 40px;
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: $lmobile) {
 
   .Not-found h1 {
     font-size: 38px;
@@ -79,7 +79,7 @@
   }
 }
 
-@media (max-width: 425px) {
+@media (max-width: $mobile) {
   .Not-found svg {
     width: 220px;
   }

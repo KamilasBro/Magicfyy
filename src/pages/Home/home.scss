@@ -1,8 +1,15 @@
-@import "../../assets/scss/partials/colors";
+@use "../../assets/scss/partials/importer" as *;
 
 .Home {
-  width: 100%;
   overflow-x: visible; // or unset, but NOT hidden
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Home .search {
+  width: $fhdContainer;
 }
 
 .Home h1 {
@@ -24,7 +31,7 @@
   border-radius: 10px 0px 0px 10px;
   height: 70px;
   width: 70px;
-  transition: 300ms;
+  transition: background-color 300ms;
 }
 
 .Home .search-wrap:hover {
@@ -68,11 +75,22 @@
   margin-top: 50px;
   overflow: hidden;
   padding-block: 20px;
+  flex-shrink: 0;
+  display: flex;
+  width: 100%;
+  max-width: fit-content;
+  overflow-x: hidden;
 }
 
 .Home .cards .card {
   flex-shrink: 0;
-  max-width: 1520px;
+  margin-right: 50px;
+  max-width: 300px;
+}
+
+.Home .cards img {
+  display: flex 0 0;
+  flex-shrink: 0;
   margin-right: 50px;
 }
 
@@ -89,7 +107,11 @@
   padding-block: 20px;
 }
 
-@media screen and (max-width: 1600px) {
+@media screen and (max-width: $xlg) {
+  .Home .search {
+    width: $xlgContainer;
+  }
+
   .Home h1 {
     font-size: 46px;
   }
@@ -107,29 +129,25 @@
     font-size: 18px;
     padding-inline: 23px;
   }
-
-  .Home .cards {
-    padding: 10px;
-  }
-
-  .Home .cards .card {
-    max-width: 1300px;
-  }
 }
 
 
 
-@media screen and (max-width: 1440px) {
+@media screen and (max-width: $lg) {
+  .Home .search {
+    width: $lgContainer;
+  }
+
   .Home .search-bar {
     width: 600px;
   }
-
-  .Home .cards .card {
-    max-width: 1200px;
-  }
 }
 
-@media screen and (max-width: 1280px) {
+@media screen and (max-width: $md) {
+  .Home .search {
+    width: $mdContainer;
+  }
+
   .Home h1 {
     font-size: 44px;
   }
@@ -151,13 +169,13 @@
   .Home input {
     font-size: 16px;
   }
-
-  .Home .cards .card {
-    max-width: 1000px;
-  }
 }
 
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: $sm) {
+  .Home .search {
+    width: 100%;
+  }
+
   .Home .search {
     align-items: center;
   }
@@ -178,13 +196,10 @@
   .Home .search-buttons {
     width: 500px;
   }
-
-  .Home .cards .card {
-    max-width: 770px;
-  }
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: $tablet) {
+
   .Home h1 {
     font-size: 40px;
   }
@@ -197,13 +212,10 @@
   .Home input {
     font-size: 13px;
   }
-
-  .Home .cards .card {
-    max-width: 550px;
-  }
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: $lmobile) {
+
   .Home h1 {
     font-size: 38px;
   }
@@ -231,13 +243,10 @@
     justify-content: center;
     gap: 12px;
   }
-
-  .Home .cards .card {
-    max-width: 400px;
-  }
 }
 
-@media screen and (max-width: 425px) {
+@media screen and (max-width: $mobile) {
+
   .Home h1 {
     font-size: 32px;
   }
@@ -258,7 +267,7 @@
   }
 
   .Home .search-buttons {
-    width: 100%;
+    width: 315px;
     flex-wrap: wrap;
     justify-content: left;
     gap: 15px;
@@ -267,9 +276,5 @@
   .Home .cards {
     margin-top: 25px;
     padding-block: 0px;
-  }
-
-  .Home .cards .card {
-    max-width: 315px;
   }
 }
