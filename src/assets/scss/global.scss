@@ -51,6 +51,14 @@ body::-webkit-scrollbar-track {
   object-fit: cover;
 }
 
+a,
+button,
+input {
+  &:focus {
+    outline: transparent;
+  }
+}
+
 button {
   font-size: 14px;
   font-weight: 300;
@@ -58,10 +66,6 @@ button {
   border-radius: 10px;
   background-color: $transparentBlack;
   transition: background-color 300ms;
-
-  &:focus {
-    outline: transparent;
-  }
 }
 
 main {
