@@ -44,3 +44,42 @@
 .go-top-box .go-top-arrow:hover path {
   fill: $red;
 }
+
+@media (max-width: $sm) {
+  .go-top-box {
+    right: -110px;
+    padding-left: 40px;
+    font-size: 13px;
+  }
+
+  .go-top-box .hide-show-arrow {
+    width: 35px;
+    height: 35px;
+  }
+
+  .go-top-box .go-top-arrow {
+    height: 55px;
+    width: 55px;
+  }
+}
+
+@media (max-width: $lmobile) {
+  .go-top-box {
+    right: -95px;
+    padding-left: 35px;
+    font-size: 12px;
+    padding-block: 15px;
+    padding-right: 15px;
+  }
+
+  .go-top-box .hide-show-arrow {
+    width: 30px;
+    height: 30px;
+    margin-left: 5px;
+  }
+
+  .go-top-box .go-top-arrow {
+    height: 50px;
+    width: 50px;
+  }
+}

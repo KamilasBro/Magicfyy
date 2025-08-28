@@ -3,7 +3,8 @@
 .navbar {
   height: 100px;
   transition: background-color 300ms;
-  &.scrolled{
+
+  &.scrolled {
     background-color: $black;
   }
 }
@@ -93,6 +94,13 @@
 }
 
 @media (max-width: $sm) {
+
+  //prevent triggering clicking event outside the MobileNavbar, class appended from useEffect
+  main.menu-open *:not(.MobileNavbar, .MobileNavbar *) {
+    pointer-events: none;
+    user-select: none;
+  }
+
   .navbar {
     height: 80px;
     background-color: $black;
@@ -146,6 +154,7 @@
     flex-direction: column;
     gap: 30px;
     margin-top: 50px;
+    overflow: auto;
   }
 }
 

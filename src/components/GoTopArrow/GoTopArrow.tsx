@@ -4,6 +4,10 @@ import Arrow2Svg from "../../assets/images/icons/arrow2.svg?react";
 import "./goTopArrow.scss";
 const GoTopArrow: React.FC = () => {
   const [show, setShow] = useState(false);
+  window.onscroll = () => {
+    setShow(false);
+  }
+
   return (
     <div
       className={`go-top-box fixed z-10 ${show && "show-box"}`}
