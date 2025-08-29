@@ -3,7 +3,7 @@
 .navbar {
   height: 100px;
   transition: background-color 300ms;
-
+  background-color: transparent;
   &.scrolled {
     background-color: $black;
   }
