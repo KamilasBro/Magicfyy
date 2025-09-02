@@ -32,8 +32,14 @@ const ChooseSet: React.FC<setChosenModeInterface> = ({ setChosenMode }) => {
         setSets(
           data.data.filter(
             (set: any) =>
-              set.card_count > 20 && //filter the sets with small amount of cards
-              (set.set_type === "expansion" || set.set_type === "core")
+              set.card_count > 25 && //filter the sets with small amount of cards
+              (set.set_type === "core" ||
+                set.set_type === "expansion" ||
+                set.set_type === "masters" ||
+                set.set_type === "commander" ||
+                set.set_type === "draft_innovation" ||
+                set.set_type === "starter"
+              )
           )
         );
         isSetFetched(true);

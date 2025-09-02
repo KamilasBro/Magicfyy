@@ -76,10 +76,10 @@ const GuessTheCard: React.FC = () => {
   }, [highlightedIndex, filteredCards.length]);
   // When set is chosen, start loading
   useEffect(() => {
-    if (chosenMode.isChosen && chosenMode.setCode) {
+    if (chosenMode.isChosen && (chosenMode.name || chosenMode.setCode)) {
       setLoading(true);
     }
-  }, [chosenMode.isChosen, chosenMode.setCode]);
+  }, [chosenMode.isChosen, chosenMode.name || chosenMode.setCode]);
 
   useEffect(() => {
     const fetchCards = async () => {
@@ -109,7 +109,22 @@ const GuessTheCard: React.FC = () => {
             }
 
             const data = await response.json();
-            allCards.push(...data.data);
+
+            // normalize names: keep only the part before " // "
+            const normalizeName = (name?: string) => (name ? name.split(" // ")[0].trim() : name);
+
+            const normalizedCards = data.data.map((card: CardData) => {
+              const c = { ...card, name: normalizeName(card.name) };
+              if (Array.isArray(card.card_faces)) {
+                c.card_faces = card.card_faces.map((face: any) => ({
+                  ...face,
+                  name: normalizeName(face.name),
+                }));
+              }
+              return c;
+            });
+
+            allCards.push(...normalizedCards);
             hasMore = data.has_more;
             page++;
           }
@@ -151,7 +166,7 @@ const GuessTheCard: React.FC = () => {
     };
 
     fetchCards();
-  }, [chosenMode.setCode, chosenMode.isChosen]);
+  }, [chosenMode.name, chosenMode.name || chosenMode.setCode]);
 
   useEffect(() => {
     const fetchSymbols = async () => {
@@ -596,7 +611,7 @@ const GuessTheCard: React.FC = () => {
                             const card = filteredCards[0];
                             setGuesses((prevState) => [...prevState, card]);
                             setSearchValue("");
-                            if (card.name === randomCard?.name) setWinTheGame(true);
+                            if (card.name === randomCard?.name) setWinTheGame(true)
                           }
                         }}
                       >
@@ -681,32 +696,33 @@ const GuessTheCard: React.FC = () => {
                                 "Planeswalker",
                                 "Sorcery",
                                 "Battle",
-                              ]; // List of basic card types
+                              ];
 
-                              // Filter and process the `type_line` for the guess and randomCard
-                              const guessTypes = (guess.type_line || "")
-                                .split(/[\s//]+/)
-                                .filter((type) => basicTypes.includes(type));
+                              // use only the first face's type_line if present, otherwise fallback to top-level type_line
+                              const guessTypeLine = guess.card_faces?.[0]?.type_line ?? guess.type_line ?? "";
+                              const randomTypeLine = randomCard?.card_faces?.[0]?.type_line ?? randomCard?.type_line ?? "";
 
-                              const randomCardTypes = (randomCard?.type_line || "")
-                                .split(/[\s//]+/)
-                                .filter((type) => basicTypes.includes(type));
+                              const extractTypes = (typeLine: string) =>
+                                (typeLine.split("—")[0] || "")
+                                  .trim()
+                                  .split(/\s+/)
+                                  .filter((t) => basicTypes.includes(t));
 
-                              // Check for exact match
+                              const guessTypes = extractTypes(guessTypeLine);
+                              const randomTypes = extractTypes(randomTypeLine);
+
                               if (
-                                guessTypes.length === randomCardTypes.length &&
-                                guessTypes.every((type) => randomCardTypes.includes(type))
+                                guessTypes.length === randomTypes.length &&
+                                guessTypes.every((t) => randomTypes.includes(t))
                               ) {
-                                return `correct`;
+                                return "correct";
                               }
 
-                              // Check for partial match
-                              if (guessTypes.some((type) => randomCardTypes.includes(type))) {
-                                return `partial`;
+                              if (guessTypes.some((t) => randomTypes.includes(t))) {
+                                return "partial";
                               }
 
-                              // Default case
-                              return ``;
+                              return "";
                             })()}
                           >
                             {(() => {
@@ -721,50 +737,42 @@ const GuessTheCard: React.FC = () => {
                                 "Battle",
                               ];
 
-                              const separator = guess.type_line?.includes("//") ? " // " : ", ";
-                              const matchingTypes = (guess.type_line || "")
-                                .split(/[\s//]+/)
-                                .filter((type) => basicTypes.includes(type));
+                              const guessTypeLine = guess.card_faces?.[0]?.type_line ?? guess.type_line ?? "";
 
-                              return matchingTypes.join(separator);
+                              const extractTypes = (typeLine: string) =>
+                                (typeLine.split("—")[0] || "")
+                                  .trim()
+                                  .split(/\s+/)
+                                  .filter((t) => basicTypes.includes(t));
+
+                              const guessTypes = extractTypes(guessTypeLine);
+
+                              if (guessTypes.length === 0) return "";
+
+                              // Return plain text, comma-separated, no <span> tags
+                              return guessTypes.join(", ");
                             })()}
                           </li>
                           <li
                             className={(() => {
-                              // Check if `guess.colors` matches `randomCard.colors` exactly
+                              // use only the first face's colors if present, otherwise fallback to top-level colors
+                              const guessColors = guess.card_faces?.[0]?.colors ?? guess.colors ?? [];
+                              const randomColors = randomCard?.card_faces?.[0]?.colors ?? randomCard?.colors ?? [];
+
+                              // exact match
                               if (
-                                guess.colors?.length === randomCard?.colors?.length &&
-                                guess.colors?.every((color) => randomCard?.colors?.includes(color))
+                                guessColors.length === randomColors.length &&
+                                guessColors.every((c) => randomColors.includes(c))
                               ) {
-                                return `correct`;
+                                return "correct";
                               }
 
-                              // Check if `card_faces[0].colors` or `card_faces[1].colors` matches `randomCard.colors` exactly
-                              if (
-                                guess.card_faces?.[0]?.colors?.length === randomCard?.colors?.length &&
-                                guess.card_faces?.[0]?.colors?.every((color) => randomCard?.colors?.includes(color))
-                              ) {
-                                return `correct`;
+                              // partial match
+                              if (guessColors.some((c) => randomColors.includes(c))) {
+                                return "partial";
                               }
 
-                              if (
-                                guess.card_faces?.[1]?.colors?.length === randomCard?.colors?.length &&
-                                guess.card_faces?.[1]?.colors?.every((color) => randomCard?.colors?.includes(color))
-                              ) {
-                                return `correct`;
-                              }
-
-                              // Check for partial matches
-                              if (
-                                guess.colors?.some((color) => randomCard?.colors?.includes(color)) ||
-                                guess.card_faces?.[0]?.colors?.some((color) => randomCard?.colors?.includes(color)) ||
-                                guess.card_faces?.[1]?.colors?.some((color) => randomCard?.colors?.includes(color))
-                              ) {
-                                return `partial`;
-                              }
-
-                              // Default case
-                              return ``;
+                              return "";
                             })()}
                           >
                             {(() => {
@@ -775,41 +783,38 @@ const GuessTheCard: React.FC = () => {
                                 R: "Red",
                                 G: "Green",
                               };
-
                               const allColors = ["W", "U", "B", "R", "G"];
 
-                              // Handle the case where the card has no colors
-                              if (!guess.colors || guess.colors.length === 0) {
-                                if (guess.card_faces && guess.card_faces.length > 0) {
-                                  // Map over card_faces and extract colors
-                                  const faceColors = guess.card_faces
-                                    .map((face) =>
-                                      (face.colors || [])
-                                        .map((color) => colorMap[color] || color) // Map color codes to names
-                                        .join(", ")
-                                    )
-                                    .join(" // "); // Join each face's colors with //
+                              // use only the first face's colors if present, otherwise fallback to top-level colors
+                              const guessColors = guess.card_faces?.[0]?.colors ?? guess.colors ?? [];
 
-                                  return faceColors || "Colorless";
-                                }
-
+                              // handle colorless
+                              if (!guessColors || guessColors.length === 0) {
                                 return "Colorless";
                               }
 
-                              // Map colors to their names
-                              const colorNames = (guess.colors || []).map((color) => colorMap[color] || color);
-
-                              // Check if all colors are included
-                              if (allColors.every((color) => (guess.colors || []).includes(color))) {
+                              // All colors shorthand
+                              if (allColors.every((c) => guessColors.includes(c))) {
                                 return "All Colors";
                               }
 
-                              return colorNames.join(", ");
+                              // Map to names and return plain comma-separated string
+                              const names = guessColors.map((code: string) => colorMap[code] || code);
+                              return names.join(", ");
                             })()}
                           </li>
-                          <li className={guess.cmc === randomCard?.cmc ? `correct` : ``}>{guess.cmc ? guess.cmc : "none"}</li>
-                          <li className={guess.rarity === randomCard?.rarity ? `correct` : ``}>{guess.rarity}</li>
-                          <li className={guess.artist === randomCard?.artist ? `correct` : ``}>{guess.artist}</li>
+                          <li className={guess.cmc === randomCard?.cmc ? `correct` : `incorrect`}>
+                            {randomCard?.cmc && (guess.cmc < randomCard.cmc ? "Higher than" :
+                              guess.cmc > randomCard.cmc ? "Lower than" : "")}
+                            {" "}
+                            {guess.cmc ? guess.cmc : "None"}
+                          </li>
+                          <li className={guess.rarity === randomCard?.rarity ? `correct` : ``}>
+                            {guess.rarity}
+                          </li>
+                          <li className={guess.artist === randomCard?.artist ? `correct` : ``}>
+                            {guess.artist}
+                          </li>
                           <li
                             className={(() => {
                               const superTypes = [
@@ -823,25 +828,47 @@ const GuessTheCard: React.FC = () => {
                                 "Ongoing",
                               ]; // List of super types
 
-                              // Filter and process the `type_line` for the guess and randomCard
-                              const guessSuperTypes = (guess.type_line || "")
-                                .split(/[\s//]+/)
-                                .filter((type) => superTypes.includes(type));
+                              // use only the main face's type_line if present, otherwise fallback to top-level type_line
+                              const guessTypeLine = (guess.card_faces?.[0]?.type_line ?? guess.type_line ?? "");
+                              const randomTypeLine = (randomCard?.card_faces?.[0]?.type_line ?? randomCard?.type_line ?? "");
 
-                              const randomCardSuperTypes = (randomCard?.type_line || "")
-                                .split(/[\s//]+/)
-                                .filter((type) => superTypes.includes(type));
+                              const extract = (typeLine: string) =>
+                                (typeLine || "")
+                                  .split(/[\s//]+/)
+                                  .filter((type) => superTypes.includes(type));
 
-                              // Check for exact match
+                              const guessSuperTypes = extract(guessTypeLine);
+                              const randomCardSuperTypes = extract(randomTypeLine);
+
+                              // prefer main face layout, fallback to top-level layout
+                              const guessLayoutRaw = (guess.layout ?? "")?.toString();
+                              const randomLayoutRaw = (randomCard?.layout ?? "")?.toString();
+
+                              const guessLayout = guessLayoutRaw ? guessLayoutRaw.toLowerCase() : "";
+                              const randomLayout = randomLayoutRaw ? randomLayoutRaw.toLowerCase() : "";
+
+                              const normalizeForCompare = (arr: string[], layoutStr: string) => {
+                                const norm = arr.map((s) => s.toLowerCase());
+                                // include layout only if it's present and not "normal"
+                                if (layoutStr && layoutStr !== "normal") {
+                                  if (!norm.includes(layoutStr)) norm.push(layoutStr);
+                                }
+                                return norm;
+                              };
+
+                              const guessNorm = normalizeForCompare(guessSuperTypes, guessLayout);
+                              const randomNorm = normalizeForCompare(randomCardSuperTypes, randomLayout);
+
+                              // Check for exact match (same items, order not important)
                               if (
-                                guessSuperTypes.length === randomCardSuperTypes.length &&
-                                guessSuperTypes.every((type) => randomCardSuperTypes.includes(type))
+                                guessNorm.length === randomNorm.length &&
+                                guessNorm.every((type) => randomNorm.includes(type))
                               ) {
                                 return `correct`;
                               }
 
                               // Check for partial match
-                              if (guessSuperTypes.some((type) => randomCardSuperTypes.includes(type))) {
+                              if (guessNorm.some((type) => randomNorm.includes(type))) {
                                 return `partial`;
                               }
 
@@ -861,16 +888,26 @@ const GuessTheCard: React.FC = () => {
                                 "Ongoing",
                               ];
 
-                              const separator = guess.type_line?.includes("//") ? " // " : ", ";
-                              const matchingSuperTypes = (guess.type_line || "")
+                              const separator = guess.card_faces?.[0]?.type_line?.includes("//") || guess.type_line?.includes("//") ? " // " : ", ";
+                              // use only the main face's type_line if present, otherwise fallback to top-level type_line
+                              const matchingSuperTypes = (guess.card_faces?.[0]?.type_line ?? guess.type_line ?? "")
                                 .split(/[\s//]+/)
                                 .filter((type) => superTypes.includes(type));
 
-                              if (matchingSuperTypes.length === 0) {
+                              // prefer main face layout, fallback to top-level layout
+                              const layoutRaw = (guess.layout ?? "")?.toString();
+                              const layout = layoutRaw ? layoutRaw.toString() : "";
+
+                              // include layout only if present and not "normal"
+                              const includeLayout = layout && layout.toLowerCase() !== "normal";
+                              const parts = includeLayout ? [...matchingSuperTypes, layout] : matchingSuperTypes;
+
+                              if (parts.length === 0) {
                                 return "None";
                               }
 
-                              return matchingSuperTypes.join(separator);
+                              // Return plain text, comma-separated (or " // " if separator chosen)
+                              return parts.join(separator);
                             })()}
                           </li>
                         </ul>

@@ -30,6 +30,7 @@ const Sets: React.FC = () => {
     };
     fetchCards();
   }, []);
+  console.log(sets);
   return (
     <section className="Sets">
       <h1>Search for a set</h1>
