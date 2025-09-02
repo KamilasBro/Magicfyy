@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LogoSvg from "../../assets/images/logo/navbarLogo.svg?react"
 import { Link } from "react-router-dom";
 import MobileNavbar from "./MobileNavbar";
@@ -7,20 +7,35 @@ import "./navbar.scss";
 const Navbar: React.FC = () => {
   const [Ypos, setYPos] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
-  window.onresize = () => {
-    if (window.innerWidth > 1024) {
-      setIsMobile(false);
-    }
-  };
-  window.onscroll = () => {
-    if (window.innerWidth <= 1024) return;
-    if (window.scrollY === 0) {
-      setYPos(true);
-    } else {
-      setYPos(false);
-    }
-  };
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 1024) {
+        setIsMobile(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY === 0) {
+        setYPos(true);
+      } else {
+        setYPos(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   if (isMobile) {
     (document.querySelector("html") as HTMLElement).style.overflowY = "hidden";

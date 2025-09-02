@@ -486,3 +486,7 @@
 .Guess-the-card .game .guess li.partial {
   background-color: $yellow;
 }
+
+.Guess-the-card .game .guess li.wrong {
+  background-color: $crimsonRed;
+}

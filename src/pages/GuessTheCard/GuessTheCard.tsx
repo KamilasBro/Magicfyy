@@ -8,13 +8,13 @@ import LoadingCardsAnim from "../../components/LoadingCardsAnim/LoadingCardsAnim
 import { CardSymbolData } from "../../interfaces/CardsInterface";
 import "./guessTheCard.scss";
 
-const getInitialChosenSet = () => {
+const getInitialChosenMode = () => {
   const savedData = localStorage.getItem("savedData");
   if (savedData) {
     try {
       const parsed = JSON.parse(savedData);
-      if (parsed.chosenSet && parsed.chosenSet.isChosen) {
-        return parsed.chosenSet;
+      if (parsed.chosenMode && parsed.chosenMode.isChosen) {
+        return parsed.chosenMode;
       }
     } catch (e) { }
   }
@@ -27,19 +27,14 @@ const getInitialChosenSet = () => {
 };
 
 const GuessTheCard: React.FC = () => {
-  const [chosenSet, setChosenSet] = useState<{
-    setCode: string;
+  const [chosenMode, setChosenMode] = useState<{
+    mode: string
+    setCode?: string;
     isChosen: boolean;
-    icon_svg_uri: string;
+    icon_svg_uri?: string;
     name: string;
-  }>(getInitialChosenSet());
-  // const [commanders, setCommanders] = useState<{
-  //   setCode: string;
-  //   isChosen: boolean;
-  //   icon_svg_uri: string;
-  //   name: string;
-  // }>();
-  const [dataFromSet, setDataFromSet] = useState<CardData[]>([]);
+  }>(getInitialChosenMode());
+  const [cardsData, setCardsData] = useState<CardData[]>([]);
   const [randomCard, setRandomCard] = useState<CardData>();
   const [randomCardIndex, setRandomCardIndex] = useState<number | null>(null);
   const [searchValue, setSearchValue] = useState<string>("");
@@ -60,7 +55,7 @@ const GuessTheCard: React.FC = () => {
   ];
   const loadedRandomCard = React.useRef(false);
   const [loading, setLoading] = useState(false);
-  const filteredCards = dataFromSet.filter((card) => {
+  const filteredCards = cardsData.filter((card) => {
     return (
       !guesses.some((guess) => guess.name === card.name) &&
       card.name.toLowerCase().startsWith(searchValue.toLowerCase())
@@ -81,24 +76,32 @@ const GuessTheCard: React.FC = () => {
   }, [highlightedIndex, filteredCards.length]);
   // When set is chosen, start loading
   useEffect(() => {
-    if (chosenSet.isChosen && chosenSet.setCode) {
+    if (chosenMode.isChosen && chosenMode.setCode) {
       setLoading(true);
     }
-  }, [chosenSet.isChosen, chosenSet.setCode]);
+  }, [chosenMode.isChosen, chosenMode.setCode]);
 
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        if (chosenSet.isChosen && chosenSet.setCode) {
+        if (chosenMode.isChosen) {
           setLoading(true); // Ensure loading is true
           const minLoading = new Promise((resolve) => setTimeout(resolve, 1000));
+          let apiUrl = "";
           let hasMore = true;
           let page = 1;
           const allCards: CardData[] = [];
 
           while (hasMore) {
             await new Promise((resolve) => setTimeout(resolve, 50));
-            const apiUrl = `https://api.scryfall.com/cards/search?q=e:${chosenSet.setCode}&page=${page}`;
+            if (chosenMode.mode === "commander") {
+              const q = encodeURIComponent(
+                '((type:legendary type:creature) OR (type:legendary type:artifact type:vehicle) OR (type:legendary type:Spacecraft) OR (oracletag:non-creature-commander)) legal:commander -is:token lang:en'
+              );
+              apiUrl = `https://api.scryfall.com/cards/search?q=${q}&page=${page}`;
+            } else if (chosenMode.mode === "set") {
+              apiUrl = `https://api.scryfall.com/cards/search?q=e:${chosenMode.setCode}&page=${page}`;
+            }
             const response = await fetch(apiUrl);
 
             if (!response.ok) {
@@ -111,7 +114,7 @@ const GuessTheCard: React.FC = () => {
             page++;
           }
 
-          setDataFromSet(allCards);
+          setCardsData(allCards);
 
           // Only pick a new random card index if not already loaded from localStorage
           if (!loadedRandomCard.current) {
@@ -148,7 +151,7 @@ const GuessTheCard: React.FC = () => {
     };
 
     fetchCards();
-  }, [chosenSet.setCode, chosenSet.isChosen]);
+  }, [chosenMode.setCode, chosenMode.isChosen]);
 
   useEffect(() => {
     const fetchSymbols = async () => {
@@ -167,9 +170,9 @@ const GuessTheCard: React.FC = () => {
   }, []);
   //maintenance
   useEffect(() => {
-    console.log(dataFromSet);
+    console.log(cardsData);
     console.log(randomCard);
-  }, [dataFromSet]);
+  }, [cardsData]);
   //maintenance
 
   useEffect(() => {
@@ -193,7 +196,7 @@ const GuessTheCard: React.FC = () => {
     if (savedData) {
       try {
         const parsed = JSON.parse(savedData);
-        if (parsed.chosenSet) setChosenSet(parsed.chosenSet);
+        if (parsed.chosenMode) setChosenMode(parsed.chosenMode);
         if (typeof parsed.randomCardIndex === "number") setRandomCardIndex(parsed.randomCardIndex);
         if (parsed.guesses) setGuesses(parsed.guesses);
         if (typeof parsed.winTheGame === "boolean") setWinTheGame(parsed.winTheGame);
@@ -203,12 +206,12 @@ const GuessTheCard: React.FC = () => {
     }
   }, []);
   useEffect(() => {
-    // Only save if a set is chosen
-    if (chosenSet.isChosen) {
+    // Only save if a mode is chosen
+    if (chosenMode.isChosen) {
       localStorage.setItem(
         "savedData",
         JSON.stringify({
-          chosenSet,
+          chosenMode,
           randomCardIndex,
           guesses,
           winTheGame,
@@ -218,7 +221,7 @@ const GuessTheCard: React.FC = () => {
       // If not chosen, remove savedData
       localStorage.removeItem("savedData");
     }
-  }, [chosenSet, randomCardIndex, guesses, winTheGame]);
+  }, [chosenMode, randomCardIndex, guesses, winTheGame]);
 
   function renderRandomCardImg() {
     const baseBlur = 4; // starting blur in px
@@ -360,7 +363,7 @@ const GuessTheCard: React.FC = () => {
               <h2>Do you want to reset?</h2>
               <span className="reset-btns-wrap flex justify-center">
                 <button onClick={() => {
-                  resetSet();
+                  resetGame();
                   setShowPopup({ option: "", show: false });
                 }}>Yes</button>
                 <button
@@ -509,12 +512,13 @@ const GuessTheCard: React.FC = () => {
       </div >
     );
   }
-  function resetSet() {
+  function resetGame() {
     // Remove all relevant localStorage keys
     localStorage.removeItem("savedData");
 
     // Reset all state
-    setChosenSet({
+    setChosenMode({
+      mode: "",
       setCode: "",
       isChosen: false,
       icon_svg_uri: "",
@@ -522,7 +526,7 @@ const GuessTheCard: React.FC = () => {
     });
     setRandomCardIndex(null);
     setRandomCard(undefined);
-    setDataFromSet([]);
+    setCardsData([]);
     setGuesses([]);
     setWinTheGame(false);
     loadedRandomCard.current = false;
@@ -533,16 +537,16 @@ const GuessTheCard: React.FC = () => {
       <span className="title flex items-end justify-center">
         <h1>Guess The Card</h1>
       </span>
-      {!chosenSet.isChosen ? (
-        <ChooseSet setChosenSet={setChosenSet} />
+      {!chosenMode.isChosen ? (
+        <ChooseSet setChosenMode={setChosenMode} />
       ) : (
         <>
           <div className="guess-wrap">
             <span className="set-name flex justify-center items-center">
-              <img src={chosenSet.icon_svg_uri} alt="set-icon" />
-              <h2>{chosenSet.name}</h2>
+              {chosenMode.icon_svg_uri && <img src={chosenMode.icon_svg_uri} alt="set-icon" />}
+              <h2>{chosenMode.name}</h2>
             </span>
-            {loading || (!randomCard && dataFromSet.length === 0) ? <LoadingCardsAnim /> :
+            {loading || (!randomCard && cardsData.length === 0) ? <LoadingCardsAnim /> :
               <>
                 <div className="search-input flex justify-center">
                   <div>
@@ -626,10 +630,10 @@ const GuessTheCard: React.FC = () => {
                   <div className="btns-wrap flex  items-center">
                     <button
                       onClick={() => (
-                        winTheGame ? resetSet() : setShowPopup({ option: "reset", show: true })
+                        winTheGame ? resetGame() : setShowPopup({ option: "reset", show: true })
                       )}
                     >
-                      {!winTheGame ? "Reset Set" : "Play Again"}
+                      {!winTheGame ? "Reset Game" : "Play Again"}
                     </button>
                     <button
                       onClick={() => setShowPopup({ option: "hints", show: true })}
@@ -880,7 +884,7 @@ const GuessTheCard: React.FC = () => {
         </>
       )}
       {showPopup.show && renderPopup()}
-      {chosenSet.isChosen && <GoTopArrow />}
+      {chosenMode.isChosen && <GoTopArrow />}
     </section>
   );
 };
