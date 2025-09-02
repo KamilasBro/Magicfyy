@@ -474,6 +474,7 @@
   font-size: 12px;
   font-weight: 400;
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   text-align: center;
@@ -485,4 +486,8 @@
 
 .Guess-the-card .game .guess li.partial {
   background-color: $yellow;
+}
+
+.Guess-the-card .game .guess li.incorrect {
+  background-color: $red;
 }

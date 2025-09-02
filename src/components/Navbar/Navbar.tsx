@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LogoSvg from "../../assets/images/logo/navbarLogo.svg?react"
 import { Link } from "react-router-dom";
 import MobileNavbar from "./MobileNavbar";
@@ -7,18 +7,35 @@ import "./navbar.scss";
 const Navbar: React.FC = () => {
   const [Ypos, setYPos] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
-  window.onscroll = () => {
-    if (window.scrollY === 0) {
-      setYPos(true);
-    } else {
-      setYPos(false);
-    }
-  };
-  window.onresize = () => {
-    if (window.innerWidth > 1024) {
-      setIsMobile(false);
-    }
-  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 1024) {
+        setIsMobile(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY === 0) {
+        setYPos(true);
+      } else {
+        setYPos(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   if (isMobile) {
     (document.querySelector("html") as HTMLElement).style.overflowY = "hidden";
@@ -28,7 +45,7 @@ const Navbar: React.FC = () => {
   return (
     <>
       <nav
-        className={`${!Ypos && "scrolled"} navbar w-screen flex items-center justify-center fixed z-10`}
+        className={`${Ypos ? "" : "scrolled"} navbar w-screen flex items-center justify-center fixed z-10`}
       >
         <div className="inner-nav flex items-center justify-between">
           <HamburgerSvg className="hamburger" onClick={() => setIsMobile(!isMobile)} />

@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { Set } from "../../interfaces/CardsInterface";
 
-interface setChosenSetInterface {
-  setChosenSet: React.Dispatch<
+interface setChosenModeInterface {
+  setChosenMode: React.Dispatch<
     React.SetStateAction<{
-      setCode: string;
+      mode: string;
+      setCode?: string;
       isChosen: boolean;
-      icon_svg_uri: string;
+      icon_svg_uri?: string;
       name: string;
     }>
   >;
 }
 
-const ChooseSet: React.FC<setChosenSetInterface> = ({ setChosenSet }) => {
+const ChooseSet: React.FC<setChosenModeInterface> = ({ setChosenMode }) => {
   const [sets, setSets] = useState<Set[]>([]);
   const [searchedName, setSearchedName] = useState("");
   const [setFetched, isSetFetched] = useState(false);
@@ -31,8 +32,14 @@ const ChooseSet: React.FC<setChosenSetInterface> = ({ setChosenSet }) => {
         setSets(
           data.data.filter(
             (set: any) =>
-              set.card_count > 20 && //filter the sets with small amount of cards
-              (set.set_type === "expansion" || set.set_type === "core")
+              set.card_count > 25 && //filter the sets with small amount of cards
+              (set.set_type === "core" ||
+                set.set_type === "expansion" ||
+                set.set_type === "masters" ||
+                set.set_type === "commander" ||
+                set.set_type === "draft_innovation" ||
+                set.set_type === "starter"
+              )
           )
         );
         isSetFetched(true);
@@ -65,7 +72,8 @@ const ChooseSet: React.FC<setChosenSetInterface> = ({ setChosenSet }) => {
                     className="flex items-center"
                     key={set.code}
                     onClick={() => {
-                      setChosenSet(() => ({
+                      setChosenMode(() => ({
+                        mode: "set",
                         setCode: set.code,
                         isChosen: true,
                         icon_svg_uri: set.icon_svg_uri,
@@ -93,19 +101,24 @@ const ChooseSet: React.FC<setChosenSetInterface> = ({ setChosenSet }) => {
           </ul>
         </div>
         <span className="btn-wrap flex">
-          {/* <button
+          <button
             disabled={!setFetched}
             onClick={() => {
-
+              setChosenMode(() => ({
+                mode: "commander",
+                isChosen: true,
+                name: "Commander",
+              }));
             }}
           >
-            Commanders
-          </button> */}
+            Commander
+          </button>
           <button
             disabled={!setFetched}
             onClick={() => {
               const randomNumber = Math.floor(Math.random() * sets.length);
-              setChosenSet(() => ({
+              setChosenMode(() => ({
+                mode: "set",
                 setCode: sets[randomNumber].code,
                 isChosen: true,
                 icon_svg_uri: sets[randomNumber].icon_svg_uri,
@@ -135,7 +148,8 @@ const ChooseSet: React.FC<setChosenSetInterface> = ({ setChosenSet }) => {
                 const chosenSet = filteredSets[randomNumber];
 
                 // Update the state with the chosen set
-                setChosenSet({
+                setChosenMode({
+                  mode: "set",
                   setCode: chosenSet.code,
                   isChosen: true,
                   icon_svg_uri: chosenSet.icon_svg_uri,
