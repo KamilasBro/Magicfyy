@@ -368,6 +368,20 @@ const GuessTheCard: React.FC = () => {
       return <span key={color + idx}>{color}</span>;
     });
   }
+  function removeCardNamesFromText(text: string, names: (string | undefined)[]) {
+    if (!text) return text;
+    let result = text;
+    names
+      .filter(Boolean)
+      .map(n => (n as string).trim())
+      .forEach((name) => {
+        if (!name) return;
+        const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        // Replace whole-word occurrences (case-insensitive) with "this card"
+        result = result.replace(new RegExp(`\\b${escaped}\\b`, "gi"), "*this card*");
+      });
+    return result;
+  }
   function renderPopup() {
     return (
       <div className="popup-wrap flex justify-center items-center" onClick={() => {
@@ -502,7 +516,14 @@ const GuessTheCard: React.FC = () => {
                   </p>
                   {guesses.length >= 15 && randomCard && (
                     randomCard.oracle_text
-                      ? <span className="oracle-text">{renderTextWithSymbols(randomCard.oracle_text)}</span>
+                      ? <span className="oracle-text">
+                        {renderTextWithSymbols(
+                          removeCardNamesFromText(
+                            randomCard.oracle_text,
+                            [randomCard.name, ...(randomCard.card_faces?.map((f: any) => f.name) ?? [])]
+                          )
+                        )}
+                      </span>
                       : "No text"
                   )}
                 </li>
