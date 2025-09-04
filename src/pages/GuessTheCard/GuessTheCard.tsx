@@ -56,9 +56,11 @@ const GuessTheCard: React.FC = () => {
   const loadedRandomCard = React.useRef(false);
   const [loading, setLoading] = useState(false);
   const filteredCards = cardsData.filter((card) => {
+    const query = searchValue.trim().toLowerCase();
+    if (!query) return false;
     return (
       !guesses.some((guess) => guess.name === card.name) &&
-      card.name.toLowerCase().startsWith(searchValue.toLowerCase())
+      card.name.toLowerCase().includes(query)
     );
   });
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
@@ -308,7 +310,6 @@ const GuessTheCard: React.FC = () => {
             src={symbolData.svg_uri}
             alt={`${symbol} symbol`}
             className="oracle-symbol"
-            style={{ width: 22, height: 22, verticalAlign: "middle", margin: "0 2px" }}
           />
         );
       } else {
