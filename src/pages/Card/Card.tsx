@@ -265,17 +265,21 @@ const Card: React.FC = () => {
       });
   }
   function renderCardImg() {
-    const typeLine =
-      cardData?.type_line || cardData?.card_faces?.[0]?.type_line;
     const isArvinox =
       ((cardData?.card_faces?.[showCardBack ? 1 : 0]?.name || cardData?.name) === "Arvinox, the Mind Flail") &&
       (cardData?.set === "sld");
     // Check if the card is Arvinox, the Mind Flail in the SLD set cause it is upside down from API
 
     if (
-      typeLine?.includes("Room") ||
-      typeLine?.includes("Adventure") ||
-      cardData?.layout.includes("flip")
+      cardData?.layout.includes("room") ||
+      cardData?.layout.includes("adventure") ||
+      cardData?.layout.includes("flip") ||
+      cardData?.layout.includes("split") ||
+      cardData?.layout.includes("aftermath") ||
+      cardData?.layout.includes("reversible_card") ||
+      cardData?.layout.includes("battle") ||
+      cardData?.layout.includes("double_faced_token") ||
+      cardData?.layout.includes("reversible_card")
     ) {
       return (
         <img

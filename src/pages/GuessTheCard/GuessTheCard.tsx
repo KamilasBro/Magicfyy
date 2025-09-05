@@ -56,9 +56,11 @@ const GuessTheCard: React.FC = () => {
   const loadedRandomCard = React.useRef(false);
   const [loading, setLoading] = useState(false);
   const filteredCards = cardsData.filter((card) => {
+    const query = searchValue.trim().toLowerCase();
+    if (!query) return false;
     return (
       !guesses.some((guess) => guess.name === card.name) &&
-      card.name.toLowerCase().startsWith(searchValue.toLowerCase())
+      card.name.toLowerCase().includes(query)
     );
   });
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
@@ -238,6 +240,15 @@ const GuessTheCard: React.FC = () => {
     }
   }, [chosenMode, randomCardIndex, guesses, winTheGame]);
 
+  useEffect(() => {
+    const guessesContainer = document.querySelector(
+      ".guesses"
+    ) as HTMLDivElement;
+    if (guessesContainer) {
+      guessesContainer.scrollTo({ left: 0, behavior: "smooth" });
+    }
+  }, [guesses.length, loading]);
+
   function renderRandomCardImg() {
     const baseBlur = 4; // starting blur in px
     const minBlur = 0;  // minimum blur
@@ -308,7 +319,6 @@ const GuessTheCard: React.FC = () => {
             src={symbolData.svg_uri}
             alt={`${symbol} symbol`}
             className="oracle-symbol"
-            style={{ width: 22, height: 22, verticalAlign: "middle", margin: "0 2px" }}
           />
         );
       } else {
@@ -366,6 +376,20 @@ const GuessTheCard: React.FC = () => {
       }
       return <span key={color + idx}>{color}</span>;
     });
+  }
+  function removeCardNamesFromText(text: string, names: (string | undefined)[]) {
+    if (!text) return text;
+    let result = text;
+    names
+      .filter(Boolean)
+      .map(n => (n as string).trim())
+      .forEach((name) => {
+        if (!name) return;
+        const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        // Replace whole-word occurrences (case-insensitive) with "this card"
+        result = result.replace(new RegExp(`\\b${escaped}\\b`, "gi"), "*this card*");
+      });
+    return result;
   }
   function renderPopup() {
     return (
@@ -501,7 +525,14 @@ const GuessTheCard: React.FC = () => {
                   </p>
                   {guesses.length >= 15 && randomCard && (
                     randomCard.oracle_text
-                      ? <span className="oracle-text">{renderTextWithSymbols(randomCard.oracle_text)}</span>
+                      ? <span className="oracle-text">
+                        {renderTextWithSymbols(
+                          removeCardNamesFromText(
+                            randomCard.oracle_text,
+                            [randomCard.name, ...(randomCard.card_faces?.map((f: any) => f.name) ?? [])]
+                          )
+                        )}
+                      </span>
                       : "No text"
                   )}
                 </li>
@@ -912,7 +943,7 @@ const GuessTheCard: React.FC = () => {
                           </li>
                         </ul>
                       );
-                    })}
+                    }).reverse()}
 
                   </div>
                 </div>
@@ -921,7 +952,7 @@ const GuessTheCard: React.FC = () => {
         </>
       )}
       {showPopup.show && renderPopup()}
-      {chosenMode.isChosen && <GoTopArrow />}
+      {chosenMode.isChosen && !showPopup.show && <GoTopArrow />}
     </section>
   );
 };
