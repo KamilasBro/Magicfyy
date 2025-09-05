@@ -610,12 +610,18 @@
   main:has(.Mobile-card) {
     margin-top: 60px;
     margin-bottom: 0px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
   }
 
   .Mobile-card {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
   }
 
   .Mobile-card .mobile-card-menu {
@@ -633,8 +639,7 @@
   }
 
   .Mobile-card>div {
-    min-height: 550px;
-    height: 60vh;
+    height: 550px;
     margin-top: 70px; //height of mobile-card-menu
   }
 
@@ -686,7 +691,7 @@
   }
 
   .Mobile-card>div {
-    min-height: 520px;
+    height: 520px;
     margin-top: 60px; //height of mobile-card-menu
   }
 

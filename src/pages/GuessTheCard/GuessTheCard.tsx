@@ -240,6 +240,15 @@ const GuessTheCard: React.FC = () => {
     }
   }, [chosenMode, randomCardIndex, guesses, winTheGame]);
 
+  useEffect(() => {
+    const guessesContainer = document.querySelector(
+      ".guesses"
+    ) as HTMLDivElement;
+    if (guessesContainer) {
+      guessesContainer.scrollTo({ left: 0, behavior: "smooth" });
+    }
+  }, [guesses.length, loading]);
+
   function renderRandomCardImg() {
     const baseBlur = 4; // starting blur in px
     const minBlur = 0;  // minimum blur
@@ -934,7 +943,7 @@ const GuessTheCard: React.FC = () => {
                           </li>
                         </ul>
                       );
-                    })}
+                    }).reverse()}
 
                   </div>
                 </div>
@@ -943,7 +952,7 @@ const GuessTheCard: React.FC = () => {
         </>
       )}
       {showPopup.show && renderPopup()}
-      {chosenMode.isChosen && <GoTopArrow />}
+      {chosenMode.isChosen && !showPopup.show && <GoTopArrow />}
     </section>
   );
 };
