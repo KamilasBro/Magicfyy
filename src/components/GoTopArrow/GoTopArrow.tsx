@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import "./goTopArrow.scss";
+
 import Arrow1Svg from "../../assets/images/icons/arrow1.svg?react";
 import Arrow2Svg from "../../assets/images/icons/arrow2.svg?react";
-import "./goTopArrow.scss";
+
+import React, { useState } from "react";
+
 const GoTopArrow: React.FC = () => {
   const [show, setShow] = useState(false);
   window.onscroll = () => {

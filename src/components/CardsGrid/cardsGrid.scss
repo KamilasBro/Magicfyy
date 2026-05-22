@@ -1,0 +1,53 @@
+@use "../../assets/scss/partials/importer" as *;
+
+.cards-grid {
+    margin-block: 100px;
+    row-gap: 50px;
+    column-gap: 46px;
+
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+@media screen and (max-width: $xlg) {
+    .cards-grid {
+        column-gap: 56px;
+    }
+}
+
+@media screen and (max-width: $lg) {
+    .cards-grid {
+        column-gap: 31px;
+        row-gap: 40px;
+    }
+}
+
+@media screen and (max-width: $md) {
+    .cards-grid {
+        column-gap: 46px;
+    }
+
+}
+
+@media screen and (max-width: $sm) {
+    .cards-grid {
+        margin-block: 75px;
+        column-gap: 60px;
+    }
+}
+
+@media screen and (max-width: $tablet) {
+    .cards-grid {
+        justify-content: center;
+
+        column-gap: 60px;
+    }
+}
+
+@media screen and (max-width: $lmobile) {
+    .cards-grid {
+        margin-block: 50px;
+        column-gap: 60px;
+    }
+}

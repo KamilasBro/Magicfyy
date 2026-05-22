@@ -1,0 +1,78 @@
+@use "@/assets/scss/partials/importer" as *;
+
+.Advanced-search .filter-stats .input-wrap {
+    .stats-list {
+        gap: 10px;
+        margin-bottom: 10px;
+
+        li {
+            padding: 5px;
+
+            font-size: 12px;
+            font-weight: 500;
+            color: $black;
+
+            background-color: $orange;
+
+            border-radius: 5px;
+
+            svg {
+                margin-left: 5px;
+
+                width: 15px;
+                height: 15px;
+
+                cursor: pointer;
+
+                path {
+                    stroke: $black;
+                    stroke-width: 7px;
+                }
+            }
+        }
+    }
+
+    .stats-wrap {
+        gap: 25px;
+
+        .stats-input {
+            gap: 10px;
+
+            cursor: pointer;
+        }
+
+        .stat-value {
+            width: 200px !important;
+        }
+
+        .stat-dropdown {
+            width: 151px;
+
+            li {
+                cursor: pointer;
+                transition: color 300ms;
+
+                :hover {
+                    color: $orange;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: $sm) {
+    .Advanced-search .filter-stats .stats-wrap {
+        flex-direction: column;
+        align-items: start;
+
+        .dropdown li {
+            font-size: 14px;
+        }
+    }
+}
+
+@media (max-width: $mobile) {
+    .Advanced-search .filter-stats .input-wrap .stat-dropdown li {
+        font-size: 12px;
+    }
+}

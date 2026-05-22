@@ -1,0 +1,470 @@
+@use "@/assets/scss/partials/importer" as *;
+
+//fallback
+.Mobile-card {
+  display: none;
+}
+
+@media (max-width: $sm) {
+  .Mobile-card {
+    display: flex;
+    flex-direction: column;
+
+    height: 815px;
+    width: $smContainer;
+
+    background-color: $transparentBlack;
+    border-radius: 10px;
+
+    .mobile-card-menu {
+      display: flex;
+      justify-content: center;
+      box-sizing: border-box;
+
+      column-gap: 10px;
+
+      background-color: $black;
+
+      border-radius: 10px 10px 0px 0px;
+
+      li {
+        cursor: pointer;
+        font-size: 20px;
+        font-weight: 500;
+
+        padding-block: 20px;
+        padding-inline: 25px;
+
+        box-sizing: border-box;
+        border-bottom: 2px solid;
+
+        border-color: transparent;
+
+        transition: color 300ms, border-color 300ms;
+
+        &.active {
+          color: $orange;
+
+          border-color: $orange;
+        }
+      }
+    }
+
+    &>div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-grow: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+
+      padding-top: 50px;
+
+      h2 {
+        font-size: 24px;
+        font-weight: 600;
+      }
+
+      h3 {
+        font-size: 16px;
+        font-weight: 400;
+      }
+
+      p {
+        font-size: 13px;
+        font-weight: 300;
+        line-height: 1.6;
+
+        img {
+          width: 14px;
+
+          display: inline;
+
+          margin-right: 2.5px;
+        }
+
+        .flavor {
+          color: $orange;
+        }
+      }
+    }
+
+    .view-back {
+      width: 150px;
+
+      margin-top: 25px;
+      padding-block: 20px;
+
+      background-color: $orange;
+    }
+
+    .mobile-card-menu-indicators {
+      display: flex;
+      justify-content: center;
+
+      gap: 25px;
+      margin-block: 25px;
+
+      .indicator button {
+        height: 15px;
+        width: 15px;
+
+        background-color: $gray;
+
+        transition: background-color 300ms;
+
+        &.active {
+          background-color: $orange;
+        }
+
+        &:focus {
+          outline: transparent;
+        }
+      }
+    }
+  }
+
+  .Mobile-card .card-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .card-img {
+      height: 475px;
+      width: 330px;
+
+      border-radius: 20px;
+    }
+  }
+
+  .Mobile-card .card-details {
+    gap: 25px;
+    padding-inline: 50px;
+
+    h2 {
+      display: flex;
+      column-gap: 5px;
+
+      img {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    h3 {
+      display: flex;
+
+      column-gap: 5px;
+
+      img {
+        width: 28px;
+        filter: invert(35%) sepia(100%) saturate(7500%) hue-rotate(30deg);
+      }
+    }
+
+    .card-formats {
+      gap: 15px;
+
+      button {
+        cursor: default;
+
+        &.legal {
+          background-color: $green;
+        }
+
+        &.restricted {
+          background-color: $yellow;
+        }
+
+        &.banned {
+          background-color: $crimsonRed;
+        }
+      }
+    }
+  }
+
+  .Mobile-card .prints {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    justify-items: center;
+
+    padding-inline: 50px;
+    row-gap: 25px;
+
+    width: 100%;
+
+    .print {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      width: 190px;
+
+      .card-img {
+        width: 175px;
+        height: 244px;
+
+        border-radius: 10px;
+      }
+
+      p {
+        font-size: 13px;
+        font-weight: 400;
+
+        &.active {
+          color: $orange;
+        }
+
+        span {
+          font-size: 12px;
+          color: $gray;
+        }
+      }
+
+      li {
+        margin-top: 10px;
+        column-gap: 5px;
+      }
+
+      svg {
+        width: 25px;
+        height: 25px;
+
+        path {
+          fill: $gray;
+        }
+
+        &.active path {
+          fill: $orange;
+        }
+      }
+    }
+  }
+
+  .Mobile-card .rules-list {
+    padding-inline: 50px;
+    row-gap: 25px;
+
+    h3 {
+      font-size: 18px;
+      font-weight: 600;
+
+      color: $orange;
+    }
+
+    li {
+      display: flex;
+
+      gap: 10px;
+    }
+
+    p {
+      font-size: 13px;
+      font-weight: 300;
+
+      &.no-rules {
+        font-size: 22px;
+        font-weight: 400;
+        text-align: center;
+      }
+    }
+  }
+
+}
+
+@media (max-width: $tablet) {
+  .Mobile-card {
+    flex-grow: 1;
+
+    width: $tabletContainer;
+    height: 790px;
+
+    &>div {
+      padding-top: 25px;
+
+      h2 {
+        font-size: 22px;
+      }
+
+      h3 {
+        font-size: 14px;
+      }
+
+      p {
+        font-size: 12px;
+
+        img {
+          width: 12px;
+        }
+      }
+    }
+
+    .mobile-card-menu li {
+      padding-inline: 15px;
+    }
+  }
+
+  .Mobile-card .card-tab .card-img {
+    height: 431px;
+    width: 300px;
+
+    border-radius: 15px;
+  }
+
+
+  .Mobile-card .card-details {
+    gap: 20px;
+    padding-inline: 25px;
+
+    .card-details h2 img {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .Mobile-card .rules {
+    padding-inline: 25px;
+
+    h3 {
+      font-size: 16px;
+    }
+
+    p {
+      font-size: 13px;
+
+      &.no-rules {
+        font-size: 20px;
+      }
+    }
+  }
+}
+
+@media (max-width: $lmobile) {
+
+  //exception for main to make section on whole screen
+  main:has(.Mobile-card) {
+    margin-top: 60px;
+    margin-bottom: 0px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .Mobile-card {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: rgba(0, 0, 0, 0.4);
+
+    &>div {
+      height: 550px;
+      margin-top: 70px;
+
+      h2 {
+        font-size: 20px;
+      }
+
+      h3 {
+        font-size: 13px;
+      }
+
+      .Mobile-card p {
+        font-size: 11px;
+
+        img {
+          width: 11px;
+        }
+      }
+    }
+
+    .mobile-card-menu {
+      position: fixed;
+      z-index: 10;
+
+      height: 70px;
+      width: 100%;
+
+      column-gap: 15px;
+
+      border-radius: 0;
+
+      li {
+        padding-inline: 10px;
+
+        font-size: 18px;
+      }
+    }
+  }
+
+  .Mobile-card .card-details {
+    gap: 20px;
+    padding-inline: 25px;
+
+    h2 img {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .Mobile-card .prints {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    justify-items: center;
+
+    row-gap: 15px;
+    padding-inline: 15px;
+
+  }
+}
+
+@media (max-width: $mobile) {
+  .Mobile-card {
+    .mobile-card-menu {
+      height: 60px;
+
+      column-gap: 10px;
+
+      li {
+        padding-inline: 5px;
+        padding-block: 15px;
+
+        font-size: 16px;
+      }
+    }
+
+    &>div {
+      height: 520px;
+      margin-top: 60px;
+    }
+  }
+
+  .Mobile-card .card-tab .card-img {
+    height: 402px;
+    width: 280px;
+
+    border-radius: 20px;
+  }
+
+  .Mobile-card .card-details {
+    padding-inline: 15px;
+    gap: 15px;
+  }
+
+  .Mobile-card .Mobile-card .prints {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+
+    padding-inline: 0px;
+  }
+
+  .Mobile-card .rules {
+    padding-inline: 15px;
+  }
+}

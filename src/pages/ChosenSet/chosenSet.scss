@@ -2,147 +2,146 @@
 
 .Chosen-set {
   width: $fhdContainer;
-}
 
-.Chosen-set h1 {
-  font-size: 42px;
-  font-weight: 600;
-}
+  h1 {
+    font-size: 42px;
+    font-weight: 600;
+  }
 
-.Chosen-set .h1-set-icon {
-  width: 50px;
-  margin-right: 25px;
-  filter: invert(35%) sepia(100%) saturate(7500%) hue-rotate(30deg);
-}
+  .h1-set-icon {
+    width: 50px;
 
-.Chosen-set .search-bar {
-  margin-top: 50px;
-  margin-bottom: 25px;
-  width: 650px;
-  background-color: $transparentBlack;
-  border-radius: 10px;
-}
+    margin-right: 25px;
 
-.Chosen-set .search-wrap {
-  border-radius: 10px 0px 0px 10px;
-  height: 70px;
-  width: 70px;
-  transition: stroke 300ms;
-}
+    filter: invert(35%) sepia(100%) saturate(7500%) hue-rotate(30deg);
+  }
 
-.Chosen-set .search-wrap svg {
-  width: 32px;
-  height: 32px;
-}
+  .search-bar {
+    width: 650px;
 
-.Chosen-set .search-wrap svg path {
-  stroke: $white;
-  stroke-width: 8px;
-}
+    margin-top: 50px;
+    margin-bottom: 25px;
 
-.Chosen-set .input-wrap {
-  width: 90%;
-}
+    background-color: $transparentBlack;
 
-.Chosen-set input {
-  font-size: 20px;
-  font-weight: 400;
-  width: 100%;
-  background: transparent;
-  outline: none;
-  padding-inline: 10px;
-  height: 100%;
-}
+    border-radius: 10px;
 
-// .Chosen-set .sets-wrap {
-//   margin-top: 100px;
-//   column-gap: 100px;
-//   row-gap: 75px;
-// }
+    .search-wrap {
+      height: 70px;
+      width: 70px;
 
-.Chosen-set .cards {
-  margin-top: 100px;
+      border-radius: 10px 0px 0px 10px;
+
+      transition: stroke 300ms;
+
+      svg {
+        width: 32px;
+        height: 32px;
+
+        path {
+          stroke: $white;
+          stroke-width: 8px;
+        }
+      }
+    }
+
+    .input-wrap {
+      width: 90%;
+
+      input {
+        width: 100%;
+        height: 100%;
+
+        padding-inline: 10px;
+
+        font-size: 20px;
+        font-weight: 400;
+
+        background: transparent;
+        outline: none;
+      }
+    }
+  }
+
 }
 
 @media screen and (max-width: $xlg) {
   .Chosen-set {
     width: $xlgContainer;
-  }
 
-  .Chosen-set .search-bar {
-    width: 600px;
-  }
+    .search-bar {
+      width: 600px;
 
-  .Chosen-set .search-wrap {
-    height: 67px;
-    width: 67px;
-  }
+      .search-wrap {
+        height: 67px;
+        width: 67px;
 
-  .Chosen-set .search-wrap svg {
-    width: 28px;
-    height: 28px;
-  }
+        svg {
+          width: 28px;
+          height: 28px;
+        }
+      }
 
-  .Chosen-set input {
-    font-size: 18px;
+      .input-wrap input {
+        font-size: 18px;
+      }
+    }
   }
 }
 
 @media screen and (max-width: $lg) {
   .Chosen-set {
     width: $lgContainer;
-  }
 
-  .Chosen-set .search-bar {
-    width: 550px;
+    .search-bar {
+      width: 550px;
+    }
   }
 }
 
 @media screen and (max-width: $md) {
   .Chosen-set {
     width: $mdContainer;
-  }
 
-  .Chosen-set .search-bar {
-    width: 500px;
-  }
+    .search-bar {
+      width: 500px;
 
-  .Chosen-set .search-wrap {
-    height: 65px;
-    width: 65px;
-  }
+      .search-wrap {
+        height: 65px;
+        width: 65px;
 
-  .Chosen-set .search-wrap svg {
-    width: 25px;
-    height: 25px;
-  }
+        svg {
+          width: 25px;
+          height: 25px;
+        }
+      }
 
-  .Chosen-set input {
-    font-size: 16px;
+      .input-wrap input {
+        font-size: 16px;
+      }
+    }
   }
 }
 
 @media screen and (max-width: $sm) {
 
   .Chosen-set {
-    width: $smContainer;
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
 
+    width: $smContainer;
 
-  .Chosen-set .search-wrap {
-    height: 63px;
-    width: 63px;
-  }
+    .search-bar {
+      .search-wrap {
+        height: 63px;
+        width: 63px;
+      }
 
-  .Chosen-set input {
-    font-size: 14px;
-  }
-
-  .Chosen-set .cards {
-    margin-top: 75px;
+      .input-wrap input {
+        font-size: 14px;
+      }
+    }
   }
 }
 
@@ -150,56 +149,53 @@
 
   .Chosen-set {
     width: $tabletContainer;
-  }
 
-  .Chosen-set h1 {
-    font-size: 40px;
-  }
+    h1 {
+      font-size: 40px;
+    }
 
-  .Chosen-set .search-wrap {
-    height: 61px;
-    width: 61px;
-  }
+    .search-bar {
+      .search-wrap {
+        height: 61px;
+        width: 61px;
+      }
 
-  .Chosen-set input {
-    font-size: 13px;
+      .input-wrap input {
+        font-size: 13px;
+      }
+    }
   }
 }
 
 @media screen and (max-width: $lmobile) {
-
   .Chosen-set {
     width: $lmobileContainer;
-  }
 
-  .Chosen-set h1 {
-    font-size: 34px;
-  }
+    h1 {
+      font-size: 34px;
+    }
 
-  .Chosen-set .h1-set-icon {
-    width: 40px;
-  }
+    .h1-set-icon {
+      width: 40px;
+    }
 
-  .Chosen-set .search-bar {
-    width: 400px;
-  }
+    .search-bar {
+      width: 400px;
 
-  .Chosen-set .search-wrap {
-    height: 59px;
-    width: 59px;
-  }
+      .search-wrap {
+        height: 59px;
+        width: 59px;
 
-  .Chosen-set .search-wrap svg {
-    width: 22px;
-    height: 22px;
-  }
+        svg {
+          width: 22px;
+          height: 22px;
+        }
+      }
 
-  .Chosen-set input {
-    font-size: 12px;
-  }
-
-  .Chosen-set .cards {
-    margin-top: 50px;
+      .input-wrap input {
+        font-size: 12px;
+      }
+    }
   }
 }
 
@@ -207,34 +203,31 @@
 
   .Chosen-set {
     width: $mobileContainer;
-  }
-  .Chosen-set h1 {
-    font-size: 26px;
-  }
 
-  .Chosen-set .h1-set-icon {
-    width: 35px;
-  }
+    h1 {
+      font-size: 26px;
+    }
 
-  .Chosen-set .search-bar {
-    width: 315px;
-  }
+    .h1-set-icon {
+      width: 35px;
+    }
 
-  .Chosen-set .search-wrap {
-    height: 50px;
-    width: 50px;
-  }
+    .search-bar {
+      width: 315px;
 
-  .Chosen-set .search-wrap svg {
-    width: 20px;
-    height: 20px;
-  }
+      .search-wrap {
+        height: 50px;
+        width: 50px;
 
-  .Chosen-set input {
-    font-size: 12px;
-  }
+        svg {
+          width: 20px;
+          height: 20px;
+        }
+      }
 
-  .Chosen-set .cards {
-    margin-top: 50px;
+      .input-wrap input {
+        font-size: 12px;
+      }
+    }
   }
 }

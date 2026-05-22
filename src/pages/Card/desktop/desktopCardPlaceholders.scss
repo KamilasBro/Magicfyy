@@ -1,0 +1,111 @@
+@use "@/assets/scss/partials/importer" as *;
+
+.Card .card-info {
+    .card-placeholder {
+        width: 330px;
+        height: 460px;
+
+        margin-right: 46px;
+
+        &:nth-child(3) {
+            width: 100%;
+        }
+
+        &:nth-child(4) {
+            width: 100%;
+        }
+    }
+
+    .card-placeholder-img {
+        height: 170px;
+    }
+
+    .card-placeholder-content {
+        row-gap: 25px;
+
+        div {
+            height: 20px;
+        }
+    }
+
+    .card-details-placeholders {
+        height: 460px;
+
+        gap: 50px;
+        padding: 25px;
+
+        background-color: $transparentBlack;
+        border-radius: 10px;
+
+        @include shine-mask();
+
+        .card-details-placeholder {
+            height: 20px;
+            width: 40%;
+
+            border-radius: 10px;
+
+            background-color: $gray;
+
+            &:first-child {
+                height: 40px;
+                width: 100%;
+            }
+        }
+    }
+}
+
+.Card .card-details-placeholder,
+.Card .prints .placeholder,
+.Card .rules .placeholders {
+    @include shine-mask();
+    gap: 30px;
+}
+
+.Card .prints .placeholder div,
+.Card .rules .placeholder {
+    height: 20px;
+    width: 100%;
+
+    background-color: $gray;
+
+    border-radius: 10px;
+}
+
+.Card .rules .placeholder:nth-child(odd) {
+    width: 15%;
+}
+
+@media screen and (max-width: $xlg) {
+    .Card .card-info .card-details-placeholder:first-child {
+        height: 40px;
+        width: 70%;
+    }
+
+    .Card .prints .placeholder,
+    .Card .rules .placeholders {
+        height: 400px;
+    }
+
+    .Card .rules .placeholder div:nth-child(odd) {
+        width: 25%;
+    }
+}
+
+@media screen and (max-width: $md) {
+    .Card .card-info {
+        .card-placeholder {
+            width: 300px;
+            height: 430px;
+        }
+
+        .card-details-placeholders {
+            gap: 40px;
+            height: 430px;
+        }
+    }
+
+    .Card .rules .placeholder div:nth-child(odd) {
+        width: 35%;
+    }
+}

@@ -2,20 +2,21 @@
 
 .Not-found {
   gap: 25px;
-}
 
-.Not-found h1 {
-  font-size: 48px;
-  font-weight: 600;
-}
+  h1 {
+    font-size: 48px;
+    font-weight: 600;
+  }
 
-.Not-found button {
-  margin-top: 25px;
-  background-color: $orange;
-}
+  button {
+    margin-top: 25px;
 
-.Not-found button:hover {
-  background-color: $red;
+    background-color: $orange;
+
+    &:hover {
+      background-color: $red;
+    }
+  }
 }
 
 @media (max-width: $xlg) {
@@ -34,31 +35,28 @@
   .Not-found {
     flex-direction: column;
     align-items: center;
-  }
 
-  .Not-found>div {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+    h1 {
+      font-size: 42px;
+    }
 
-  .Not-found svg {
-    height: initial;
-    width: 250px;
-  }
+    button {
+      padding: 20px;
+      padding-inline: 50px;
 
-  .Not-found h1 {
-    font-size: 42px;
-  }
+      font-size: 14px;
+    }
 
-  .Not-found button {
-    font-size: 14px;
-    padding: 20px;
-    padding-inline: 50px;
-  }
+    &>div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-  .Not-found button:hover {
-    background-color: $orange;
+    svg {
+      height: initial;
+      width: 250px;
+    }
   }
 }
 
@@ -70,25 +68,29 @@
 
 @media (max-width: $lmobile) {
 
-  .Not-found h1 {
-    font-size: 38px;
-  }
+  .Not-found {
+    h1 {
+      font-size: 38px;
+    }
 
-  .Not-found button {
-    font-size: 13px;
+    button {
+      font-size: 13px;
+    }
   }
 }
 
 @media (max-width: $mobile) {
-  .Not-found svg {
-    width: 220px;
-  }
+  .Not-found {
+    h1 {
+      font-size: 32px;
+    }
 
-  .Not-found h1 {
-    font-size: 32px;
-  }
+    button {
+      font-size: 12px;
+    }
 
-  .Not-found button {
-    font-size: 12px;
+    svg {
+      width: 220px;
+    }
   }
 }

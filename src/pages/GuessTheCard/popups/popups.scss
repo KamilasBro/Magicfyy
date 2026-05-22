@@ -1,0 +1,366 @@
+@use "../../../assets/scss/partials/importer" as *;
+
+.Guess-the-card .popup-wrap {
+    position: fixed;
+    z-index: 10;
+
+    height: 100vh;
+    width: 100%;
+
+    top: 0;
+    left: 0;
+
+    background-color: $transparentBlack;
+
+    .popup {
+        position: relative;
+        overflow: auto;
+
+        display: flex;
+        flex-direction: column;
+
+        gap: 25px;
+        padding: 50px;
+
+        font-weight: 500;
+
+        background-color: $black;
+
+        border-radius: 10px;
+
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .popup-reset {
+        h2 {
+            font-size: 28px;
+        }
+
+        .reset-btns-wrap {
+            gap: 40px;
+
+            button {
+                width: 75px;
+
+                font-size: 20px;
+                font-weight: 500;
+
+                background-color: $orange;
+
+                &:hover {
+                    background-color: $red !important;
+                }
+            }
+        }
+    }
+
+    .popup-hints {
+        width: 800px;
+        height: 650px;
+
+        .close-icon {
+            position: absolute;
+
+            width: 35px;
+            height: 35px;
+
+            right: 25px;
+            top: 25px;
+
+            cursor: pointer;
+
+            path {
+                stroke-width: 6px;
+            }
+        }
+
+        h2 {
+            font-size: 38px;
+
+            color: $orange;
+        }
+
+        p {
+            margin-bottom: 15px;
+
+            font-size: 24px;
+            font-weight: 500;
+
+            color: $white;
+
+            .hint-counter {
+                font-size: 20px;
+
+                color: $gray;
+
+            }
+        }
+
+        span {
+            font-size: 20px;
+            font-weight: 300;
+
+            color: $white;
+        }
+
+        .hints-list {
+            overflow: auto;
+
+            gap: 25px;
+            padding-right: 10px;
+
+            font-size: 20px;
+
+            .formats {
+                display: flex;
+                flex-wrap: wrap;
+
+                gap: 15px;
+
+                button {
+                    background-color: $background;
+
+                    cursor: default;
+
+                    &.legal {
+                        background-color: $green;
+                    }
+
+                    &.restricted {
+                        background-color: $yellow;
+                    }
+
+                    &.banned {
+                        background-color: $crimsonRed;
+                    }
+                }
+            }
+
+            .color-hint {
+                gap: 15px;
+
+                .color-symbol {
+                    height: 40px;
+                    width: 40px;
+                }
+            }
+
+            .price-hint {
+                li {
+                    font-weight: 400;
+                }
+
+                span {
+                    color: $orange;
+                }
+            }
+
+            .first-letter {
+                font-size: 24px;
+                font-weight: 500;
+
+                color: $orange ;
+            }
+
+
+            .oracle-text {
+                display: inline;
+                white-space: pre-wrap;
+
+                font-size: 16px;
+                font-weight: 400;
+
+                img {
+                    display: inline;
+                    vertical-align: middle;
+
+                    width: 18px;
+                    height: 18px;
+
+                    margin-right: 2.5px;
+
+                }
+            }
+
+            .card-art {
+                span:not(.hint-counter) {
+                    font-size: 16px;
+                    font-weight: 500;
+
+                    color: $orange;
+                }
+
+                .card-img {
+                    flex-shrink: 0;
+
+                    width: 180px;
+                    min-width: 180px;
+
+                    border-radius: 20px;
+                }
+            }
+        }
+
+    }
+}
+
+@media (max-height: 700px) {
+    .Guess-the-card .popup-wrap .popup-hints {
+        width: 100% !important;
+        height: 100% !important;
+
+        margin-inline: 0px !important;
+    }
+}
+
+@media (max-width: $sm) {
+    .Guess-the-card .popup-wrap {
+        .popup-reset {
+            h2 {
+                font-size: 24px;
+            }
+
+            .reset-btns-wrap {
+                gap: 40px;
+
+                button {
+                    width: 75px;
+
+                    font-size: 18px;
+                }
+            }
+        }
+
+        .popup-hints {
+            width: 770px;
+            height: 600px;
+
+            h2 {
+                font-size: 32px;
+            }
+
+            p {
+                font-size: 20px;
+
+                .hint-counter {
+                    font-size: 18px;
+                }
+            }
+
+            span {
+                font-size: 18px;
+            }
+
+            .hints-list {
+                font-size: 16px;
+
+                .color-hint {
+                    gap: 15px;
+
+                    .color-symbol {
+                        height: 35px;
+                        width: 35px;
+                    }
+                }
+
+                .first-letter {
+                    font-size: 18px;
+                }
+
+                .oracle-text {
+                    font-size: 16px;
+
+                    img {
+                        width: 16px;
+                        height: 16px;
+                    }
+                }
+
+                .card-art span:not(.hint-counter) {
+                    font-size: 15px;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: $tablet) {
+    .Guess-the-card .popup-wrap {
+        .popup {
+            padding: 25px;
+        }
+
+        .popup-reset {
+            h2 {
+                font-size: 22px;
+            }
+
+            .reset-btns-wrap {
+                gap: 40px;
+
+                button {
+                    font-size: 15px;
+                }
+            }
+        }
+
+        h2 {
+            font-size: 32px;
+        }
+
+        p {
+            font-size: 18px;
+
+            .hint-counter {
+                font-size: 18px;
+            }
+        }
+
+        span {
+            font-size: 16px;
+        }
+
+        .popup-hints {
+            width: 100%;
+            height: 600px;
+
+            margin-inline: 25px;
+
+            .hints-list {
+                font-size: 16px;
+
+                .oracle-text {
+                    font-size: 16px;
+
+                    img {
+                        width: 16px;
+                        height: 16px;
+                    }
+                }
+
+                .card-art span:not(.hint-counter) {
+                    font-size: 15px;
+                }
+
+                .color-hint .color-symbol {
+                    height: 35px;
+                    width: 35px;
+                }
+
+                .first-letter {
+                    font-size: 18px;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: $lmobile) {
+    .Guess-the-card .popup-wrap .popup-hints {
+        height: 100%;
+
+        margin-inline: 0px;
+    }
+}

@@ -1,0 +1,27 @@
+@use "@/assets/scss/partials/importer" as *;
+
+.Advanced-search .filter-games .input-wrap {
+    gap: 50px;
+
+    .radio-wrap {
+        span {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .radio {
+            height: 24px;
+            width: 24px;
+        }
+    }
+}
+
+
+
+@media (max-width: $sm) {
+    .Advanced-search .filter-games .input-wrap {
+        flex-direction: column;
+        
+        gap: 25px;
+    }
+}

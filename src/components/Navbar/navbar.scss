@@ -1,40 +1,5 @@
 @use "../../assets/scss/partials/importer" as *;
 
-.navbar {
-  height: 100px;
-  transition: background-color 300ms;
-  background-color: transparent;
-  &.scrolled {
-    background-color: $black;
-  }
-}
-
-.MobileNavbar {
-  display: none;
-}
-
-.navbar .inner-nav {
-  width: $fhdContainer;
-}
-
-.navbar .hamburger {
-  display: none;
-}
-
-.navbar .nav-links {
-  gap: 30px;
-}
-
-.navbar .nav-link {
-  font-size: 16px;
-  font-weight: 400;
-}
-
-.navbar .nav-link a:hover {
-  transition: color 300ms;
-  color: $orange;
-}
-
 @keyframes slideIn {
   from {
     transform: translateX(-100%);
@@ -55,17 +20,59 @@
   }
 }
 
+.navbar {
+  height: 100px;
+
+  background-color: transparent;
+
+  transition: background-color 300ms;
+
+  &.scrolled {
+    background-color: $black;
+  }
+
+  .inner-nav {
+    width: $fhdContainer;
+
+    .hamburger {
+      //fallback
+      display: none;
+    }
+
+    .nav-links {
+      gap: 30px;
+
+      .nav-link {
+        font-size: 16px;
+        font-weight: 400;
+
+        a:hover {
+          color: $orange;
+
+          transition: color 300ms;
+        }
+      }
+    }
+  }
+}
+
+//fallback
+.MobileNavbar {
+  display: none;
+}
+
+
 @media (max-width: $xlg) {
   .navbar .inner-nav {
     width: $xlgContainer;
-  }
 
-  .navbar .nav-links {
-    gap: 25px;
-  }
+    .nav-links {
+      gap: 25px;
 
-  .navbar .nav-link {
-    font-size: 15px;
+      .nav-link {
+        font-size: 15px;
+      }
+    }
   }
 }
 
@@ -78,18 +85,19 @@
 @media (max-width: $md) {
   .navbar {
     height: 90px;
-  }
 
-  .navbar .inner-nav {
-    width: $mdContainer;
-  }
+    .inner-nav {
+      width: $mdContainer;
 
-  .navbar .logo {
-    width: 160px;
-  }
+      .logo {
+        width: 160px;
+      }
 
-  .navbar .nav-link {
-    font-size: 14px;
+      .nav-links .nav-link {
+        font-size: 14px;
+      }
+
+    }
   }
 }
 
@@ -104,82 +112,90 @@
   .navbar {
     height: 80px;
     background-color: $black;
-  }
 
-  .navbar .inner-nav {
-    width: $smContainer;
-  }
+    .inner-nav {
+      width: $smContainer;
 
-  .navbar .nav-links {
-    display: none;
-  }
+      //fallback
+      .hamburger {
+        display: block;
+      }
 
-  .navbar .logo {
-    display: none;
-  }
-
-  .navbar .hamburger {
-    display: block;
-  }
-
-  .MobileNavbar {
-    width: 500px;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background-color: $background;
-    padding-inline: 50px;
-    padding-block: 25px;
-    animation-name: slideIn;
-    animation-duration: 250ms;
-    overflow: auto;
-  }
-
-  .MobileNavbar a {
-    width: fit-content;
-  }
-
-  .MobileNavbar .close-icon {
-    width: 40px;
-    position: absolute;
-    right: 25px;
-    top: 5px;
-
-    path {
-      stroke-width: 5px;
+      //fallback
+      .logo,
+      .nav-links {
+        display: none;
+      }
     }
   }
 
-  .MobileNavbar .nav-links {
-    flex-direction: column;
-    gap: 30px;
-    margin-top: 50px;
+  .MobileNavbar {
+    display: block;
     overflow: auto;
+
+    padding-inline: 50px;
+    padding-block: 25px;
+
+    width: 500px;
+    height: 100%;
+
+    background-color: $background;
+
+    animation-name: slideIn;
+    animation-duration: 250ms;
+
+    .logo-wrap {
+      display: flex;
+      justify-content: space-between;
+      position: sticky;
+
+      top: 0;
+    }
+
+    .close-icon {
+      width: 40px;
+      height: auto;
+
+      path {
+        stroke-width: 5px;
+      }
+    }
+
+    a {
+      width: fit-content;
+    }
+
+    .nav-links {
+      flex-direction: column;
+      gap: 30px;
+      margin-top: 50px;
+      overflow: auto;
+    }
   }
 }
 
 @media (max-width: $tablet) {
   .navbar {
     height: 70px;
-  }
 
-  .navbar .inner-nav {
-    width: $tabletContainer;
+    .inner-nav {
+      width: $tabletContainer;
+    }
   }
 }
 
 @media (max-width: $lmobile) {
   .navbar {
     height: 60px;
-  }
 
-  .navbar .inner-nav {
-    width: $lmobileContainer;
-  }
+    .inner-nav {
+      width: $lmobileContainer;
 
-  .navbar .hamburger {
-    width: 35px;
-    height: 35px;
+      .hamburger {
+        width: 35px;
+        height: 35px;
+      }
+    }
   }
 
   .MobileNavbar {
@@ -193,11 +209,14 @@
     width: $mobileContainer;
   }
 
-  .MobileNavbar .close-icon {
-    width: 35px;
-  }
+  .MobileNavbar {
+    padding: 25px;
+    .close-icon {
+      width: 35px;
+    }
 
-  .MobileNavbar .nav-links {
-    text-align: center;
+    .nav-links {
+      text-align: center;
+    }
   }
 }

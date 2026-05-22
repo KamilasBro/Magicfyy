@@ -1,22 +1,13 @@
 import "./cardPlaceholder.scss";
 
-interface Props {
-  index?: number;
-  key?: number;
-}
-
-const CardPlaceholder: React.FC<Props> = (props) => {
+const CardPlaceholder: React.FC = () => {
   return (
     <div
-      key={`card-placeholder-${props.index}`}
       className="card-placeholder flex flex-col "
     >
       <div className="card-placeholder-img" />
       <div className="card-placeholder-content flex flex-col">
-        <div />
-        <div />
-        <div />
-        <div />
+        {Array(4).fill(null).map((_, j) => (<div key={`content-${j}`} />))}
       </div>
     </div>
   );

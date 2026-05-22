@@ -1,0 +1,93 @@
+@use "@/assets/scss/partials/importer" as *;
+
+.Advanced-search .filter-formats .input-wrap {
+    .formats-list {
+        gap: 10px;
+        margin-bottom: 10px;
+
+        li {
+            padding: 5px;
+
+            font-size: 12px;
+            font-weight: 500;
+            color: $black;
+
+            background-color: $orange;
+
+            border-radius: 5px;
+
+            svg {
+                margin-left: 5px;
+
+                width: 15px;
+                height: 15px;
+
+                cursor: pointer;
+
+                path {
+                    stroke: $black;
+                    stroke-width: 7px;
+                }
+            }
+
+            &.legal {
+                background-color: $green;
+            }
+
+            &.restricted {
+                background-color: $yellow;
+            }
+
+            &.banned {
+                background-color: $crimsonRed;
+            }
+        }
+    }
+
+    .formats-wrap {
+        gap: 25px;
+
+        .formats-input {
+            gap: 10px;
+
+            cursor: pointer;
+        }
+
+        .dropdown li {
+            cursor: pointer;
+            transition: color 300ms;
+
+            &:hover {
+                color: $orange;
+            }
+        }
+
+        .add-btn {
+            margin-left: 0px !important;
+        }
+    }
+}
+
+@media (max-width: $sm) {
+
+    .Advanced-search .filter-formats .formats-wrap .dropdown li {
+        font-size: 14px;
+    }
+}
+
+
+@media (max-width: $mobile) {
+    .Advanced-search .filter-formats .input-wrap .formats-wrap .dropdown li {
+        font-size: 12px;
+    }
+}
+
+@media (max-height: 600px) {
+
+    .Advanced-search .filter-formats .input-wrap .formats-wrap .dropdown {
+        overflow: scroll;
+
+        max-height: 150px;
+    }
+
+}

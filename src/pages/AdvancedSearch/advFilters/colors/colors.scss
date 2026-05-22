@@ -1,0 +1,97 @@
+@use "@/assets/scss/partials/importer" as *;
+
+.Advanced-search .filter-colors {
+    margin-top: 0px !important;
+
+    .input-wrap {
+        .colors-wrap {
+            .colors-input {
+                width: 240px !important;
+
+                cursor: pointer;
+            }
+
+            .dropdown {
+                overflow-y: scroll;
+
+                max-height: 250px;
+                width: 240px !important;
+
+                li {
+                    padding-block: 5px;
+
+                    cursor: pointer;
+                    transition: color 300ms;
+
+                    &:hover {
+                        cursor: pointer;
+                        color: $orange;
+                    }
+                }
+            }
+        }
+
+        .color-icons {
+            gap: 30px;
+
+            svg {
+                flex-shrink: 0;
+
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+
+
+@media (max-width: $sm) {
+    .Advanced-search .filter-colors .input-wrap {
+        flex-direction: column;
+        align-items: start;
+
+        row-gap: 25px;
+
+        .colors-wrap {
+            .dropdown li {
+                font-size: 14px;
+            }
+        }
+    }
+}
+
+@media (max-width: $tablet) {
+    .Advanced-search .filter-colors .color-icons svg {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+@media (max-width: $lmobile) {
+
+    .Advanced-search .filter-colors .color-icons svg {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+@media (max-width: $mobile) {
+    .Advanced-search .filter-colors .input-wrap {
+        .colors-wrap {
+            .dropdown {
+                li {
+                    font-size: 12px;
+                }
+            }
+        }
+
+        .color-icons {
+            justify-content: space-between;
+
+            gap: 0px;
+            
+            width: 100%;
+        }
+    }
+
+}

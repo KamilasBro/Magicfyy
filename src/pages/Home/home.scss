@@ -1,133 +1,144 @@
 @use "../../assets/scss/partials/importer" as *;
 
 .Home {
-  overflow-x: visible; // or unset, but NOT hidden
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-}
 
-.Home .search {
-  width: $fhdContainer;
-}
-
-.Home h1 {
-  font-size: 48px;
-  font-weight: 600;
-}
-
-.Home .search-bar {
-  margin-top: 50px;
-  margin-bottom: 25px;
-  width: 750px;
-  background-color: $transparentBlack;
-  border-radius: 10px;
-}
-
-.Home .search-wrap {
-  cursor: pointer;
-  background-color: $orange;
-  border-radius: 10px 0px 0px 10px;
-  height: 70px;
-  width: 70px;
-  transition: background-color 300ms;
-}
-
-.Home .search-wrap:hover {
-  background-color: $red;
-}
-
-.Home .search-wrap svg {
-  width: 32px;
-  height: 32px;
-}
-
-.Home .search-wrap svg path {
-  stroke: $white;
-  stroke-width: 8px;
-}
-
-.Home .input-wrap {
-  width: 90%;
-}
-
-.Home input {
-  font-size: 20px;
-  font-weight: 400;
   width: 100%;
-  background: transparent;
-  outline: none;
-  padding-inline: 25px;
-  height: 100%;
-}
 
-.Home ul {
-  gap: 15px;
-}
+  .search {
+    width: $fhdContainer;
 
-.Home ul button:hover {
-  background-color: $orange;
-}
+    h1 {
+      font-size: 48px;
+      font-weight: 600;
+    }
 
-.Home .cards {
-  will-change: transform;
-  margin-top: 50px;
-  overflow: hidden;
-  padding-block: 20px;
-  flex-shrink: 0;
-  display: flex;
-  width: 100%;
-  max-width: fit-content;
-  overflow-x: hidden;
-}
+    .search-bar {
+      margin-top: 50px;
+      margin-bottom: 25px;
 
-.Home .cards .card {
-  flex-shrink: 0;
-  margin-right: 50px;
-  max-width: 300px;
-}
+      width: 750px;
 
-.Home .cards img {
-  display: flex 0 0;
-  flex-shrink: 0;
-  margin-right: 50px;
-}
+      background-color: $transparentBlack;
 
-.Home .card-placeholder {
-  margin-right: 50px;
-}
+      border-radius: 10px;
 
-.carousel {
-  display: flex;
-  flex-direction: row;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  scroll-behavior: auto;
-  padding-block: 20px;
+      .search-wrap {
+        height: 70px;
+        width: 70px;
+
+        background-color: $orange;
+
+        border-radius: 10px 0px 0px 10px;
+
+        transition: background-color 300ms;
+
+        cursor: pointer;
+
+        svg {
+          width: 32px;
+          height: 32px;
+
+          path {
+            stroke: $white;
+            stroke-width: 8px;
+          }
+        }
+
+        &:hover {
+          background-color: $red;
+        }
+      }
+
+      .input-wrap {
+        width: 90%;
+
+        input {
+          width: 100%;
+          height: 100%;
+
+          padding-inline: 25px;
+
+          font-size: 20px;
+          font-weight: 400;
+
+          outline: none;
+
+          background: transparent;
+        }
+      }
+    }
+
+    .search-buttons {
+      gap: 15px;
+
+      button:hover {
+        background-color: $orange;
+      }
+    }
+  }
+
+
+
+  .cards {
+    display: flex;
+
+    width: 100%;
+    max-width: fit-content;
+
+    margin-top: 50px;
+
+    .carousel {
+      display: flex;
+      flex-direction: row;
+
+      overflow: hidden;
+
+      scroll-behavior: auto;
+      padding-block: 20px;
+
+      .card {
+        max-width: 300px;
+
+        margin-right: 50px;
+      }
+    }
+
+    .card-placeholder {
+      margin-right: 50px;
+    }
+  }
+
+
 }
 
 @media screen and (max-width: $xlg) {
-  .Home .search {
-    width: $xlgContainer;
-  }
+  .Home {
+    .search {
+      width: $xlgContainer;
 
-  .Home h1 {
-    font-size: 46px;
-  }
+      h1 {
+        font-size: 46px;
+      }
 
-  .Home .search-bar {
-    width: 650px;
-  }
+      .search-bar {
+        width: 650px;
 
-  .Home .search-wrap {
-    height: 67px;
-    width: 67px;
-  }
+        .search-wrap {
+          height: 67px;
+          width: 67px;
+        }
 
-  .Home input {
-    font-size: 18px;
-    padding-inline: 23px;
+        .input-wrap {
+          input {
+            font-size: 18px;
+            padding-inline: 23px;
+          }
+        }
+      }
+    }
   }
 }
 
@@ -136,145 +147,155 @@
 @media screen and (max-width: $lg) {
   .Home .search {
     width: $lgContainer;
-  }
 
-  .Home .search-bar {
-    width: 600px;
+    .search-bar {
+      width: 600px;
+    }
   }
 }
 
 @media screen and (max-width: $md) {
   .Home .search {
     width: $mdContainer;
-  }
 
-  .Home h1 {
-    font-size: 44px;
-  }
+    h1 {
+      font-size: 44px;
+    }
 
-  .Home .search-bar {
-    width: 500px;
-  }
+    .search-bar {
+      width: 500px;
 
-  .Home .search-wrap {
-    height: 65px;
-    width: 65px;
-  }
+      .search-wrap {
+        height: 65px;
+        width: 65px;
 
-  .Home .search-wrap svg {
-    width: 25px;
-    height: 25px;
-  }
+        svg {
+          width: 25px;
+          height: 25px;
+        }
+      }
 
-  .Home input {
-    font-size: 16px;
+      .input-wrap {
+        input {
+          font-size: 16px;
+        }
+      }
+    }
   }
 }
 
 @media screen and (max-width: $sm) {
   .Home .search {
     width: 100%;
-  }
-
-  .Home .search {
     align-items: center;
-  }
 
-  .Home h1 {
-    font-size: 42px;
-  }
+    h1 {
+      font-size: 42px;
+    }
 
-  .Home .search-wrap {
-    height: 63px;
-    width: 63px;
-  }
+    .search-bar {
+      .search-wrap {
+        height: 63px;
+        width: 63px;
+      }
 
-  .Home input {
-    font-size: 14px;
-  }
+      .input-wrap input {
+        font-size: 14px;
+      }
+    }
 
-  .Home .search-buttons {
-    width: 500px;
+    .search-buttons {
+      width: 500px;
+    }
   }
 }
 
 @media screen and (max-width: $tablet) {
+  .Home .search {
+    h1 {
+      font-size: 40px;
+    }
 
-  .Home h1 {
-    font-size: 40px;
-  }
+    .search-bar {
+      .search-wrap {
+        height: 61px;
+        width: 61px;
+      }
 
-  .Home .search-wrap {
-    height: 61px;
-    width: 61px;
-  }
-
-  .Home input {
-    font-size: 13px;
+      .input-wrap input {
+        font-size: 13px;
+      }
+    }
   }
 }
 
 @media screen and (max-width: $lmobile) {
+  .Home .search {
+    h1 {
+      font-size: 38px;
+    }
 
-  .Home h1 {
-    font-size: 38px;
-  }
+    .search-bar {
+      width: 400px;
 
-  .Home .search-bar {
-    width: 400px;
-  }
+      .search-wrap {
+        height: 59px;
+        width: 59px;
 
-  .Home .search-wrap {
-    height: 59px;
-    width: 59px;
-  }
+        svg {
+          width: 22px;
+          height: 22px;
+        }
+      }
 
-  .Home .search-wrap svg {
-    width: 22px;
-    height: 22px;
-  }
+      .input-wrap input {
+        font-size: 12px;
+      }
+    }
 
-  .Home input {
-    font-size: 12px;
-  }
-
-  .Home .search-buttons {
-    width: 400px;
-    justify-content: center;
-    gap: 12px;
+    .search-buttons {
+      width: 400px;
+      justify-content: center;
+      gap: 12px;
+    }
   }
 }
 
 @media screen and (max-width: $mobile) {
 
-  .Home h1 {
-    font-size: 32px;
-  }
+  .Home {
 
-  .Home .search-bar {
-    margin-top: 25px;
-    width: 315px;
-  }
+    .search {
+      h1 {
+        font-size: 32px;
+      }
 
-  .Home .search-wrap {
-    height: 50px;
-    width: 50px;
-  }
+      .search-bar {
+        margin-top: 25px;
+        width: 315px;
 
-  .Home .search-wrap svg {
-    width: 20px;
-    height: 20px;
-  }
+        .search-wrap {
+          height: 50px;
+          width: 50px;
 
-  .Home .search-buttons {
-    width: 315px;
-    flex-wrap: wrap;
-    justify-content: left;
-    gap: 15px;
-  }
+          svg {
+            width: 20px;
+            height: 20px;
+          }
+        }
+      }
 
-  .Home .cards {
-    margin-top: 25px;
-    padding-block: 0px;
+      .search-buttons {
+        width: 315px;
+        flex-wrap: wrap;
+        justify-content: left;
+        gap: 15px;
+      }
+    }
+
+    .cards {
+      margin-top: 25px;
+      padding-block: 0px;
+    }
   }
 }

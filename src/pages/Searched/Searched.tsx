@@ -1,121 +1,106 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import CardPlaceholder from "../../components/CardPlaceholder/CardPlaceholder";
-import { CardData, CardlistData } from "../../interfaces/CardsInterface";
-import GoTopArrow from "../../components/GoTopArrow/GoTopArrow";
 import "./searched.scss";
+
+import GoTopArrow from "../../components/GoTopArrow/GoTopArrow";
 import NotFound from "../NotFound/NotFound";
 import LoadingCardsAnim from "../../components/LoadingCardsAnim/LoadingCardsAnim";
+import CardsGrid from "../../components/CardsGrid/CardsGrid";
+
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { CardlistData } from "../../interfaces/Interfaces";
+
 
 const Searched: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const urlParams = new URLSearchParams(location.search);
+
+  const currentPage = urlParams.get("page") as string;
+  const parsedCurrentPage = Math.abs(parseInt(currentPage));
+
   const [searchedCards, setSearchedCards] = useState<CardlistData>({
     has_more: false,
     total_cards: 0,
     data: [],
   });
-  const [loadedCards, setLoadedCards] = useState<boolean[]>([]); // Track loading state for each card
-  const [cardNotFound, setCardNotFound] = useState(false);
-  const [visibleCards, setVisibleCards] = useState<number>(25); // Track number of visible cards
-  const observer = useRef<IntersectionObserver | null>(null);
-
-  const urlParams = new URLSearchParams(location.search);
-  let currentPage = urlParams.get("page");
+  const [isLoading, setIsLoading] = useState(true);
+  const [cardsNotFound, setCardsNotFound] = useState(false);
 
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "auto",
-    });
-    setCardNotFound(false);
+    const controller = new AbortController();
+
+    //reset
     setSearchedCards({
       has_more: false,
       total_cards: 0,
       data: [],
-    }); // Reset card list data
-    setLoadedCards([]); // Reset loaded cards state
-    setVisibleCards(50); // Reset visible cards
-
-    if (currentPage !== null && isNaN(parseInt(currentPage))) {
+    });
+    setIsLoading(true)
+    //if page index is not correct we set it here to 1
+    if (currentPage !== null && isNaN(parsedCurrentPage)) {
       return navigate(handlePage("start"));
     }
+    //reset
 
     const fetchCards = async () => {
       try {
-        await new Promise((resolve) => {
-          setTimeout(resolve, 50); // Set a timeout of 50ms
-        });
         const apiUrl = `https://api.scryfall.com/cards/${location.pathname}${location.search}`;
-        const response = await fetch(apiUrl);
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        } else {
-          const data: CardlistData = await response.json();
-          setSearchedCards(data);
-          setLoadedCards(Array(data.data.length).fill(false)); // Initialize loading state for cards
-        }
-      } catch (error) {
-        setCardNotFound(true);
-        console.error("Error fetching data:", error);
+
+        const response = await fetch(apiUrl, {
+          signal: controller.signal,
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch data");
+
+        const data: CardlistData = await response.json();
+
+        setSearchedCards(data);
+        setIsLoading(false);
+      } catch (error: any) {
+        if (error.name === "AbortError") return;
+        setCardsNotFound(true);
+        console.error(error);
       }
     };
+
     fetchCards();
-  }, [currentPage]);
-
-  useEffect(() => {
-    observer.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisibleCards((prevVisibleCards) =>
-              Math.min(prevVisibleCards + 25, searchedCards.data.length)
-            );
-          }
-        });
-      },
-      {
-        root: null,
-        rootMargin: "0px 0px 150px 0px",
-        threshold: 0,
-      }
-    );
-
-    const sentinel = document.querySelector("#sentinel");
-    if (sentinel) {
-      observer.current.observe(sentinel);
-    }
 
     return () => {
-      observer.current?.disconnect();
+      controller.abort();
     };
-  }, [searchedCards]);
+  }, [currentPage]);
 
-  function handlePage(action: string) {
+  const cardsAtPage = 175; // Scryfall API paginates results in chunks of 175 cards per page
+
+  // Builds Scryfall pagination URL based on current route + query params
+  // URLSearchParams is mutated and reused within this function
+  const handlePage = (action: "start" | "previous" | "next" | "end") => {
     if (typeof currentPage !== "string") {
-      urlParams.set("page", "2");
+      urlParams.set("page", "2"); // default fallback when page param is missing/invalid
     } else {
       urlParams.delete("page");
       switch (action) {
         case "start":
           urlParams.set("page", "1");
           break;
-        case "remove":
-          urlParams.set("page", (parseInt(currentPage) - 1).toString());
+        case "previous":
+          urlParams.set("page", (parsedCurrentPage - 1).toString());
           break;
-        case "add":
-          urlParams.set("page", (parseInt(currentPage) + 1).toString());
+        case "next":
+          urlParams.set("page", (parsedCurrentPage + 1).toString());
           break;
         case "end":
-          if (searchedCards.total_cards % 175 === 0) {
+          // Calculate last page based on total cards / page size (Scryfall pagination)
+          // Handles remainder when total_cards is not divisible by cardsAtPage
+          if (searchedCards.total_cards % cardsAtPage === 0) {
             urlParams.set(
               "page",
-              `${Math.floor(searchedCards.total_cards / 175)}`
+              `${Math.floor(searchedCards.total_cards / cardsAtPage)}`
             );
           } else {
             urlParams.set(
               "page",
-              `${Math.floor(searchedCards.total_cards / 175) + 1}`
+              `${Math.floor(searchedCards.total_cards / cardsAtPage) + 1}`
             );
           }
           break;
@@ -124,43 +109,40 @@ const Searched: React.FC = () => {
     return `${location.pathname}?${urlParams.toString()}`;
   }
 
-  function handleCardCounter(order: number) {
-    if (currentPage) {
-      switch (order) {
-        case 1:
-          return 175 * (parseInt(currentPage) - 1) + 1;
-        case 2:
+
+  const returnCardsCounter = () => {
+    // Calculates displayed card range (e.g. "176 - 350 of 1200")
+    // Depends on Scryfall pagination rules (175 cards per page)
+    const handleCardCounter = (pageIndex: "previous" | "current") => {
+      switch (pageIndex) {
+        case "previous":
+          return cardsAtPage * (parsedCurrentPage - 1) + 1;
+        case "current":
+          // If last page, clamp to total_cards to avoid overflow range display
           if (!searchedCards.has_more) {
             return searchedCards.total_cards;
           } else {
-            return 175 * parseInt(currentPage);
+            return cardsAtPage * parsedCurrentPage;
           }
       }
     }
-  }
 
-  const handleImageLoad = (index: number) => {
-    setLoadedCards((prevState) => {
-      const updatedState = [...prevState];
-      updatedState[index] = true; // Mark the card as loaded
-      return updatedState;
-    });
-  };
+    const parsedCurrentPage = Number(currentPage);
+    const safePage = Number.isFinite(parsedCurrentPage) && parsedCurrentPage > 0
+      ? parsedCurrentPage
+      : 1;
 
-  function returnCardsCounter() {
     return (
       <div className="flex justify-between items-center cards-counter-wrap">
         <div className="cards-counter">
           {searchedCards.data.length > 0
-            ? `${handleCardCounter(1)} - ${handleCardCounter(2)} of ${searchedCards.total_cards
-            } cards`
+            ? `${handleCardCounter("previous")} - ${handleCardCounter("current")} of ${searchedCards.total_cards} cards`
             : `Searching`}
         </div>
-        <ul className={"counter-buttons-wrap flex"}>
+        <ul className="counter-buttons-wrap flex">
           <button
-            className={`${currentPage && parseInt(currentPage) > 1 && "active"
-              }`}
-            disabled={!!currentPage && parseInt(currentPage) === 1}
+            className={!isLoading && safePage > 1 ? "active" : ""}
+            disabled={isLoading || safePage <= 1}
             onClick={() => {
               navigate(handlePage("start"));
             }}
@@ -168,27 +150,26 @@ const Searched: React.FC = () => {
             {"<<"}
           </button>
           <button
-            className={`${currentPage && parseInt(currentPage) > 1 && "active"
-              }`}
-            disabled={!!currentPage && parseInt(currentPage) === 1}
+            className={!isLoading && safePage > 1 ? "active" : ""}
+            disabled={isLoading || safePage <= 1}
             onClick={() => {
-              navigate(handlePage("remove"));
+              navigate(handlePage("previous"));
             }}
           >
             {"< Previous"}
           </button>
           <button
-            className={`${searchedCards.has_more && "active"}`}
-            disabled={!searchedCards.has_more}
+            className={`${!isLoading && searchedCards.has_more ? "active" : ""}`}
+            disabled={isLoading || !searchedCards.has_more}
             onClick={() => {
-              navigate(handlePage("add"));
+              navigate(handlePage("next"));
             }}
           >
             {"Next >"}
           </button>
           <button
-            className={`${searchedCards.has_more && "active"}`}
-            disabled={!searchedCards.has_more}
+            className={`${!isLoading && searchedCards.has_more ? "active" : ""}`}
+            disabled={isLoading || !searchedCards.has_more}
             onClick={() => {
               navigate(handlePage("end"));
             }}
@@ -199,71 +180,22 @@ const Searched: React.FC = () => {
       </div>
     );
   }
+
   return (
     <section className="Searched">
-      {cardNotFound ? (
-        <NotFound />
-      ) : (
+      {!cardsNotFound ?
         <>
           <GoTopArrow />
           {returnCardsCounter()}
-          {searchedCards.data.length === 0 ? (
-            <LoadingCardsAnim />
-          ) : (
-            <>
-              <ul className="cards flex flex-wrap">
-                {searchedCards.data
-                  .slice(0, visibleCards)
-                  .map((card: CardData, index: number) => {
-                    const isArvinox =
-                      card.name === "Arvinox, the Mind Flail" && card.set === "sld";
-                    return (
-                      <Link
-                        to={`/card/${card.set}/${card.collector_number}`}
-                        key={card.id}
-                      >
-                        <li>
-                          {!loadedCards[index] && <CardPlaceholder />}
-                          {/* Placeholder */}
-                          {card.image_uris ? (
-                            <img
-                              className="card"
-                              src={card.image_uris.normal}
-                              alt="Card"
-                              loading="eager"
-                              onLoad={() => handleImageLoad(index)}
-                              style={{
-                                display: loadedCards[index] ? "block" : "none",
-                                ...(isArvinox ? { transform: "rotate(180deg)" } : {}),
-                              }}
-                            />
-                          ) : (
-                            card.card_faces && (
-                              <img
-                                className="card"
-                                src={card.card_faces[0].image_uris.normal}
-                                alt="Card"
-                                loading="eager"
-                                onLoad={() => handleImageLoad(index)}
-                                style={{
-                                  display: loadedCards[index] ? "block" : "none",
-                                  ...(isArvinox ? { transform: "rotate(180deg)" } : {}),
-                                }}
-                              />
-                            )
-                          )}
-                        </li>
-                      </Link>
-                    );
-                  })}
-              </ul>
-              <div id="sentinel" style={{ height: "1px" }}></div>
-            </>
-          )}
-
+          {isLoading
+            ? <LoadingCardsAnim />
+            : <CardsGrid cardsList={searchedCards.data} />
+          }
           {searchedCards.data.length > 0 && returnCardsCounter()}
         </>
-      )}
+        :
+        <NotFound />
+      }
     </section>
   );
 };

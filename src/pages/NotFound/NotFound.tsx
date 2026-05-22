@@ -1,6 +1,7 @@
-import QuestionMarkSvg from "../../assets/images/icons/questionMark.svg?react";
-import { Link } from "react-router-dom";
 import "./notFound.scss";
+import QuestionMarkSvg from "../../assets/images/icons/questionMark.svg?react";
+
+import { Link } from "react-router-dom";
 
 const NotFound: React.FC = () => {
   return (

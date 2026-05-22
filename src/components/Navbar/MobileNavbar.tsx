@@ -1,101 +1,115 @@
-import React, { useEffect, useRef } from "react";
-import LogoSvg from "../../assets/images/logo/mobileLogo.svg?react"
+import LogoSvg from "../../assets/images/logo/mobileLogo.svg?react";
 import CloseSvg from "../../assets/images/icons/close.svg?react";
+
+import React, { useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
-import "./navbar.scss";
+import { navLinksList } from "@/utils/other/navLinksList";
 
-interface MobileNavbarProps {
-    isMobile: boolean;
-    setIsMobile: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const MobileNavbar: React.FC<MobileNavbarProps> = ({ isMobile, setIsMobile }) => {
+const MobileNavbar: React.FC<{
+    showMobileNavbar: boolean;
+    setShowMobileNavbar: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ showMobileNavbar, setShowMobileNavbar }) => {
     const navRef = useRef<HTMLElement>(null);
-    const handleClose = () => {
-        if (navRef.current) {
-            navRef.current.style.animationName = "slideOut";
-            setTimeout(() => {
-                navRef.current!.style.animationName = "slideIn";
-                setIsMobile(false);
-            }, 200);//matching the 250 like in css causes the navbar to flash or a milisecond
-        }
-    };
-    //append class to prevent trigger clicking event outside MobileNavbar
-    useEffect(() => {
-        const main = document.querySelector("main");
-        if (isMobile) {
-            main?.classList.add("menu-open");
-        } else {
-            main?.classList.remove("menu-open");
-        }
-        return () => main?.classList.remove("menu-open");
-    }, [isMobile]);
-    //prevent switching between clickables outside of MobileNavbar
-    useEffect(() => {
-        if (!isMobile) return;
 
-        const focusableEls = navRef.current?.querySelectorAll<HTMLElement>(
-            'a[href], button, input, [tabindex]:not([tabindex="-1"])'
+    const handleClose = useCallback(() => {
+        const nav = navRef.current;
+        if (!nav) return;
+
+        nav.style.animationName = "slideOut";
+
+        nav.addEventListener(
+            "animationend",
+            () => {
+                nav.style.animationName = "slideIn";
+                setShowMobileNavbar(false);
+            },
+            { once: true }
         );
-        const firstEl = focusableEls?.[0];
-        const lastEl = focusableEls?.[focusableEls.length - 1];
+    }, [setShowMobileNavbar]);
 
-        function handleKey(e: KeyboardEvent) {
+    //disable scroll at mount
+    useEffect(() => {
+        const html = document.documentElement;
+        const main = document.querySelector("main");
+
+        html.style.overflowY = showMobileNavbar ? "hidden" : "visible";
+        main?.classList.toggle("menu-open", showMobileNavbar);
+
+        return () => {
+            html.style.overflowY = "visible";
+            main?.classList.remove("menu-open");
+        };
+    }, [showMobileNavbar]);
+
+    //disable interactions on rest of site on mount
+    useEffect(() => {
+        if (!showMobileNavbar) return;
+
+        const getFocusables = () =>
+            navRef.current?.querySelectorAll<HTMLElement>(
+                'a[href], button, input, [tabindex]:not([tabindex="-1"])'
+            );
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            const focusables = getFocusables();
+            if (!focusables?.length) return;
+
+            const firstEl = focusables[0];
+            const lastEl = focusables[focusables.length - 1];
+
             if (e.key === "Tab") {
-                if (document.activeElement === lastEl && !e.shiftKey) {
+                if (e.shiftKey && document.activeElement === firstEl) {
                     e.preventDefault();
-                    firstEl?.focus();
-                } else if (document.activeElement === firstEl && e.shiftKey) {
+                    lastEl.focus();
+                } else if (!e.shiftKey && document.activeElement === lastEl) {
                     e.preventDefault();
-                    lastEl?.focus();
+                    firstEl.focus();
                 }
             }
+
             if (e.key === "Escape") {
                 handleClose();
             }
-        }
+        };
 
-        document.addEventListener("keydown", handleKey);
-        firstEl?.focus();
-
-        return () => document.removeEventListener("keydown", handleKey);
-    }, [isMobile]);
-
-
-    useEffect(() => {
-        function handleClickOutside(e: MouseEvent) {
+        const handleMouseDown = (e: MouseEvent) => {
             if (navRef.current && !navRef.current.contains(e.target as Node)) {
                 handleClose();
             }
-        }
+        };
 
-        if (isMobile) {
-            document.addEventListener("mousedown", handleClickOutside);
-        }
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, [isMobile]);
+        document.addEventListener("keydown", handleKeyDown);
+        document.addEventListener("mousedown", handleMouseDown);
+
+        getFocusables()?.[0]?.focus();
+
+        return () => {
+            document.removeEventListener("keydown", handleKeyDown);
+            document.removeEventListener("mousedown", handleMouseDown);
+        };
+    }, [showMobileNavbar, handleClose]);
+
     return (
         <nav ref={navRef} className="MobileNavbar flex flex-col fixed z-20">
-            <CloseSvg className="close-icon" onClick={handleClose} />
-            <Link to={"/"} >
-                <LogoSvg className="mobile-logo" onClick={handleClose} />
-            </Link>
-            <ul className="nav-links flex ">
-                <li className="nav-link" >
-                    <Link onClick={handleClose} to={"/"}>Search</Link>
-                </li>
-                <li className="nav-link">
-                    <Link onClick={handleClose} to={"/advanced"}>Advanced Search</Link>
-                </li>
-                <li className="nav-link">
-                    <Link onClick={handleClose} to={"/sets"}>Sets</Link>
-                </li>
-                <li className="nav-link">
-                    <Link onClick={handleClose} to={"/guess"}>Guess The Card</Link>
-                </li>
+            <div className="logo-wrap">
+                <Link to="/" onClick={handleClose}>
+                    <LogoSvg className="mobile-logo" />
+                </Link>
+                <CloseSvg className="close-icon" onClick={handleClose} />
+            </div>
+
+            <ul className="nav-links flex">
+                {navLinksList.map((navLink) => (
+                    <li
+                        key={`mobile ${navLink.name}`}
+                        className="nav-link"
+                        onClick={handleClose}
+                    >
+                        <Link to={navLink.link}>{navLink.name}</Link>
+                    </li>
+                ))}
             </ul>
         </nav>
-
     );
 };
 

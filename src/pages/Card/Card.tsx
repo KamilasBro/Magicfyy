@@ -1,665 +1,77 @@
+import { CardData } from "../../interfaces/Interfaces";
+
+import NotFound from "../NotFound/NotFound";
+
+import DesktopCard from "./desktop/DesktopCards";
+import MobileCard from "./mobile/MobileCard";
+
+import { useCardSymbols } from "../../utils/card/useCardSymbols";
+import { useIsMobile } from "../../utils/other/useIsMobile";
+
 import { useEffect, useState } from "react";
-import StarSvg from "../../assets/images/icons/rarity.svg?react";
-import {
-  CardData,
-  RulingsData,
-  CardSymbolData,
-} from "../../interfaces/CardsInterface";
-import { useParams, Link } from "react-router-dom";
-import CardPlaceholder from "../../components/CardPlaceholder/CardPlaceholder";
-import MobileCard from "./MobileCard";
-import "./card.scss";
-import "./placeholders.scss";
+import { useParams } from "react-router-dom";
+
 const Card: React.FC = () => {
-  const [isFetched, setIsFetched] = useState({
-    cardFetched: false,
-    printsFetched: false,
-    rulesFetched: false,
-    symbolsFetched: false,
-    cardBackFetched: false,
-  });
-  const [cardData, setCardData] = useState<CardData>();
-  const [printsData, setPrintsData] = useState<CardData[]>([]);
-  const [rulingsData, setRulingsData] = useState<RulingsData[]>([]);
-  const [cardSymbols, setCardSymbols] = useState<CardSymbolData[]>([]);
-  const [showCardBack, setShowCardBack] = useState(false);
-  const [printMinature, setPrintMinature] = useState({
-    show: false,
-    imgSrc: "",
-    isArvinox: false,
-  });
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [setIconUrl, setSetIconUrl] = useState<string>(""); // Track set icon URL
-  const mtgFormats = [
-    "Standard",
-    "Alchemy",
-    "Pioneer",
-    "Explorer",
-    "Modern",
-    "Historic",
-    "Legacy",
-    "Brawl",
-    "Vintage",
-    "Commander",
-    "Pauper",
-    "Oathbreaker",
-    "Penny",
-  ];
-  const [isMobile, setIsMobile] = useState(false);
   const params = useParams();
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 1024);
-    };
+  const { getTextWithSymbols } = useCardSymbols();
 
-    handleResize(); // set initial value on mount
-    window.addEventListener("resize", handleResize);
+  const [cardData, setCardData] = useState<CardData>();
+  const [isCardLoaded, setIsCardLoaded] = useState(false)
+  const [cardNotFound, setCardNotFound] = useState(false)
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  const [showAltFace, setShowAltFace] = useState(false);
+
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchCard = async () => {
+      setCardNotFound(false)
       try {
-        await new Promise((resolve) => setTimeout(resolve, 100)); // Set a timeout of 100ms
         const apiUrl = `https://api.scryfall.com/cards/${params.set}/${params.code}`;
-        const response = await fetch(apiUrl);
+        const response = await fetch(apiUrl, {
+          signal: controller.signal,
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         } else {
           const data = await response.json();
           setCardData(data);
-          setIsFetched((prevState) => ({ ...prevState, cardFetched: true }));
+          setIsCardLoaded(true);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
+        setCardNotFound(true)
       }
     };
     fetchCard();
-  }, [params.set, params.code]);
-  useEffect(() => {
-    if (isFetched.cardFetched) {
-      const fetchPrints = async () => {
-        try {
-          await new Promise((resolve) => setTimeout(resolve, 100)); // Set a timeout of 100ms
-          const apiUrl = `${cardData?.prints_search_uri}`;
-          const response = await fetch(apiUrl);
-          if (!response.ok) {
-            throw new Error("Failed to fetch data");
-          } else {
-            const data = await response.json();
-            setPrintsData(data.data);
-            setIsFetched((prevState) => ({
-              ...prevState,
-              printsFetched: true,
-            }));
-          }
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      };
-      setShowCardBack(false);
-      fetchPrints();
-    }
-  }, [cardData]);
-  useEffect(() => {
-    if (isFetched.cardFetched) {
-      const fetchRulings = async () => {
-        try {
-          await new Promise((resolve) => setTimeout(resolve, 100)); // Set a timeout of 100ms
-          const apiUrl = `${cardData?.rulings_uri}`;
-          const response = await fetch(apiUrl);
-          if (!response.ok) {
-            throw new Error("Failed to fetch data");
-          } else {
-            const data = await response.json();
-            setRulingsData(data.data);
-            setIsFetched((prevState) => ({
-              ...prevState,
-              rulesFetched: true,
-            }));
-          }
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      };
-      fetchRulings();
-    }
-  }, [cardData]);
-  useEffect(() => {
-    const fetchSymbols = async () => {
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 50)); // Set a timeout of 100ms
-        const apiUrl = `https://api.scryfall.com/symbology`;
-        const response = await fetch(apiUrl);
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        } else {
-          const data = await response.json();
-          setCardSymbols(data.data);
-          setIsFetched((prevState) => ({ ...prevState, symbolsFetched: true }));
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchSymbols();
-  }, []);
-  useEffect(() => {
-    if (!printMinature.show) return;
-
-    const handleMouseMove = (event: MouseEvent) => {
-      setMousePosition({
-        x: event.clientX,
-        y: event.clientY + window.scrollY,
-      });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
+      controller.abort();
     };
-  }, [printMinature.show]);
-  useEffect(() => {
-    if (isFetched.cardFetched) {
-      const fetchSetIcon = async () => {
-        try {
-          const apiUrl = `https://api.scryfall.com/sets/${params.set}`;
-          const response = await fetch(apiUrl);
-          if (!response.ok) {
-            throw new Error("Failed to fetch set icon");
-          } else {
-            const data = await response.json();
-            setSetIconUrl(data.icon_svg_uri);
-          }
-        } catch (error) {
-          console.error("Error fetching set icon:", error);
-        }
-      };
+  }, [params.set, params.code]);
 
-      fetchSetIcon();
-    }
-  }, [isFetched.cardFetched, params.set]);
-  function renderTextWithSymbols(text: string) {
-    const symbolRegex = /\{([^}]+)\}/g;
-    const parts: (string | JSX.Element)[] = [];
-    let lastIndex = 0;
+  const isMobile = useIsMobile();
 
-    text.replace(symbolRegex, (match, symbol, offset) => {
-      // Add the text before the current match
-      parts.push(text.slice(lastIndex, offset));
-
-      // Find the symbol data in cardSymbols
-      const symbolData = cardSymbols.find(
-        (symbolData) => symbolData.symbol === `{${symbol}}`
-      );
-
-      // If symbolData is found, render the image
-      if (symbolData) {
-        parts.push(
-          <img key={offset} src={symbolData.svg_uri} alt={`${symbol} symbol`} />
-        );
-      } else {
-        // If symbolData is not found, render the symbol as text
-        parts.push(match);
-      }
-
-      // Update lastIndex to the end of the current match
-      lastIndex = offset + match.length;
-      return match; // Return the match to conform to the expected return type
-    });
-
-    // Add the remaining text after the last match
-    parts.push(text.slice(lastIndex));
-
-    return parts;
-  }
-  function compareData(date: string) {
-    const releaseDate = new Date(date);
-    const currentDate = new Date();
-    return releaseDate > currentDate;
-  }
-  function renderLegalities(card: CardData) {
-    const lowercaseLegalities = Object.fromEntries(
-      Object.entries(card.legalities).map(([key, value]) => [
-        key.toLowerCase(),
-        value,
-      ])
-    );
-
-    return mtgFormats
-      .filter((format) => lowercaseLegalities[format.toLowerCase()]) // Filter only formats present in card's legalities
-      .map((format) => {
-        const legality = lowercaseLegalities[format.toLowerCase()];
-        switch (legality) {
-          case "legal":
-            return (
-              <button className={`format-${format} legal`} key={format}>
-                {format}
-              </button>
-            );
-          case "not_legal":
-            return (
-              <button className={`format-${format} not-legal`} key={format}>
-                {format}
-              </button>
-            );
-          case "restricted":
-            return (
-              <button className={`format-${format} restricted`} key={format}>
-                {format}
-              </button>
-            );
-          case "banned":
-            return (
-              <button className={`format-${format} banned`} key={format}>
-                {format}
-              </button>
-            );
-          default:
-            return null; // Don't render button for formats with unknown legality
-        }
-      });
-  }
-  function renderCardImg() {
-    const isArvinox =
-      ((cardData?.card_faces?.[showCardBack ? 1 : 0]?.name || cardData?.name) === "Arvinox, the Mind Flail") &&
-      (cardData?.set === "sld");
-    // Check if the card is Arvinox, the Mind Flail in the SLD set cause it is upside down from API
-
-    if (
-      cardData?.layout.includes("room") ||
-      cardData?.layout.includes("adventure") ||
-      cardData?.layout.includes("flip") ||
-      cardData?.layout.includes("split") ||
-      cardData?.layout.includes("aftermath") ||
-      cardData?.layout.includes("reversible_card") ||
-      cardData?.layout.includes("battle") ||
-      cardData?.layout.includes("double_faced_token") ||
-      cardData?.layout.includes("reversible_card")
-    ) {
-      return (
-        <img
-          src={cardData?.image_uris?.normal}
-          className="card-img"
-          style={isArvinox ? { transform: "rotate(180deg)" } : undefined}
-        />
-      );
-    }
-    if (cardData?.card_back_id && showCardBack) {
-      const [firstChar, secondChar] = cardData.card_back_id.split("-")[0];
-      return (
-        <img
-          src={`https://backs.scryfall.io/normal/${firstChar}/${secondChar}/${cardData.card_back_id}.jpg?1665006175`}
-          className="card-img"
-        />
-      );
-    } else {
-      return (
-        <img
-          src={
-            cardData?.card_faces
-              ? cardData?.card_faces?.[showCardBack ? 1 : 0]?.image_uris?.normal
-              : cardData?.image_uris?.normal
-          }
-          className="card-img"
-          style={isArvinox ? { transform: "rotate(180deg)" } : undefined}
-        />
-      );
-    }
-  }
-  const renderViewBackButton = () => {
-    const twoFacedLayouts = [
-      "transform",
-      "modal_dfc",
-      "meld",
-      "flip",
-      "split",
-      "adventure",
-      "aftermath",
-      "reversible_card",
-      "battle",
-    ];
-    const typeLine =
-      cardData?.type_line ||
-      cardData?.card_faces?.[0]?.type_line ||
-      cardData?.card_faces?.[1]?.type_line;
-
-    const hasTwoFaces =
-      Array.isArray(cardData?.card_faces) && cardData.card_faces.length > 1;
-
-    const isSpecialLayout =
-      cardData?.layout && twoFacedLayouts.includes(cardData.layout);
-
-    if (
-      !typeLine?.includes("Token") &&
-      (hasTwoFaces || isSpecialLayout)
-    ) {
-      return (
-        <button
-          className="view-back"
-          onClick={() => {
-            setShowCardBack((prevState) => !prevState);
-          }}
-        >
-          {"View " + (showCardBack ? "Front" : "Back")}
-        </button>
-      );
-    }
-    return null;
-  };
-  function getBestEurPrice(prices: any, purchase_uris: any) {
-    if (prices.eur) {
-      return (
-        <span
-          className="price-link"
-          onClick={e => {
-            e.stopPropagation();
-            e.preventDefault();
-            window.open(purchase_uris.cardmarket, "_blank");
-          }}
-          title="Buy on Cardmarket"
-        >
-          {prices.eur}€
-        </span>
-      );
-    }
-    if (prices.eur_foil) {
-      return (
-        <span
-          className="price-link"
-          onClick={e => {
-            e.stopPropagation();
-            e.preventDefault();
-            window.open(purchase_uris.cardmarket, "_blank");
-          }}
-          title="Buy on Cardmarket"
-        >
-          {prices.eur_foil}€
-        </span>
-      );
-    }
-    return null;
-  }
-
-  function getBestUsdPrice(prices: any, purchase_uris: any) {
-    if (prices.usd) {
-      return (
-        <span
-          className="price-link"
-          onClick={e => {
-            e.stopPropagation();
-            e.preventDefault();
-            window.open(purchase_uris.tcgplayer, "_blank");
-          }}
-          title="Buy on TCGPlayer"
-        >
-          {prices.usd}$
-        </span>
-      );
-    }
-    if (prices.usd_foil) {
-      return (
-        <span
-          className="price-link"
-          onClick={e => {
-            e.stopPropagation();
-            e.preventDefault();
-            window.open(purchase_uris.tcgplayer, "_blank");
-          }}
-          title="Buy on TCGPlayer"
-        >
-          {prices.usd_foil}$
-        </span>
-      );
-    }
-    if (prices.usd_etched) {
-      return (
-        <span
-          className="price-link"
-          onClick={e => {
-            e.stopPropagation();
-            e.preventDefault();
-            window.open(purchase_uris.tcgplayer, "_blank");
-          }}
-          title="Buy on TCGPlayer"
-        >
-          {prices.usd_etched}$
-        </span>
-      );
-    }
-    return null;
-  }
-  const handleMouseEnter = (print: CardData) => {
-    const isArvinox = print.name === "Arvinox, the Mind Flail" && print.set === "sld";
-    setPrintMinature({
-      show: true,
-      imgSrc: print.card_faces
-        ? print.card_faces[0]?.image_uris?.normal ?? ""
-        : print.image_uris?.normal ?? "",
-      isArvinox,
-    });
-  };
-
-  const handleMouseLeave = () => {
-    setPrintMinature({
-      show: false,
-      imgSrc: "",
-      isArvinox: false, // <-- reset this too
-    });
-  };
-
-  console.log(cardData);
   return (
-    <>
-      {isMobile ? <MobileCard
-        isFetched={isFetched}
-        cardData={cardData}
-        printsData={printsData}
-        rulingsData={rulingsData}
-        cardSymbols={cardSymbols}
-        showCardBack={showCardBack}
-        setIconUrl={setIconUrl}
-        mtgFormats={mtgFormats}
-        renderTextWithSymbols={renderTextWithSymbols}
-        compareData={compareData}
-        renderLegalities={renderLegalities}
-        renderCardImg={renderCardImg}
-        renderViewBackButton={renderViewBackButton}
-        getBestEurPrice={getBestEurPrice}
-        getBestUsdPrice={getBestUsdPrice}
-      /> :
+    !cardNotFound
+      ? (!isMobile
+        ? <DesktopCard
+          cardData={cardData}
+          isCardLoaded={isCardLoaded}
+          getTextWithSymbols={getTextWithSymbols}
+          showAltFace={showAltFace}
+          setShowAltFace={setShowAltFace}
+        />
+        : <MobileCard
+          cardData={cardData}
+          isCardLoaded={isCardLoaded}
+          getTextWithSymbols={getTextWithSymbols}
+          showAltFace={showAltFace}
+          setShowAltFace={setShowAltFace}
+        />)
 
-        <section className="Card">
-          {printMinature.show && (
-            <img
-              src={printMinature.imgSrc}
-              className="print-minature absolute"
-              style={{
-                left: `${mousePosition.x - 225}px`,
-                top: `${mousePosition.y - 75}px`,
-                ...(printMinature.isArvinox ? { transform: "rotate(180deg)" } : {}),
-              }}
-            />
-          )}
-          <div className="card-info flex">
-            <div className="flex flex-col items-center">
-              {isFetched.cardFetched ? renderCardImg() : <CardPlaceholder />}
-              {renderViewBackButton()}
-            </div>
-            <ul className="card-details flex flex-col">
-              {isFetched.cardFetched && isFetched.symbolsFetched && cardData ? (
-                <>
-                  <h2 className="flex items-center">
-                    {cardData.card_faces?.[showCardBack ? 1 : 0]?.name ||
-                      cardData.name}
-                    {cardData.card_faces?.[showCardBack ? 1 : 0]?.mana_cost ||
-                      (cardData.card_faces && cardData.card_faces[1] && !showCardBack
-                        ? null
-                        : cardData.mana_cost)
-                      ? renderTextWithSymbols(
-                        cardData.card_faces?.[showCardBack ? 1 : 0]?.mana_cost ||
-                        cardData.mana_cost
-                      )
-                      : null}
-                  </h2>
-                  <h3>
-                    {cardData.card_faces?.[showCardBack ? 1 : 0]?.type_line ||
-                      cardData.type_line}
-                  </h3>
-                  {cardData.card_faces?.[showCardBack ? 1 : 0]?.oracle_text ? (
-                    <p className="whitespace-pre-wrap">
-                      {renderTextWithSymbols(
-                        cardData.card_faces[showCardBack ? 1 : 0].oracle_text
-                      )}
-                    </p>
-                  ) : (
-                    cardData.oracle_text && (
-                      <p className="whitespace-pre-wrap">
-                        {renderTextWithSymbols(cardData.oracle_text)}
-                      </p>
-                    )
-                  )}
-                  {cardData.card_faces?.[showCardBack ? 1 : 0]?.flavor_text ? (
-                    <p className="italic flavor">
-                      {cardData.card_faces[showCardBack ? 1 : 0].flavor_text}
-                    </p>
-                  ) : (
-                    cardData.flavor_text && (
-                      <p className="italic flavor">{cardData.flavor_text}</p>
-                    )
-                  )}
-                  {cardData.card_faces?.[showCardBack ? 1 : 0]?.power &&
-                    cardData.card_faces?.[showCardBack ? 1 : 0]?.toughness ? (
-                    <p>{`${cardData.card_faces[showCardBack ? 1 : 0].power}/${cardData.card_faces[showCardBack ? 1 : 0].toughness
-                      } (Power ${cardData.card_faces[showCardBack ? 1 : 0].power
-                      }, Toughness ${cardData.card_faces[showCardBack ? 1 : 0].toughness
-                      })`}</p>
-                  ) : (
-                    cardData.power &&
-                    cardData.toughness && (
-                      <p>{`${cardData.power}/${cardData.toughness} (Power ${cardData.power}, Toughness ${cardData.toughness})`}</p>
-                    )
-                  )}
-                  {cardData.card_faces?.[0]?.loyalty ? (
-                    <p>
-                      Loyalty {cardData.card_faces[showCardBack ? 1 : 0].loyalty}
-                    </p>
-                  ) : (
-                    cardData.loyalty && <p>Loyalty {cardData.loyalty}</p>
-                  )}
-                  <p className="italic">Illustrated by {cardData.artist}</p>
-                  <h3 className="flex items-center">
-                    {setIconUrl && (
-                      <img src={setIconUrl} alt="Set Icon" className="set-icon" />
-                    )}
-                    <span>
-                      {`${cardData.set_name} (${cardData.set.toUpperCase()}) #${cardData.collector_number
-                        } · `}
-                      <span className="capitalize">{cardData.rarity}</span>
-                    </span>
-                  </h3>
-                  <ul className="card-formats flex flex-wrap">
-                    {compareData(cardData.released_at) ? (
-                      <button key={`format-unreleased`}>Unreleased</button>
-                    ) : (
-                      renderLegalities(cardData)
-                    )}
-                  </ul>
-                </>
-              ) : (
-                <div className="card-details-placeholders flex flex-col">
-                  <div className="card-details-placeholder"></div>
-                  <div className="card-details-placeholder"></div>
-                  <div className="card-details-placeholder"></div>
-                  <div className="card-details-placeholder"></div>
-                  <div className="card-details-placeholder"></div>
-                  <div className="card-details-placeholder"></div>
-                </div>
-              )}
-            </ul>
-          </div>
-          <div className="prints">
-            <h2 className="text-center">Prints</h2>
-            <ul className="flex flex-col">
-              {isFetched.printsFetched ? (
-                printsData.map((print: CardData) => {
-                  return (
-                    <Link
-                      onMouseEnter={() => handleMouseEnter(print)}
-                      onMouseLeave={handleMouseLeave}
-                      onClick={handleMouseLeave}
-                      to={`/card/${print.set}/${print.collector_number}`}
-                      key={"print " + print.id}
-                    >
-                      <li className="flex items-center">
-                        <StarSvg
-                          className={`${print.set_name === cardData?.set_name &&
-                            print.collector_number === cardData?.collector_number &&
-                            "active"
-                            } flex-shrink-0`}
-                        />
-                        <p className="flex flex-col">
-                          {print.set_name} #{print.collector_number}
-                          <span className="prices">
-                            {getBestEurPrice(print.prices, print.purchase_uris)}
-                            {getBestEurPrice(print.prices, print.purchase_uris) && getBestUsdPrice(print.prices, print.purchase_uris) && " | "}
-                            {getBestUsdPrice(print.prices, print.purchase_uris)}
-                          </span>
-                        </p>
-                      </li>
-                    </Link>
-                  );
-                })
-              ) : (
-                <div className="placeholder flex flex-col">
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                </div>
-              )}
-            </ul>
-          </div>
-          <div className="rules">
-            <h2>Rules</h2>
-            <ul className="flex flex-col">
-              {isFetched.rulesFetched ? (
-                rulingsData.length > 0 ? (
-                  rulingsData.map((rule: RulingsData, index: number) => (
-                    <li
-                      className="flex flex-col"
-                      key={"rule " + rule.oracle_id + index}
-                    >
-                      <h3>{rule.published_at}</h3>
-                      <p>{renderTextWithSymbols(rule.comment)}</p>
-                    </li>
-                  ))
-                ) : (
-                  <p>There are no rules for this card.</p>
-                )
-              ) : (
-                <div className="placeholder flex flex-col">
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                </div>
-              )}
-            </ul>
-          </div>
-        </section>}
-    </>
-
+      : <NotFound />
   );
 };
 

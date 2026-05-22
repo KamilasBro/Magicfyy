@@ -4,51 +4,73 @@
 @import "tailwindcss/utilities";
 @import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 
-body {
-  width: 100vw;
-  margin: 0;
-  padding: 0;
-  color: $white;
-  background-color: $background;
-  font-family: "Rubik", sans-serif;
-  letter-spacing: 1px;
-  -webkit-tap-highlight-color: transparent;
-  overflow-x: hidden;
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
+// to bypass darkmodes ingeretion by browsers
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  width: 100vw;
+
+  overflow-x: hidden;
+
+  margin: 0;
+  padding: 0;
+
+  font-family: "Rubik", sans-serif;
+  letter-spacing: 1px;
+  color: $white;
+
+  background-color: $background;
+
+  -webkit-tap-highlight-color: transparent;
+}
 
 ::-webkit-scrollbar {
   width: 5px;
   height: 2px;
 }
 
-body::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: $black;
 }
 
 ::-webkit-scrollbar-thumb {
   background: $orange;
+
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: $red;
+
   border-radius: 10px;
 }
 
 .background-container {
-  position: relative;
   width: 100%;
   height: 100%;
-}
 
-.background-container .bg-placeholder {
-  background-color: $background;
-}
+  position: relative;
 
-.background-container img {
-  filter: brightness(25%);
-  object-fit: cover;
+  .bg-placeholder {
+    background-color: $background;
+  }
+
+  img {
+    filter: brightness(25%);
+    object-fit: cover;
+  }
 }
 
 a,
@@ -60,36 +82,48 @@ input {
 }
 
 button {
+  padding: 10px;
+
   font-size: 14px;
   font-weight: 300;
-  padding: 10px;
+
   border-radius: 10px;
+
   background-color: $transparentBlack;
+
   transition: background-color 300ms;
 }
 
 main {
-  margin-top: 175px;
-  margin-bottom: 175px;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  margin-top: 175px;
+  margin-bottom: 175px;
 }
 
 input {
   border: none;
   outline: none;
-}
 
-input::placeholder {
-  color: $white;
-}
+  &::placeholder {
+    color: $white;
+  }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  appearance: none;
-  margin: 0;
+  &::-webkit-outer-spin-button {
+    margin: 0;
+
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  &::-webkit-inner-spin-button {
+    margin: 0;
+
+    -webkit-appearance: none;
+    appearance: none;
+  }
 }
 
 /* Firefox */
@@ -98,35 +132,81 @@ input[type="number"] {
   appearance: textfield;
 }
 
-@keyframes cardFadeIn {
-  from {
-    opacity: 0;
-  }
 
-  to {
-    opacity: 1;
-  }
-}
-
-.cards {
-  column-gap: 46px;
-  row-gap: 50px;
-}
 
 .card {
-  cursor: pointer;
   width: 215px;
   height: 300px;
+
   border-radius: 12px;
-  image-rendering: auto; // Try 'auto', 'crisp-edges', or 'pixelated'
-  backface-visibility: hidden; // Helps with GPU artifacts
+
+  image-rendering: auto;
+  backface-visibility: hidden;
+  cursor: pointer;
+
   will-change: transform;
   transition: filter 300ms;
+
+  &:hover {
+    filter: drop-shadow(0px 0px 6px $orange);
+  }
 }
 
-.card:hover {
-  filter: drop-shadow(0px 0px 6px $orange);
+//cards unique variants
+.flip {
+  transition: rotate 300ms;
+  rotate: 0deg;
+
+  &.alt-face {
+    rotate: 180deg;
+  }
 }
+
+@mixin split-layout($rotate,
+  $scale,
+  $translate,
+  $clip,
+  $alt-translate,
+  $alt-clip) {
+  rotate: $rotate;
+  scale: $scale;
+  transform: translateY($translate);
+  clip-path: inset($clip);
+
+  &.alt-face {
+    transform: translateY($alt-translate);
+    clip-path: inset($alt-clip);
+  }
+}
+
+img {
+  &.split {
+    @include split-layout(90deg,
+      1.4,
+      -25%,
+      50% 0 0 0,
+      25%,
+      0 0 50% 0);
+  }
+
+  &.room {
+    @include split-layout(90deg,
+      1.4,
+      -22%,
+      48% 0 0 0,
+      25%,
+      0 0 52% 0);
+  }
+
+  &.aftermath.alt-face {
+    rotate: -90deg;
+    scale: 1.4;
+    transform: translateY(-25%);
+    clip-path: inset(54.5% 0 0 0);
+  }
+}
+
+
 
 @media screen and (max-width: $xlg) {
   main {
@@ -135,10 +215,6 @@ input[type="number"] {
 
   button {
     font-size: 13px;
-  }
-
-  .cards {
-    column-gap: 56px;
   }
 }
 
@@ -150,14 +226,6 @@ input[type="number"] {
   button {
     font-size: 12px;
   }
-
-  .cards {
-    column-gap: 31px;
-    row-gap: 40px;
-  }
-
-
-
 }
 
 @media screen and (max-width: $md) {
@@ -165,11 +233,6 @@ input[type="number"] {
     margin-top: 135px;
     margin-bottom: 130px;
   }
-
-  .cards {
-    column-gap: 46px;
-  }
-
 }
 
 @media screen and (max-width: $sm) {
@@ -177,23 +240,15 @@ input[type="number"] {
     margin-bottom: 50px;
   }
 
-  .cards {
-    column-gap: 60px;
-  }
-
   button {
     font-size: 11px;
   }
+
 }
 
 @media screen and (max-width: $tablet) {
   main {
     margin-top: 125px;
-  }
-
-  .cards {
-    column-gap: 60px;
-    justify-content: center;
   }
 
   button {

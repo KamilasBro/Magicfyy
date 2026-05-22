@@ -1,9 +1,5 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import BgAnim from "./components/BgAnim/BgAnim";
-import Navbar from "./components/Navbar/Navbar";
-import Footer from "./components/Footer/Footer";
-import ScrollToTop from "./utils/ScrollToTop";
+import "./assets/scss/global.scss";
+
 import Home from "./pages/Home/Home";
 import AdvancedSearch from "./pages/AdvancedSearch/AdvancedSearch";
 import Searched from "./pages/Searched/Searched";
@@ -12,7 +8,13 @@ import ChosenSet from "./pages/ChosenSet/ChosenSet";
 import Card from "./pages/Card/Card";
 import GuessTheCard from "./pages/GuessTheCard/GuessTheCard";
 import NotFound from "./pages/NotFound/NotFound";
-import "./assets/scss/global.scss";
+import BgAnim from "./components/BgAnim/BgAnim";
+import Navbar from "./components/Navbar/Navbar";
+import Footer from "./components/Footer/Footer";
+
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import ScrollToTop from "./utils/other/ScrollToTop";
 
 const App: React.FC = () => {
   return (

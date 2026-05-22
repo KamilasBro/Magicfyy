@@ -1,0 +1,95 @@
+@use "@/assets/scss/partials/importer" as *;
+
+.Advanced-search .filter-type .type-wrap {
+    background-color: $transparentBlack;
+
+    border-radius: 10px;
+
+    .type-tags {
+        gap: 10px;
+        padding: 10px 18px 0px 18px;
+
+        font-size: 12px;
+        font-weight: 500;
+
+
+        .type-tag {
+            gap: 5px;
+
+            .if-not {
+                width: 30px;
+
+                letter-spacing: 0px;
+
+                background-color: $green;
+
+                border-radius: 5px;
+
+                cursor: pointer;
+
+                &.excluded {
+                    background-color: $red;
+                }
+            }
+
+            .type-tag-name {
+                color: $orange;
+            }
+
+            svg {
+                height: 20px;
+                width: 20px;
+
+                cursor: pointer;
+
+                path {
+                    stroke-width: 7px;
+                }
+            }
+        }
+
+    }
+
+    .type-input {
+        background-color: transparent !important;
+    }
+
+    .dropdown {
+        overflow-y: scroll;
+
+        max-height: 250px;
+        width: 100%;
+
+        .type-category {
+            font-weight: 600;
+            color: $orange;
+        }
+
+        .type {
+            font-size: 15px;
+            font-weight: 300;
+
+            transition: 300ms;
+            cursor: pointer;
+
+            &:hover {
+                color: $orange;
+            }
+        }
+    }
+
+
+}
+
+@media (max-width: $sm) {
+
+    .Advanced-search .filter-type .input-wrap .type-wrap .dropdown {
+        .type-category {
+            font-size: 14px;
+        }
+
+        .type {
+            font-size: 13px;
+        }
+    }
+}
