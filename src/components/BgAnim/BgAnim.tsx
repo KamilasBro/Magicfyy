@@ -4,18 +4,21 @@ import bg2 from "../../assets/images/backgrounds/island.webp";
 import bg3 from "../../assets/images/backgrounds/swamp.webp";
 import bg4 from "../../assets/images/backgrounds/mountain.webp";
 import bg5 from "../../assets/images/backgrounds/forest.webp";
-const images = [bg1, bg2, bg3, bg4, bg5];
+
+const imagesList = [bg1, bg2, bg3, bg4, bg5];
+const intervalTime = 15000;
+
 
 const BackgroundSlideshow = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [imagesLoaded, setImagesLoaded] = useState<boolean[]>(
-    Array(images.length).fill(false)
+    Array(imagesList.length).fill(false)
   );
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 15000); // Change image every 15 seconds
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % imagesList.length);
+    }, intervalTime); // Change image every 15 seconds
 
     return () => clearInterval(interval);
   }, []);
@@ -30,7 +33,7 @@ const BackgroundSlideshow = () => {
 
   return (
     <div className="background-container">
-      {images.map((image, index) => (
+      {imagesList.map((image, index) => (
         <img
           className="fixed top-0 left-0 w-screen h-screen"
           key={`bg` + index}
@@ -52,7 +55,7 @@ const BackgroundSlideshow = () => {
         <div
           className="fixed top-0 left-0 w-screen h-screen bg-placeholder"
           style={{
-            zIndex: -images.length - 1, // Ensure placeholder is behind all images
+            zIndex: -imagesList.length - 1, // Ensure placeholder is behind all images
           }}
         />
       )}

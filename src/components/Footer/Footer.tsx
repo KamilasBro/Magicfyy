@@ -1,12 +1,15 @@
-import LogoSvg from "../../assets/images/logo/footerLogo.svg?react";
-import { Link } from "react-router-dom";
 import "./footer.scss";
+import LogoSvg from "../../assets/images/logo/footerLogo.svg?react";
+
+import { Link } from "react-router-dom";
+import { navLinksList } from "@/utils/other/navLinksList";
+
 const Footer: React.FC = () => {
   return (
     <footer className="footer flex items-center justify-center">
       <div className="inner-footer flex items-center justify-between">
         <Link to={"/"}>
-          <LogoSvg className="logo"/>
+          <LogoSvg className="logo" />
         </Link>
         <p>
           All names and trademarks used on this website belong to their
@@ -22,18 +25,13 @@ const Footer: React.FC = () => {
           </a>
         </p>
         <ul className="nav-links flex flex-col">
-          <li className="nav-link">
-            <Link to={"/"}>Search</Link>
-          </li>
-          <li className="nav-link">
-            <Link to={"/advanced"}>Advanced Search</Link>
-          </li>
-          <li className="nav-link">
-            <Link to={"/sets"}>Sets</Link>
-          </li>
-          <li className="nav-link">
-            <Link to={"/guess"}>Guess The Card</Link>
-          </li>
+          {navLinksList.map((navLink) =>
+            <li key={navLink.name} className="nav-link">
+              <Link to={navLink.link}>
+                {navLink.name}
+              </Link>
+            </li>
+          )}
         </ul>
       </div>
     </footer>

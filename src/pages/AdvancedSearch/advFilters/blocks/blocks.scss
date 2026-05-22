@@ -1,0 +1,102 @@
+@use "@/assets/scss/partials/importer" as *;
+
+.Advanced-search .filter-set .input-wrap {
+    display: flex;
+    flex-direction: column;
+
+    gap: 15px;
+
+    .set-wrap {
+        background-color: $transparentBlack;
+
+        border-radius: 10px;
+
+        .set-tags {
+            gap: 10px;
+            padding: 10px 18px 0px 18px;
+
+            font-size: 12px;
+            font-weight: 500;
+
+            .set-tag {
+                gap: 5px;
+
+                .set-tag-name {
+                    color: $orange;
+                }
+
+                svg {
+                    height: 20px;
+                    width: 20px;
+
+                    cursor: pointer;
+
+                    path {
+                        stroke-width: 7px;
+                    }
+                }
+            }
+        }
+
+        .set-input {
+            background-color: transparent !important;
+        }
+
+        .dropdown {
+            overflow-y: scroll;
+
+            max-height: 250px;
+            width: 100%;
+
+            .sets-list {
+                flex-direction: column;
+                display: flex;
+
+                gap: 5px;
+
+                .set,
+                .block {
+                    gap: 5px;
+
+                    font-size: 15px;
+                    font-weight: 300;
+
+                    transition: color 300ms;
+                    cursor: pointer;
+
+                    .set-icon {
+                        width: 25px;
+                        height: 25px;
+
+                        filter: invert(35%) sepia(100%) saturate(7500%) hue-rotate(30deg);
+                    }
+
+                    &:hover {
+                        color: $orange;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: $sm) {
+    .Advanced-search .filter-set .input-wrap .set-wrap .dropdown .sets-list {
+
+        .set,
+        .block {
+            font-size: 14px;
+        }
+    }
+}
+
+
+@media (max-width: $mobile) {
+    .Advanced-search .filter-set .input-wrap .dropdown .sets-list {
+
+        .set,
+        .block {
+            font-size: 12px;
+        }
+    }
+}

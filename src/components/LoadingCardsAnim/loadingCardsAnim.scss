@@ -1,4 +1,5 @@
 @use "../../assets/scss/partials/importer" as *;
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -9,7 +10,7 @@
   }
 }
 
-@keyframes shuffleCard {
+@keyframes shuffleCardLeft {
   0% {
     transform: translateX(0px);
     z-index: 3;
@@ -25,39 +26,55 @@
   }
 }
 
+@keyframes shuffleCardRight {
+  0% {
+    transform: translateX(0px);
+    z-index: 3;
+  }
+
+  50% {
+    transform: translateX(250px) rotate(15deg);
+  }
+
+  100% {
+    transform: translateX(0px) rotate(0deg);
+    z-index: 0;
+  }
+}
+
 .Loading-cards {
   animation: fadeIn 2s;
-}
 
-.Loading-cards-wrap {
-  margin-top: 50px;
-  height: 350px;
-  position: relative;
-}
+  .Loading-cards-wrap {
+    position: relative;
 
-.Loading-cards-svg {
-  position: absolute;
-}
+    margin-top: 50px;
 
-.Loading-cards-svg:nth-child(1) {
-  z-index: 1;
-}
+    height: 350px;
 
-.Loading-cards-svg:nth-child(2) {
-  z-index: 2;
-}
 
-.Loading-cards-svg:nth-child(3) {
-  z-index: 3;
-  animation: shuffleCard 2.5s ease-in-out infinite;
+    .Loading-cards-svg {
+      position: absolute;
+
+      &:nth-child(1) {
+        z-index: 1;
+      }
+
+      &:nth-child(2) {
+        z-index: 2;
+      }
+
+      &:nth-child(3) {
+        z-index: 3;
+
+        animation: shuffleCardLeft 2s ease-in-out infinite;
+      }
+    }
+  }
 }
 
 @media screen and (max-width: 800px) {
-  .Loading-cards-wrap {
-    height: 250px;
-  }
-
-  @keyframes shuffleCard {
+  @keyframes shuffleCardLeft {
     0% {
       transform: translateX(0px);
       z-index: 3;
@@ -73,7 +90,27 @@
     }
   }
 
-  .Loading-cards svg {
-    height: 225px;
+  @keyframes shuffleCardRight {
+    0% {
+      transform: translateX(0px);
+      z-index: 3;
+    }
+
+    50% {
+      transform: translateX(190px) rotate(15deg);
+    }
+
+    100% {
+      transform: translateX(0px) rotate(0deg);
+      z-index: 0;
+    }
+  }
+
+  .Loading-cards .Loading-cards-wrap {
+    height: 250px;
+
+    .Loading-cards svg {
+      height: 225px;
+    }
   }
 }

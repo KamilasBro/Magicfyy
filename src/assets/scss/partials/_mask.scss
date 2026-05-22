@@ -1,0 +1,32 @@
+@keyframes shine {
+  from {
+    -webkit-mask-position: 150%;
+    mask-position: 150%;
+  }
+
+  to {
+    -webkit-mask-position: -50%;
+    mask-position: -50%;
+  }
+}
+
+@mixin shine-mask($duration: 2s, $angle: -75deg, $size: 200%) {
+  -webkit-mask-image: linear-gradient(
+    $angle,
+    rgba(255, 255, 255, 0.6) 30%,
+    #fff 50%,
+    rgba(255, 255, 255, 0.6) 70%
+  );
+
+  mask-image: linear-gradient(
+    $angle,
+    rgba(255, 255, 255, 0.6) 30%,
+    #fff 50%,
+    rgba(255, 255, 255, 0.6) 70%
+  );
+
+  -webkit-mask-size: $size;
+  mask-size: $size;
+
+  animation: shine $duration infinite;
+}

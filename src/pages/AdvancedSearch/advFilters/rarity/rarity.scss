@@ -1,0 +1,19 @@
+@use "@/assets/scss/partials/importer" as *;
+
+.Advanced-search .filter-rarity .input-wrap {
+    gap: 30px;
+
+    .radio-wrap span {
+        font-size: 20px;
+        font-weight: 500;
+    }
+}
+
+
+@media (max-width: $sm) {
+    .Advanced-search .filter-rarity .input-wrap {
+        flex-direction: column;
+
+        gap: 25px;
+    }
+}

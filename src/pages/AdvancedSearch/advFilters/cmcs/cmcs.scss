@@ -1,0 +1,65 @@
+@use "@/assets/scss/partials/importer" as *;
+
+.Advanced-search .filter-mana-cost {
+    .input-wrap {
+        .mana-cost-input input {
+            width: 375px;
+        }
+
+        .dropdown {
+            overflow-y: scroll;
+
+            max-height: 250px;
+            width: 375px;
+
+            li {
+                padding-block: 5px;
+                
+                cursor: pointer;
+                transition: color 300ms;
+
+                &:hover {
+                    color: $orange;
+                }
+            }
+        }
+
+        .subnote {
+            margin-top: 10px;
+        }
+    }
+}
+
+@media (max-width: $sm) {
+    .Advanced-search .filter-mana-cost .input-wrap .dropdown li {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: $tablet) {
+    .Advanced-search .filter-mana-cost .input-wrap {
+        .mana-cost-input input {
+            width: 100%;
+        }
+
+        .dropdown {
+            width: 490px;
+        }
+    }
+}
+
+@media (max-width: $lmobile) {
+    .Advanced-search .filter-mana-cost .input-wrap .dropdown {
+        width: 340px;
+    }
+}
+
+@media (max-width: $mobile) {
+    .Advanced-search .filter-mana-cost .input-wrap .dropdown {
+        width: 255px;
+
+        li {
+            font-size: 12px;
+        }
+    }
+}
