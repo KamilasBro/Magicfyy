@@ -106,11 +106,13 @@
     }
   }
 
-  .Loading-cards .Loading-cards-wrap {
-    height: 250px;
+  .Loading-cards {
+    .Loading-cards-wrap {
+      height: 250px;
 
-    .Loading-cards svg {
-      height: 225px;
+      .Loading-cards-svg svg {
+        height: 225px;
+      }
     }
   }
 }
