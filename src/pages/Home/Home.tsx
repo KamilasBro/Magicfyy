@@ -31,7 +31,7 @@ const Home: React.FC = () => {
         // Pick random page to vary showcased cards
         const randomNumber = Math.floor(Math.random() * 4) + 1;
 
-        const apiUrl = `https://api.scryfalal.com/cards/search?page=${randomNumber}&q=(game:paper)+is:fullart+lang:en`;
+        const apiUrl = `https://api.scryfall.com/cards/search?page=${randomNumber}&q=(game:paper)+is:fullart+lang:en`;
 
         const response = await fetch(apiUrl, {
           signal: controller.signal,
